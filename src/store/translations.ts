@@ -17,17 +17,25 @@ export const useTranslationsStore = create<TranslationsState>()(
       locale: 'en',
       translations: defaultTranslations.en,
       setLocale: (locale: string) => {
-        set({
-          locale,
-          translations: defaultTranslations[locale] || defaultTranslations.en,
-        }, false, 'translations/setLocale');
+        set(
+          {
+            locale,
+            translations: defaultTranslations[locale] || defaultTranslations.en,
+          },
+          false,
+          'translations/setLocale'
+        );
       },
       fetchRemoteTranslations: async (locale: string) => {
         try {
           const response = await translationsAPI.fetchTranslations(locale);
-          set({
-            translations: response.translations,
-          }, false, 'translations/fetchRemoteTranslations');
+          set(
+            {
+              translations: response.translations,
+            },
+            false,
+            'translations/fetchRemoteTranslations'
+          );
         } catch (error) {
           console.warn('Failed to fetch remote translations, using default:', error);
         }
@@ -35,7 +43,7 @@ export const useTranslationsStore = create<TranslationsState>()(
     }),
     {
       name: 'Translations Store',
-      enabled: process.env.NODE_ENV === 'development'
+      enabled: process.env.NODE_ENV === 'development',
     }
   )
-); 
+);

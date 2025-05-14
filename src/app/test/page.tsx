@@ -38,10 +38,8 @@ export default function TestPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">LeetCode API Test</h1>
-      <pre className="bg-muted p-4 rounded-lg overflow-auto">
-        {JSON.stringify(data, null, 2)}
-      </pre>
+      <h1 className="mb-4 text-2xl font-bold">LeetCode API Test</h1>
+      <pre className="bg-muted overflow-auto rounded-lg p-4">{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
-} 
+}

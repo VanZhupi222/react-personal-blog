@@ -20,7 +20,7 @@ export function LanguageSwitch() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="inline-flex items-center justify-center rounded-full w-8 h-8 text-foreground hover:bg-accent dark:hover:bg-accent/50">
+      <DropdownMenuTrigger className="text-foreground hover:bg-accent dark:hover:bg-accent/50 inline-flex h-8 w-8 items-center justify-center rounded-full">
         <Globe size={18} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="dark:bg-background/95">

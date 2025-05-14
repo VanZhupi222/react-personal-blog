@@ -9,34 +9,36 @@ import { useTranslations } from '@/lib/hooks/useTranslations';
 
 const projects = [
   {
-    title: "Project Name 1",
-    description: "A full-stack web application built with Next.js and Node.js that helps users manage their daily tasks and track progress.",
-    tags: ["Next.js", "Node.js", "PostgreSQL", "TypeScript"],
+    title: 'Project Name 1',
+    description:
+      'A full-stack web application built with Next.js and Node.js that helps users manage their daily tasks and track progress.',
+    tags: ['Next.js', 'Node.js', 'PostgreSQL', 'TypeScript'],
     links: {
-      github: "https://github.com/username/project1",
-      live: "https://project1.example.com"
+      github: 'https://github.com/username/project1',
+      live: 'https://project1.example.com',
     },
-    image: "/project1.png",
+    image: '/project1.png',
     highlights: [
-      "Implemented real-time updates using WebSocket",
-      "Designed and built RESTful API endpoints",
-      "Integrated with third-party services for authentication"
-    ]
+      'Implemented real-time updates using WebSocket',
+      'Designed and built RESTful API endpoints',
+      'Integrated with third-party services for authentication',
+    ],
   },
   {
-    title: "Project Name 2",
-    description: "An e-commerce platform that allows users to browse products, manage their cart, and complete purchases securely.",
-    tags: ["React", "Express", "MongoDB", "Redux"],
+    title: 'Project Name 2',
+    description:
+      'An e-commerce platform that allows users to browse products, manage their cart, and complete purchases securely.',
+    tags: ['React', 'Express', 'MongoDB', 'Redux'],
     links: {
-      github: "https://github.com/username/project2",
-      live: "https://project2.example.com"
+      github: 'https://github.com/username/project2',
+      live: 'https://project2.example.com',
     },
-    image: "/project2.png",
+    image: '/project2.png',
     highlights: [
-      "Built responsive UI components using React and Tailwind CSS",
-      "Implemented secure payment processing with Stripe",
-      "Optimized performance with server-side rendering"
-    ]
+      'Built responsive UI components using React and Tailwind CSS',
+      'Implemented secure payment processing with Stripe',
+      'Optimized performance with server-side rendering',
+    ],
   },
 ];
 
@@ -45,17 +47,17 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
-    y: 0
-  }
+    y: 0,
+  },
 };
 
 export default function ProjectsPage() {
@@ -63,8 +65,8 @@ export default function ProjectsPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.div className="min-h-[100dvh] flex items-center justify-center">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <m.div className="flex min-h-[100dvh] items-center justify-center">
+        <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <m.div
             initial="hidden"
             animate="visible"
@@ -72,10 +74,7 @@ export default function ProjectsPage() {
             className="space-y-8"
           >
             <m.div variants={itemVariants}>
-              <PageHeader
-                heading={t.projects.title}
-                text={t.projects.description}
-              />
+              <PageHeader heading={t.projects.title} text={t.projects.description} />
             </m.div>
 
             <div className="grid gap-8">
@@ -92,7 +91,7 @@ export default function ProjectsPage() {
                             rel="noopener noreferrer"
                             className="text-muted-foreground hover:text-foreground transition-colors"
                           >
-                            <GithubIcon className="w-5 h-5" />
+                            <GithubIcon className="h-5 w-5" />
                           </a>
                           <a
                             href={project.links.live}
@@ -100,28 +99,24 @@ export default function ProjectsPage() {
                             rel="noopener noreferrer"
                             className="text-muted-foreground hover:text-foreground transition-colors"
                           >
-                            <ExternalLink className="w-5 h-5" />
+                            <ExternalLink className="h-5 w-5" />
                           </a>
                         </div>
                       </div>
                     </CardHeader>
 
                     <CardContent>
-                      <p className="text-muted-foreground mb-4">
-                        {project.description}
-                      </p>
+                      <p className="text-muted-foreground mb-4">{project.description}</p>
 
-                      <div className="flex flex-wrap gap-2 mb-6">
+                      <div className="mb-6 flex flex-wrap gap-2">
                         {project.tags.map((tag) => (
-                          <Badge key={tag}>
-                            {tag}
-                          </Badge>
+                          <Badge key={tag}>{tag}</Badge>
                         ))}
                       </div>
 
                       <div className="space-y-2">
                         <h3 className="font-semibold">{t.projects.highlights}:</h3>
-                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <ul className="text-muted-foreground list-inside list-disc space-y-1">
                           {project.highlights.map((highlight, i) => (
                             <li key={i}>{highlight}</li>
                           ))}

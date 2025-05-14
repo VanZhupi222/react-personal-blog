@@ -11,4 +11,4 @@ export interface TranslationsState {
   translations: Translations;
   setLocale: (locale: string) => void;
   fetchRemoteTranslations: (locale: string) => Promise<void>;
-} 
+}

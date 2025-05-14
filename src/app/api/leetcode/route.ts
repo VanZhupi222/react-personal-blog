@@ -4,14 +4,14 @@ import type { NextRequest } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     const response = await fetch('https://leetcode.com/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0',  // 添加 User-Agent 避免被拦截
+        'User-Agent': 'Mozilla/5.0', // 添加 User-Agent 避免被拦截
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
-    
+
     // 验证响应数据
     if (!data.data?.matchedUser) {
       throw new Error('Invalid response from LeetCode API');
@@ -46,4 +46,4 @@ export async function PUT() {
 
 export async function DELETE() {
   return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
-} 
+}

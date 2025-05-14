@@ -9,29 +9,32 @@ import { useTranslations } from '@/lib/hooks/useTranslations';
 
 const posts = [
   {
-    title: "Understanding TypeScript Generics",
-    description: "A deep dive into TypeScript generics and their practical applications in real-world scenarios.",
-    date: "2024-03-15",
-    readTime: "8 min read",
-    tags: ["TypeScript", "Programming", "Web Development"],
-    slug: "understanding-typescript-generics"
+    title: 'Understanding TypeScript Generics',
+    description:
+      'A deep dive into TypeScript generics and their practical applications in real-world scenarios.',
+    date: '2024-03-15',
+    readTime: '8 min read',
+    tags: ['TypeScript', 'Programming', 'Web Development'],
+    slug: 'understanding-typescript-generics',
   },
   {
-    title: "Building Scalable React Applications",
-    description: "Best practices and patterns for building large-scale React applications that are maintainable and performant.",
-    date: "2024-03-10",
-    readTime: "12 min read",
-    tags: ["React", "Architecture", "Performance"],
-    slug: "building-scalable-react-applications"
+    title: 'Building Scalable React Applications',
+    description:
+      'Best practices and patterns for building large-scale React applications that are maintainable and performant.',
+    date: '2024-03-10',
+    readTime: '12 min read',
+    tags: ['React', 'Architecture', 'Performance'],
+    slug: 'building-scalable-react-applications',
   },
   {
-    title: "Advanced Git Workflows",
-    description: "Learn advanced Git techniques and workflows to improve your version control skills.",
-    date: "2024-03-05",
-    readTime: "10 min read",
-    tags: ["Git", "DevOps", "Version Control"],
-    slug: "advanced-git-workflows"
-  }
+    title: 'Advanced Git Workflows',
+    description:
+      'Learn advanced Git techniques and workflows to improve your version control skills.',
+    date: '2024-03-05',
+    readTime: '10 min read',
+    tags: ['Git', 'DevOps', 'Version Control'],
+    slug: 'advanced-git-workflows',
+  },
 ];
 
 const containerVariants = {
@@ -39,17 +42,17 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
-    y: 0
-  }
+    y: 0,
+  },
 };
 
 export default function BlogPage() {
@@ -57,45 +60,40 @@ export default function BlogPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.div 
-        className="min-h-[100dvh] flex items-center justify-center"
+      <m.div
+        className="flex min-h-[100dvh] items-center justify-center"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <m.div variants={itemVariants}>
-            <PageHeader
-              heading={t.blog.title}
-              text={t.blog.description}
-            />
+            <PageHeader heading={t.blog.title} text={t.blog.description} />
           </m.div>
 
           <m.div className="mt-12 grid gap-6" variants={containerVariants}>
             {posts.map((post, index) => (
               <m.div key={index} variants={itemVariants}>
-                <Card className="group transition-colors hover:border-primary">
+                <Card className="group hover:border-primary transition-colors">
                   <CardHeader>
                     <CardTitle className="group-hover:text-primary transition-colors">
                       <a href={`/blog/${post.slug}`}>{post.title}</a>
                     </CardTitle>
                   </CardHeader>
-                  
-                  <div className="px-6 flex items-center gap-4 text-sm text-muted-foreground mb-4">
+
+                  <div className="text-muted-foreground mb-4 flex items-center gap-4 px-6 text-sm">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
+                      <Calendar className="h-4 w-4" />
                       {post.date}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="h-4 w-4" />
                       {post.readTime}
                     </span>
                   </div>
 
                   <CardContent>
-                    <p className="text-muted-foreground mb-4">
-                      {post.description}
-                    </p>
+                    <p className="text-muted-foreground mb-4">{post.description}</p>
 
                     <div className="flex flex-wrap gap-2">
                       {post.tags.map((tag) => (
@@ -113,4 +111,4 @@ export default function BlogPage() {
       </m.div>
     </LazyMotion>
   );
-} 
+}

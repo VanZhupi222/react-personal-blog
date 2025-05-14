@@ -1,7 +1,7 @@
-import axios, { 
-  AxiosInstance, 
-  AxiosError, 
-  AxiosResponse, 
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  AxiosResponse,
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from 'axios';
@@ -64,19 +64,37 @@ instance.interceptors.response.use(
 
 // 封装请求方法
 export const request = {
-  get: <TResponse, TParams = Record<string, unknown>>(url: string, config: AxiosRequestConfig<TParams> = {}) => {
+  get: <TResponse, TParams = Record<string, unknown>>(
+    url: string,
+    config: AxiosRequestConfig<TParams> = {}
+  ) => {
     return instance.get<TParams, TResponse>(url, config);
   },
-  post: <TResponse, TData = Record<string, unknown>>(url: string, data: TData = {} as TData, config: AxiosRequestConfig<TData> = {}) => {
+  post: <TResponse, TData = Record<string, unknown>>(
+    url: string,
+    data: TData = {} as TData,
+    config: AxiosRequestConfig<TData> = {}
+  ) => {
     return instance.post<TData, TResponse>(url, data, config);
   },
-  put: <TResponse, TData = Record<string, unknown>>(url: string, data: TData = {} as TData, config: AxiosRequestConfig<TData> = {}) => {
+  put: <TResponse, TData = Record<string, unknown>>(
+    url: string,
+    data: TData = {} as TData,
+    config: AxiosRequestConfig<TData> = {}
+  ) => {
     return instance.put<TData, TResponse>(url, data, config);
   },
-  delete: <TResponse, TParams = Record<string, unknown>>(url: string, config: AxiosRequestConfig<TParams> = {}) => {
+  delete: <TResponse, TParams = Record<string, unknown>>(
+    url: string,
+    config: AxiosRequestConfig<TParams> = {}
+  ) => {
     return instance.delete<TParams, TResponse>(url, config);
   },
-  patch: <TResponse, TData = Record<string, unknown>>(url: string, data: TData = {} as TData, config: AxiosRequestConfig<TData> = {}) => {
+  patch: <TResponse, TData = Record<string, unknown>>(
+    url: string,
+    data: TData = {} as TData,
+    config: AxiosRequestConfig<TData> = {}
+  ) => {
     return instance.patch<TData, TResponse>(url, data, config);
   },
 };
@@ -85,4 +103,4 @@ export const request = {
 export type { AxiosError, AxiosResponse, AxiosRequestConfig };
 
 // 导出实例
-export default instance; 
+export default instance;

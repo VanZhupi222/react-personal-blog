@@ -33,4 +33,4 @@ export interface LeetCodeResponse {
       starRating: number;
     };
   };
-} 
+}

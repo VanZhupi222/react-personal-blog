@@ -14,4 +14,4 @@ export function useTranslations() {
     locale,
     setLocale,
   };
-} 
+}

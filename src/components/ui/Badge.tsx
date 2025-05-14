@@ -11,12 +11,12 @@ export function Badge({ children, icon = false, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm",
+        'bg-secondary text-secondary-foreground inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm',
         className
       )}
     >
-      {icon && <Tag className="w-3 h-3" />}
+      {icon && <Tag className="h-3 w-3" />}
       {children}
     </span>
   );
-} 
+}

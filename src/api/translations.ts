@@ -17,4 +17,4 @@ class TranslationsAPI {
   }
 }
 
-export const translationsAPI = new TranslationsAPI(); 
+export const translationsAPI = new TranslationsAPI();

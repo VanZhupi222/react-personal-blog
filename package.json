@@ -38,6 +38,8 @@
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
     "postcss-theme-ui": "^0.10.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.2.9",
     "typescript": "^5"

@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   // 基础 URL
   BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || '',
-  
+
   // LeetCode API
   LEETCODE: {
     BASE: 'https://leetcode-stats-api.herokuapp.com',
@@ -41,4 +41,4 @@ export const HTTP_STATUS = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
-} as const; 
+} as const;

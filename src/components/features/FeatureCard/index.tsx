@@ -10,21 +10,27 @@ interface FeatureCardProps {
   actionText: string;
 }
 
-export function FeatureCard({ href, icon: Icon, title, description, actionText }: FeatureCardProps) {
+export function FeatureCard({
+  href,
+  icon: Icon,
+  title,
+  description,
+  actionText,
+}: FeatureCardProps) {
   return (
     <Link href={href}>
-      <Card className="h-full transition-colors hover:bg-accent/10">
+      <Card className="hover:bg-accent/10 h-full transition-colors">
         <CardContent className="pt-6">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <Icon className="w-8 h-8" />
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <Icon className="h-8 w-8" />
             <div className="space-y-2">
               <h3 className="text-xl font-semibold">{title}</h3>
               <p className="text-muted-foreground">{description}</p>
-              <p className="text-sm font-medium text-foreground/80">{actionText}</p>
+              <p className="text-foreground/80 text-sm font-medium">{actionText}</p>
             </div>
           </div>
         </CardContent>
       </Card>
     </Link>
   );
-} 
+}

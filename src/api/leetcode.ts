@@ -30,7 +30,7 @@ class LeetCodeAPI {
     try {
       const { data } = await axios.post<{ data: LeetCodeResponse }>(this.baseURL, {
         query: this.query,
-        variables: { username }
+        variables: { username },
       });
 
       return parseLeetCodeStats(data.data);
@@ -53,4 +53,4 @@ class LeetCodeAPI {
 export const leetcodeAPI = new LeetCodeAPI();
 
 // 导出默认实例
-export default leetcodeAPI; 
+export default leetcodeAPI;

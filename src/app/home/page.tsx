@@ -8,20 +8,20 @@ import { useTranslations } from '@/lib/hooks/useTranslations';
 
 const features = [
   {
-    href: "/about",
+    href: '/about',
     icon: User,
-    key: "about" as const,
+    key: 'about' as const,
   },
   {
-    href: "/projects",
+    href: '/projects',
     icon: Briefcase,
-    key: "projects" as const,
+    key: 'projects' as const,
   },
   {
-    href: "/blog",
+    href: '/blog',
     icon: Code,
-    key: "blog" as const,
-  }
+    key: 'blog' as const,
+  },
 ];
 
 const containerVariants = {
@@ -29,17 +29,17 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
-    y: 0
-  }
+    y: 0,
+  },
 };
 
 export default function Home() {
@@ -47,10 +47,8 @@ export default function Home() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.div 
-        className="min-h-[100dvh] flex items-center justify-center"
-      >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <m.div className="flex min-h-[100dvh] items-center justify-center">
+        <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <m.div
             initial="hidden"
             animate="visible"
@@ -58,10 +56,8 @@ export default function Home() {
             className="space-y-20"
           >
             <m.section variants={itemVariants} className="text-center">
-              <h1 className="text-4xl font-bold mb-6">{t.home.welcome}</h1>
-              <p className="text-xl text-muted-foreground mb-8">
-                {t.home.description}
-              </p>
+              <h1 className="mb-6 text-4xl font-bold">{t.home.welcome}</h1>
+              <p className="text-muted-foreground mb-8 text-xl">{t.home.description}</p>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {features.map((feature) => {
                   const { key, ...rest } = feature;
@@ -79,33 +75,39 @@ export default function Home() {
             </m.section>
 
             <m.section variants={itemVariants}>
-              <h2 className="text-2xl font-bold mb-6 text-center">{t.home.activity.title}</h2>
+              <h2 className="mb-6 text-center text-2xl font-bold">{t.home.activity.title}</h2>
               <div className="grid gap-6 md:grid-cols-2">
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="mb-4 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Trophy className="w-5 h-5" />
+                        <Trophy className="h-5 w-5" />
                         <h3 className="text-lg font-semibold">{t.home.activity.leetcode.title}</h3>
                       </div>
-                      <span className="text-sm text-muted-foreground">{t.home.activity.leetcode.status}</span>
+                      <span className="text-muted-foreground text-sm">
+                        {t.home.activity.leetcode.status}
+                      </span>
                     </div>
-                    <div className="h-32 flex items-center justify-center border rounded bg-muted/30">
-                      <p className="text-muted-foreground">{t.home.activity.leetcode.placeholder}</p>
+                    <div className="bg-muted/30 flex h-32 items-center justify-center rounded border">
+                      <p className="text-muted-foreground">
+                        {t.home.activity.leetcode.placeholder}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="mb-4 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Gamepad className="w-5 h-5" />
+                        <Gamepad className="h-5 w-5" />
                         <h3 className="text-lg font-semibold">{t.home.activity.steam.title}</h3>
                       </div>
-                      <span className="text-sm text-muted-foreground">{t.home.activity.steam.status}</span>
+                      <span className="text-muted-foreground text-sm">
+                        {t.home.activity.steam.status}
+                      </span>
                     </div>
-                    <div className="h-32 flex items-center justify-center border rounded bg-muted/30">
+                    <div className="bg-muted/30 flex h-32 items-center justify-center rounded border">
                       <p className="text-muted-foreground">{t.home.activity.steam.placeholder}</p>
                     </div>
                   </CardContent>

@@ -8,13 +8,13 @@ import { LanguageSwitch } from './LanguageSwitch';
 
 const controlVariants = {
   hidden: { opacity: 0, y: -20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: {
-      delay: 0.5
-    }
-  }
+      delay: 0.5,
+    },
+  },
 };
 
 export function ControlPanel() {
@@ -30,18 +30,16 @@ export function ControlPanel() {
       initial="hidden"
       animate="visible"
       variants={controlVariants}
-      className="fixed top-4 right-4 z-50 flex items-center gap-2 p-2 rounded-full bg-background/95 dark:bg-accent/30 backdrop-blur border border-border/40 dark:border-accent/30 shadow-sm"
+      className="bg-background/95 dark:bg-accent/30 border-border/40 dark:border-accent/30 fixed top-4 right-4 z-50 flex items-center gap-2 rounded-full border p-2 shadow-sm backdrop-blur"
     >
       <LanguageSwitch />
       <button
-        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-        className="inline-flex items-center justify-center rounded-full w-8 h-8 text-foreground hover:bg-accent dark:hover:bg-accent/50"
+        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+        className="text-foreground hover:bg-accent dark:hover:bg-accent/50 inline-flex h-8 w-8 items-center justify-center rounded-full"
         aria-label="Toggle theme"
       >
-        {mounted ? (
-          theme === "light" ? <Moon size={18} /> : <Sun size={18} />
-        ) : null}
+        {mounted ? theme === 'light' ? <Moon size={18} /> : <Sun size={18} /> : null}
       </button>
     </motion.div>
   );
-} 
+}

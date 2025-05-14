@@ -21,7 +21,7 @@ const initialState = {
   stats: null,
   loading: false,
   error: null,
-  username: 'Zhupi222'
+  username: 'Zhupi222',
 };
 
 export const useLeetCodeStore = create<LeetCodeState>()(
@@ -38,24 +38,29 @@ export const useLeetCodeStore = create<LeetCodeState>()(
       fetchStats: async () => {
         try {
           set({ loading: true, error: null }, false, 'leetcode/fetchStats/pending');
-          
+
           const username = get().username;
           const stats = await leetcodeAPI.getUserStats(username);
-          
+
           set({ stats, loading: false }, false, 'leetcode/fetchStats/fulfilled');
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch LeetCode stats';
-          set({ 
-            error: errorMessage,
-            loading: false 
-          }, false, 'leetcode/fetchStats/rejected');
+          const errorMessage =
+            error instanceof Error ? error.message : 'Failed to fetch LeetCode stats';
+          set(
+            {
+              error: errorMessage,
+              loading: false,
+            },
+            false,
+            'leetcode/fetchStats/rejected'
+          );
           // 发生错误时自动重试
           get().retryFetch();
         }
       },
 
       retryFetch: async () => {
-        await new Promise(resolve => setTimeout(resolve, 3000)); // 等待3秒
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // 等待3秒
         await get().fetchStats();
       },
 
@@ -65,7 +70,7 @@ export const useLeetCodeStore = create<LeetCodeState>()(
     }),
     {
       name: 'LeetCode Store',
-      enabled: process.env.NODE_ENV === 'development'
+      enabled: process.env.NODE_ENV === 'development',
     }
   )
-); 
+);
