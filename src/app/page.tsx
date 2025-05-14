@@ -3,12 +3,14 @@
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import Link from 'next/link';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { ControlPanel } from '@/components/features/ControlPanel';
 
 export default function WelcomePage() {
   const { t } = useTranslations();
 
   return (
     <LazyMotion features={domAnimation}>
+      <ControlPanel />
       <div className="min-h-[100dvh] flex flex-col items-center justify-center px-4 py-8">
         <m.div
           initial={{ opacity: 0, y: 20 }}

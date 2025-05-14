@@ -2,7 +2,7 @@
 
 import { Calendar, Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
-import { PageHeader } from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
@@ -66,8 +66,8 @@ export default function BlogPage() {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <m.div variants={itemVariants}>
             <PageHeader
-              title={t.blog.title}
-              description={t.blog.description}
+              heading={t.blog.title}
+              text={t.blog.description}
             />
           </m.div>
 

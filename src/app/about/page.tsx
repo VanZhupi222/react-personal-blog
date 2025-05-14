@@ -1,7 +1,7 @@
 'use client';
 
 import { LazyMotion, domAnimation, m } from 'framer-motion';
-import { PageHeader } from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { useTranslations } from '@/lib/hooks/useTranslations';
@@ -71,8 +71,8 @@ export default function AboutPage() {
           >
             <m.div variants={itemVariants}>
               <PageHeader
-                title={t.about.title}
-                description={t.about.description}
+                heading={t.about.title}
+                text={t.about.description}
               />
             </m.div>
 

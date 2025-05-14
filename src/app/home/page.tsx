@@ -2,7 +2,7 @@
 
 import { Code, User, Briefcase, Trophy, Gamepad } from 'lucide-react';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
-import { FeatureCard } from '@/components/ui/FeatureCard';
+import { FeatureCard } from '@/components/features/FeatureCard';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 

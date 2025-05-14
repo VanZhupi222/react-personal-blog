@@ -2,7 +2,7 @@
 
 import { GithubIcon, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
-import { PageHeader } from '@/components/ui/PageHeader';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
@@ -73,8 +73,8 @@ export default function ProjectsPage() {
           >
             <m.div variants={itemVariants}>
               <PageHeader
-                title={t.projects.title}
-                description={t.projects.description}
+                heading={t.projects.title}
+                text={t.projects.description}
               />
             </m.div>
 

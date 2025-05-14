@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
-import { LanguageSwitch } from "./ui/LanguageSwitch";
+import { LanguageSwitch } from "@/components/features/ControlPanel/LanguageSwitch";
 import { useTranslations } from "@/lib/hooks/useTranslations";
 
 const languages = [

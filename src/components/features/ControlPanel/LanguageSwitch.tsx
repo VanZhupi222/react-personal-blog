@@ -20,18 +20,15 @@ export function LanguageSwitch() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-accent transition-colors">
-        <Globe className="w-4 h-4" />
-        <span className="text-sm">
-          {languages.find(lang => lang.code === locale)?.name}
-        </span>
+      <DropdownMenuTrigger className="inline-flex items-center justify-center rounded-full w-8 h-8 text-foreground hover:bg-accent dark:hover:bg-accent/50">
+        <Globe size={18} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="dark:bg-background/95">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => setLocale(lang.code)}
-            className={locale === lang.code ? 'bg-accent' : ''}
+            className={locale === lang.code ? 'bg-accent dark:bg-accent/50' : ''}
           >
             {lang.name}
           </DropdownMenuItem>
@@ -39,4 +36,4 @@ export function LanguageSwitch() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+}
