@@ -64,20 +64,20 @@ instance.interceptors.response.use(
 
 // 封装请求方法
 export const request = {
-  get: <T>(url: string, config: AxiosRequestConfig = {}) => {
-    return instance.get<any, T>(url, config);
+  get: <TResponse, TParams = Record<string, unknown>>(url: string, config: AxiosRequestConfig<TParams> = {}) => {
+    return instance.get<TParams, TResponse>(url, config);
   },
-  post: <T>(url: string, data: any = {}, config: AxiosRequestConfig = {}) => {
-    return instance.post<any, T>(url, data, config);
+  post: <TResponse, TData = Record<string, unknown>>(url: string, data: TData = {} as TData, config: AxiosRequestConfig<TData> = {}) => {
+    return instance.post<TData, TResponse>(url, data, config);
   },
-  put: <T>(url: string, data: any = {}, config: AxiosRequestConfig = {}) => {
-    return instance.put<any, T>(url, data, config);
+  put: <TResponse, TData = Record<string, unknown>>(url: string, data: TData = {} as TData, config: AxiosRequestConfig<TData> = {}) => {
+    return instance.put<TData, TResponse>(url, data, config);
   },
-  delete: <T>(url: string, config: AxiosRequestConfig = {}) => {
-    return instance.delete<any, T>(url, config);
+  delete: <TResponse, TParams = Record<string, unknown>>(url: string, config: AxiosRequestConfig<TParams> = {}) => {
+    return instance.delete<TParams, TResponse>(url, config);
   },
-  patch: <T>(url: string, data: any = {}, config: AxiosRequestConfig = {}) => {
-    return instance.patch<any, T>(url, data, config);
+  patch: <TResponse, TData = Record<string, unknown>>(url: string, data: TData = {} as TData, config: AxiosRequestConfig<TData> = {}) => {
+    return instance.patch<TData, TResponse>(url, data, config);
   },
 };
 

@@ -43,9 +43,10 @@ export const useLeetCodeStore = create<LeetCodeState>()(
           const stats = await leetcodeAPI.getUserStats(username);
           
           set({ stats, loading: false }, false, 'leetcode/fetchStats/fulfilled');
-        } catch (error: any) {
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to fetch LeetCode stats';
           set({ 
-            error: error.message || 'Failed to fetch LeetCode stats',
+            error: errorMessage,
             loading: false 
           }, false, 'leetcode/fetchStats/rejected');
           // 发生错误时自动重试

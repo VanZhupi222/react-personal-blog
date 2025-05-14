@@ -43,14 +43,11 @@ class LeetCodeAPI {
   }
 
   /**
-   * 获取用户最近的提交记录
-   * @param username LeetCode 用户名
-   * @param limit 限制返回的记录数量
+   * TODO: 获取用户最近的提交记录功能待实现
    */
-  public async getRecentSubmissions(username: string, limit: number = 10) {
-    // TODO: 实现获取最近提交记录的功能
-    return [];
-  }
+  // public async getRecentSubmissions(username: string, limit: number = 10) {
+  //   return [];
+  // }
 }
 
 export const leetcodeAPI = new LeetCodeAPI();
