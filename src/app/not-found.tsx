@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
-import { useTranslations } from '@/hooks/useTranslations';
+import { useTranslations } from '@/lib/hooks/useTranslations';
 
 export default function NotFound() {
   const { t } = useTranslations();

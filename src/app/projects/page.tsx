@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/Badge';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
-import { useTranslations } from '@/hooks/useTranslations';
+import { useTranslations } from '@/lib/hooks/useTranslations';
 
 const projects = [
   {

@@ -1,15 +1,20 @@
-import { Translations } from '@/i18n/types';
+import axios from 'axios';
+import type { TranslationResponse } from '@/lib/translations/types';
 
-export interface TranslationResponse {
-  locale: string;
-  translations: Translations;
-  timestamp: number;
+class TranslationsAPI {
+  private readonly baseURL = '/api/translations';
+
+  async fetchTranslations(locale: string): Promise<TranslationResponse> {
+    try {
+      const { data } = await axios.get<TranslationResponse>(`${this.baseURL}/${locale}`);
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(`Failed to fetch translations for locale ${locale}: ${error.message}`);
+      }
+      throw error;
+    }
+  }
 }
 
-export async function fetchTranslations(locale: string): Promise<TranslationResponse> {
-  const response = await fetch(`/api/translations/${locale}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch translations for locale: ${locale}`);
-  }
-  return response.json();
-} 
+export const translationsAPI = new TranslationsAPI(); 

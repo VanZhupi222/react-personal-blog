@@ -4,7 +4,7 @@ import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { useTranslations } from '@/hooks/useTranslations';
+import { useTranslations } from '@/lib/hooks/useTranslations';
 
 const skills = {
   frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],

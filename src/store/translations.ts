@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Translations } from '@/i18n/types';
-import { fetchTranslations } from '@/api/translations';
+import { translationsAPI } from '@/api/translations';
+import type { TranslationsState } from '@/lib/translations/types';
 import en from '@/i18n/locales/en';
 import zh from '@/i18n/locales/zh';
 
@@ -9,13 +10,6 @@ const defaultTranslations: Record<string, Translations> = {
   en,
   zh,
 };
-
-interface TranslationsState {
-  locale: string;
-  translations: Translations;
-  setLocale: (locale: string) => void;
-  fetchRemoteTranslations: (locale: string) => Promise<void>;
-}
 
 export const useTranslationsStore = create<TranslationsState>()(
   devtools(
@@ -30,7 +24,7 @@ export const useTranslationsStore = create<TranslationsState>()(
       },
       fetchRemoteTranslations: async (locale: string) => {
         try {
-          const response = await fetchTranslations(locale);
+          const response = await translationsAPI.fetchTranslations(locale);
           set({
             translations: response.translations,
           }, false, 'translations/fetchRemoteTranslations');

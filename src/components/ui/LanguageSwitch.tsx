@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Globe } from 'lucide-react';
-import { useTranslations } from '@/hooks/useTranslations';
+import { useTranslations } from '@/lib/hooks/useTranslations';
 import {
   DropdownMenu,
   DropdownMenuContent,

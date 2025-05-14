@@ -7,7 +7,7 @@ import { Moon, Sun, Menu, X, Globe } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
 import { LanguageSwitch } from "./ui/LanguageSwitch";
-import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslations } from "@/lib/hooks/useTranslations";
 
 const languages = [
   { code: 'en', name: 'English' },
