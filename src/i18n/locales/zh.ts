@@ -1,6 +1,38 @@
 import { Translations } from '../types';
 
 const zh: Translations = {
+  welcome: {
+    name: 'Shijie Fan | 范世杰',
+    nickname: 'Zhupi222',
+    role: {
+      fullstack: '全栈开发者',
+      tech: '技术爱好者',
+      game: '游戏玩家',
+    },
+    enter: '进入',
+    techStack: {
+      title: '技术栈',
+      items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+    },
+    projects: {
+      title: '精选项目',
+      items: [
+        {
+          title: '项目一',
+          description: '项目一的描述',
+        },
+        {
+          title: '项目二',
+          description: '项目二的描述',
+        },
+      ],
+    },
+    contact: {
+      title: '联系我',
+      description: '无论是项目合作还是友好交流，都欢迎联系我',
+      platforms: ['GitHub', 'LinkedIn', '邮箱'],
+    },
+  },
   home: {
     title: '首页',
     welcome: '欢迎来到我的空间',

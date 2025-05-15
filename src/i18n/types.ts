@@ -1,4 +1,30 @@
 export interface Translations {
+  welcome: {
+    name: string;
+    nickname: string;
+    role: {
+      fullstack: string;
+      tech: string;
+      game: string;
+    };
+    enter: string;
+    techStack: {
+      title: string;
+      items: string[];
+    };
+    projects: {
+      title: string;
+      items: Array<{
+        title: string;
+        description: string;
+      }>;
+    };
+    contact: {
+      title: string;
+      description: string;
+      platforms: string[];
+    };
+  };
   home: {
     title: string;
     welcome: string;

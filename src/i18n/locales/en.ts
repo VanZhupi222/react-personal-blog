@@ -1,6 +1,38 @@
 import { Translations } from '../types';
 
 const en: Translations = {
+  welcome: {
+    name: 'Shijie Fan | 范世杰',
+    nickname: 'Zhupi222',
+    role: {
+      fullstack: 'Full-stack Developer',
+      tech: 'Tech Enthusiast',
+      game: 'Game Lover',
+    },
+    enter: 'Enter',
+    techStack: {
+      title: 'Tech Stack',
+      items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+    },
+    projects: {
+      title: 'Featured Projects',
+      items: [
+        {
+          title: 'Project 1',
+          description: 'Description of project 1',
+        },
+        {
+          title: 'Project 2',
+          description: 'Description of project 2',
+        },
+      ],
+    },
+    contact: {
+      title: 'Get In Touch',
+      description: 'Feel free to reach out for collaborations or just a friendly hello',
+      platforms: ['GitHub', 'LinkedIn', 'Email'],
+    },
+  },
   home: {
     title: 'Home',
     welcome: 'Welcome to My Space',

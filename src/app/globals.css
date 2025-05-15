@@ -127,3 +127,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* 在移动设备上禁用视差效果 */
+@media only screen and (max-width: 768px) {
+  .parallax {
+    background-attachment: scroll;
+  }
+}
