@@ -8,6 +8,7 @@ import { useTranslations } from '@/lib/hooks/useTranslations';
 import { useLeetCodeStore } from '@/store/leetcode';
 import { Loader } from '@/components/ui/Loader';
 import React from 'react';
+import { SteamStatsCard } from '@/components/features/SteamStatsCard';
 
 const features = [
   {
@@ -184,9 +185,7 @@ export default function Home() {
                         {t.home.activity.steam.status}
                       </span>
                     </div>
-                    <div className="bg-muted/30 flex h-32 items-center justify-center rounded border">
-                      <p className="text-muted-foreground">{t.home.activity.steam.placeholder}</p>
-                    </div>
+                    <SteamStatsCard />
                   </CardContent>
                 </Card>
               </div>

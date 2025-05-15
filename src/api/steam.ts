@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import type { SteamGameStats, SteamProfile, SteamStats } from '@/lib/steam/types';
 
 class SteamAPI {
@@ -7,8 +6,13 @@ class SteamAPI {
   private readonly steamId: string;
 
   constructor() {
-    const apiKey = process.env.STEAM_API_KEY;
-    const steamId = process.env.STEAM_ID;
+    const apiKey = process.env.NEXT_PUBLIC_STEAM_API_KEY;
+    const steamId = process.env.NEXT_PUBLIC_STEAM_ID;
+
+    console.log('Steam API Config:', {
+      apiKey: apiKey ? '***' + apiKey.slice(-4) : undefined,
+      steamId: steamId ? '***' + steamId.slice(-4) : undefined
+    });
 
     if (!apiKey) {
       throw new Error('Steam API key is not configured');
@@ -89,16 +93,4 @@ class SteamAPI {
   }
 }
 
-export async function GET() {
-  try {
-    const steamAPI = new SteamAPI();
-    const stats = await steamAPI.getUserStats();
-    return NextResponse.json(stats);
-  } catch (error) {
-    console.error('Steam API Error:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
-}
+export const steamAPI = new SteamAPI();
