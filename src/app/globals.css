@@ -39,6 +39,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-leetcode-easy: var(--leetcode-easy);
+  --color-leetcode-medium: var(--leetcode-medium);
+  --color-leetcode-hard: var(--leetcode-hard);
+  --color-leetcode-completion: var(--leetcode-completion);
+  --color-leetcode-ranking: var(--leetcode-ranking);
+  --color-leetcode-reputation: var(--leetcode-reputation);
 }
 
 @layer base {
@@ -63,6 +69,12 @@
     --border: oklch(0.9 0 0);
     --input: oklch(0.9 0 0);
     --ring: oklch(0.2 0 0);
+    --leetcode-easy: #4CAF50;
+    --leetcode-medium: #FF9800;
+    --leetcode-hard: #F44336;
+    --leetcode-completion: #eab308;
+    --leetcode-ranking: #3b82f6;
+    --leetcode-reputation: #a21caf;
   }
 
   .dark {
@@ -98,6 +110,12 @@
     --sidebar-accent-foreground: oklch(0.885 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+    --leetcode-easy: #22c55e;
+    --leetcode-medium: #f59e42;
+    --leetcode-hard: #ef4444;
+    --leetcode-completion: #fde047;
+    --leetcode-ranking: #60a5fa;
+    --leetcode-reputation: #c084fc;
   }
 }
 

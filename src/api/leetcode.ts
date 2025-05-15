@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { request } from './axios';
 import type { LeetCodeStats, LeetCodeResponse } from '@/lib/leetcode/types';
 import { parseLeetCodeStats } from '@/lib/leetcode/parser';
 
@@ -23,22 +23,23 @@ class LeetCodeAPI {
           starRating
         }
       }
+      allQuestionsCount {
+        difficulty
+        count
+      }
     }
   `;
 
   async getUserStats(username: string): Promise<LeetCodeStats> {
     try {
-      const { data } = await axios.post<{ data: LeetCodeResponse }>(this.baseURL, {
+      const data = await request.post<{ data: LeetCodeResponse }>(this.baseURL, {
         query: this.query,
         variables: { username },
       });
 
       return parseLeetCodeStats(data.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(`Failed to fetch LeetCode stats: ${error.message}`);
-      }
-      throw error;
+      throw new Error(`Failed to fetch LeetCode stats: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 

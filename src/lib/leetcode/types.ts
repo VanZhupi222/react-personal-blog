@@ -33,4 +33,8 @@ export interface LeetCodeResponse {
       starRating: number;
     };
   };
+  allQuestionsCount: Array<{
+    difficulty: string;
+    count: number;
+  }>;
 }
