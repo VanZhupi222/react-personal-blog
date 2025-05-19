@@ -89,6 +89,15 @@ export default function Home() {
               <div className="grid gap-6 md:grid-cols-2">
                 <Card>
                   <CardContent className="pt-6">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Trophy className="h-5 w-5" />
+                        <h3 className="text-lg font-semibold">{t.home.activity.leetcode.title}</h3>
+                      </div>
+                      <span className="text-muted-foreground text-sm">
+                        {stats ? 'Live' : t.home.activity.leetcode.status}
+                      </span>
+                    </div>
                     {loading ? (
                       <div className="flex min-h-[200px] items-center justify-center">
                         <Loader size="lg" />
@@ -97,13 +106,6 @@ export default function Home() {
                       <p className="text-red-500">{error}</p>
                     ) : stats ? (
                       <>
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <Trophy className="w-5 h-5 text-yellow-500" />
-                            <span className="font-semibold text-lg text-foreground">LeetCode Stats</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground font-medium">Live</span>
-                        </div>
                         <div>
                           <div className="flex items-center gap-2 mb-4">
                             <span className="ml-auto text-2xl font-extrabold text-foreground">{stats.totalSolved}</span>

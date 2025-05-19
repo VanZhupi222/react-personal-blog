@@ -1,70 +1,61 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import type { SteamStats } from '@/lib/steam/types';
+import type { SteamStats, SteamGameStats } from '@/lib/steam/types';
+import type { ParsedGame } from '@/lib/steam/parse';
+import { request } from '@/api/axios';
 
 interface SteamState {
-  // 状态
-  stats: SteamStats | null;
-  loading: boolean;
-  error: string | null;
-
-  // actions
-  fetchStats: () => Promise<void>;
-  retryFetch: () => Promise<void>;
-  reset: () => void;
+  profile: SteamStats['profile'] | null;
+  recentGames: ParsedGame[];
+  ownedGames: ParsedGame[];
+  ownedGamesLoading: boolean;
+  achievements: {
+    [appid: string]: {
+      total: number;
+      achieved: number;
+      percentage: number;
+      gameName: string;
+    };
+  };
+  totalPlaytime: number;
+  fetchOwnedGames: () => Promise<void>;
 }
 
-const initialState = {
-  stats: null,
-  loading: false,
-  error: null,
-};
-
-export const useSteamStore = create<SteamState>()(
-  devtools(
-    (set, get) => ({
-      ...initialState,
-
-      fetchStats: async () => {
-        try {
-          set({ loading: true, error: null }, false, 'steam/fetchStats/pending');
-
-          const response = await fetch('/api/steam');
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || 'Failed to fetch Steam stats');
-          }
-
-          set({ stats: data, loading: false }, false, 'steam/fetchStats/fulfilled');
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : 'Failed to fetch Steam stats';
-          set(
-            {
-              error: errorMessage,
-              loading: false,
-            },
-            false,
-            'steam/fetchStats/rejected'
-          );
-          // 发生错误时自动重试
-          get().retryFetch();
-        }
-      },
-
-      retryFetch: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 3000)); // 等待3秒
-        await get().fetchStats();
-      },
-
-      reset: () => {
-        set(initialState, false, 'steam/reset');
-      },
-    }),
-    {
-      name: 'Steam Store',
-      enabled: process.env.NODE_ENV === 'development',
+export const useSteamStore = create<SteamState>((set) => ({
+  profile: null,
+  recentGames: [],
+  ownedGames: [],
+  ownedGamesLoading: false,
+  achievements: {},
+  totalPlaytime: 0,
+  fetchOwnedGames: async () => {
+    set({ ownedGamesLoading: true });
+    try {
+      const stats = await request.get('/api/steam/stats') as SteamStats;
+      const ownedGames = stats.ownedGames.map((game: SteamGameStats) => ({
+        appid: game.appid,
+        name: game.name,
+        playtime: game.playtime_forever,
+        icon: game.img_icon_url,
+        logo: game.img_logo_url,
+      }));
+      const totalPlaytime = ownedGames.reduce((sum, g) => sum + g.playtime, 0);
+      set({
+        profile: stats.profile,
+        recentGames: stats.recentGames.map((game: SteamGameStats) => ({
+          appid: game.appid,
+          name: game.name,
+          playtime: game.playtime_forever,
+          icon: game.img_icon_url,
+          logo: game.img_logo_url,
+        })),
+        ownedGames,
+        achievements: stats.achievements || {},
+        totalPlaytime,
+        ownedGamesLoading: false,
+      });
+    } catch (error) {
+      console.error('Failed to fetch Steam games:', error);
+      set({ ownedGamesLoading: false });
     }
-  )
-);
+  },
+}));
