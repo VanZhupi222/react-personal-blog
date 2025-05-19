@@ -1,13 +1,24 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Clock, ExternalLink, Trophy } from 'lucide-react';
-import { Loader } from '@/components/ui/Loader';
-import { useSteamStore } from '@/store/steam';
-import { useTranslations } from '@/lib/hooks/useTranslations';
-import Link from 'next/link';
-import type { ParsedGame } from '@/lib/steam/parse';
+import React from 'react';
+import {
+  Box,
+  Flex,
+  Text,
+  Badge,
+  Skeleton,
+  VStack,
+  HStack,
+  Image,
+  Button,
+  Heading,
+} from "@chakra-ui/react";
+import { useSteamStore } from "@/store/steam";
+import { useTranslations } from "@/lib/hooks/useTranslations";
+import Link from "next/link";
+import type { ParsedGame } from "@/lib/steam/parse";
+import { RefreshButton } from '@/components/ui/RefreshButton';
+import { Gamepad } from 'lucide-react';
 
 function formatPlaytime(minutes: number): string {
   const hours = Math.floor(minutes / 60);
@@ -19,94 +30,182 @@ function formatPlaytime(minutes: number): string {
 
 export function SteamStatsCard() {
   const { t } = useTranslations();
-  const { profile, recentGames, ownedGamesLoading, fetchOwnedGames, totalPlaytime } = useSteamStore();
+  const {
+    profile,
+    recentGames,
+    ownedGamesLoading,
+    fetchOwnedGames,
+    totalPlaytime,
+    error,
+  } = useSteamStore();
 
-  useEffect(() => {
-    if (!profile) fetchOwnedGames();
-  }, [profile, fetchOwnedGames]);
+  React.useEffect(() => {
+    if (!profile && !ownedGamesLoading && !error) {
+      fetchOwnedGames();
+    }
+  }, [profile, ownedGamesLoading, error, fetchOwnedGames]);
 
   const handleGameClick = (appid: number) => {
-    window.open(`https://steamcommunity.com/app/${appid}`, '_blank');
+    window.open(`https://steamcommunity.com/app/${appid}`, "_blank");
+  };
+
+  const handleRefresh = () => {
+    fetchOwnedGames();
   };
 
   return (
-    <Card>
-      <CardContent className="pt-6 flex flex-col h-full min-h-[320px]">
+    <>
+      {/* Steam Card Title and Status */}
+      <Box mb={4} display="flex" alignItems="center" justifyContent="space-between">
+        <Flex align="center" gap={2}>
+          <Gamepad size={20} className="text-primary" />
+          <Heading as="h3" fontSize="lg" fontWeight="semibold" className="text-foreground">
+            {t.home.activity.steam.title}
+          </Heading>
+        </Flex>
+        <RefreshButton onClick={handleRefresh} loading={ownedGamesLoading} />
+      </Box>
+
+      <Box
+        bg="popover"
+        boxShadow="lg"
+        borderRadius="2xl"
+        p={6}
+        minH="320px"
+        w="full"
+        transition="0.3s"
+        _hover={{ boxShadow: "2xl", transform: "scale(1.01)" }}
+        className="dark:bg-popover dark:border-border"
+      >
         {ownedGamesLoading ? (
-          <div className="flex min-h-[200px] items-center justify-center">
-            <Loader size="lg" />
-          </div>
+          <VStack gap={4} align="stretch">
+            <Skeleton height="20px" width="60%" />
+            <Skeleton height="100px" />
+            <Skeleton height="20px" width="40%" />
+            <Skeleton height="100px" />
+          </VStack>
+        ) : error ? (
+          <VStack gap={4} align="center" justify="center" h="full">
+            <Text color="red.500" fontSize="lg" fontWeight="medium">
+              {error}
+            </Text>
+            <Text className="text-muted-foreground" fontSize="sm" textAlign="center">
+              {t.home.activity.steam.error}
+            </Text>
+          </VStack>
         ) : profile ? (
-          <div className="flex flex-col flex-1 space-y-6">
+          <VStack align="stretch" gap={6} h="full">
             {/* Profile Section */}
-            <div className="flex items-center gap-4">
-              <img
+            <Flex align="center" gap={4}>
+              <Image
                 src={profile.avatar}
                 alt={profile.personaname}
-                className="h-12 w-12 rounded-full"
+                h={12}
+                w={12}
+                borderRadius="full"
+                bg="muted"
+                className="dark:bg-muted"
               />
-              <div>
-                <h3 className="font-semibold">{profile.personaname}</h3>
-                <p className="text-muted-foreground text-sm">
-                  {profile.personastate === 1 ? 'Online' : 'Offline'}
-                </p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span className="text-sm">Total Playtime</span>
-                </div>
-                <p className="font-semibold">{formatPlaytime(totalPlaytime)}</p>
-              </div>
-            </div>
+              <Box>
+                <Text fontWeight="bold" fontSize="xl" className="text-foreground">
+                  {profile.personaname}
+                </Text>
+                <Badge
+                  colorScheme={profile.personastate === 1 ? "green" : "gray"}
+                  fontSize="0.8em"
+                  mt={1}
+                >
+                  {profile.personastate === 1 ? "Online" : "Offline"}
+                </Badge>
+              </Box>
+              <Box ml="auto" textAlign="right">
+                <HStack className="text-muted-foreground" gap={1} justify="flex-end">
+                  <Box as="span" fontSize="sm">⏱️</Box>
+                  <Text fontSize="sm">Total Playtime</Text>
+                </HStack>
+                <Text fontWeight="bold" fontSize="lg" className="text-foreground">
+                  {formatPlaytime(totalPlaytime)}
+                </Text>
+              </Box>
+            </Flex>
 
             {/* Recent Games Section */}
             {recentGames.length > 0 && (
-              <div>
-                <h4 className="mb-4 text-sm font-medium text-muted-foreground">Recent Games</h4>
-                <div className="space-y-4">
+              <Box>
+                <Text mb={2} fontSize="sm" className="text-muted-foreground" fontWeight="medium">
+                  Recent Games
+                </Text>
+                <VStack align="stretch" gap={3}>
                   {recentGames.map((game: ParsedGame) => (
-                    <div
+                    <Flex
                       key={game.appid}
-                      className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
+                      align="center"
+                      gap={3}
+                      cursor="pointer"
+                      _hover={{ bg: "accent", boxShadow: "md" }}
+                      p={2}
+                      borderRadius="lg"
+                      transition="background 0.2s, box-shadow 0.2s"
                       onClick={() => handleGameClick(game.appid)}
+                      className="dark:hover:bg-accent dark:shadow-none dark:hover:shadow-lg"
                     >
-                      <img
+                      <Image
                         src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.logo}.jpg`}
                         alt={game.name}
-                        className="h-10 w-auto max-w-[64px]"
-                        onError={e => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg`;
+                        h={10}
+                        w={10}
+                        minW={10}
+                        minH={10}
+                        borderRadius="md"
+                        bg="muted"
+                        className="dark:bg-muted"
+                        objectFit="cover"
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.onerror = null;
+                          img.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg`;
                         }}
                       />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1">
-                          <p className="truncate font-medium">{game.name}</p>
-                          <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                        </div>
-                      </div>
-                      <p className="text-sm font-medium">
+                      <Box flex={1} minW={0}>
+                        <HStack>
+                          <Text truncate fontWeight="medium" className="text-foreground">
+                            {game.name}
+                          </Text>
+                        </HStack>
+                      </Box>
+                      <Text fontSize="sm" fontWeight="medium" className="text-foreground">
                         {formatPlaytime(game.playtime)}
-                      </p>
-                    </div>
+                      </Text>
+                    </Flex>
                   ))}
-                </div>
-              </div>
+                </VStack>
+              </Box>
             )}
-            <div className="flex-1" />
-            <Link
-              href="/achievements"
-              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors mt-6 self-end"
-            >
-              <Trophy className="h-4 w-4" />
-              <span className="text-sm">View Achievements</span>
-            </Link>
-          </div>
+            <Box mt={4} textAlign="center">
+              <Link href="/achievements">
+                <Button
+                  bg="var(--card)"
+                  color="var(--text-muted-foreground)"
+                  px={4}
+                  py={2}
+                  borderRadius="full"
+                  fontWeight="bold"
+                  boxShadow="md"
+                  _hover={{ bg: "gray.100", color: "black", boxShadow: "lg", cursor: "pointer" }}
+                  display="inline-flex"
+                  minW={0}
+                  whiteSpace="nowrap"
+                >
+                  <Box as="span" fontSize="sm" mr={2}>🏆</Box>
+                  View Achievements
+                </Button>
+              </Link>
+            </Box>
+          </VStack>
         ) : (
-          <p className="text-muted-foreground">{t.home.activity.steam.placeholder}</p>
+          <Text className="text-muted-foreground">{t.home.activity.steam.placeholder}</Text>
         )}
-      </CardContent>
-    </Card>
+      </Box>
+    </>
   );
 }

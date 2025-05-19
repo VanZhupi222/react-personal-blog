@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { Box, Flex, Grid, Heading, Text } from '@chakra-ui/react';
 
 const skills = {
   frontend: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
@@ -63,67 +64,76 @@ export default function AboutPage() {
   return (
     <LazyMotion features={domAnimation}>
       <m.div className="flex min-h-[100dvh] items-center justify-center">
-        <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <Box mx="auto" w="full" maxW="7xl" px={4} py={24}>
           <m.div
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="space-y-12"
           >
             <m.div variants={itemVariants}>
               <PageHeader heading={t.about.title} text={t.about.description} />
             </m.div>
 
-            <m.section variants={itemVariants} className="space-y-6">
-              <h2 className="text-2xl font-bold">{t.about.skills.title}</h2>
-              <div className="grid gap-6 md:grid-cols-2">
+            <m.section variants={itemVariants}>
+              <Heading as="h2" fontSize="2xl" fontWeight="bold" mb={6}>
+                {t.about.skills.title}
+              </Heading>
+              <Grid gap={6} templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}>
                 {Object.entries(skills).map(([category, items]) => (
                   <Card key={category}>
-                    <CardContent className="pt-6">
-                      <h3 className="mb-4 text-lg font-semibold">
+                    <CardContent>
+                      <Heading as="h3" fontSize="lg" fontWeight="semibold" mb={4}>
                         {
                           t.about.skills.categories[
                             category as keyof typeof t.about.skills.categories
                           ]
                         }
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
+                      </Heading>
+                      <Flex flexWrap="wrap" gap={2}>
                         {items.map((skill) => (
                           <Badge key={skill}>{skill}</Badge>
                         ))}
-                      </div>
+                      </Flex>
                     </CardContent>
                   </Card>
                 ))}
-              </div>
+              </Grid>
             </m.section>
 
-            <m.section variants={itemVariants} className="space-y-6">
-              <h2 className="text-2xl font-bold">{t.about.experience.title}</h2>
-              <div className="space-y-6">
+            <m.section variants={itemVariants} style={{ marginTop: 48 }}>
+              <Heading as="h2" fontSize="2xl" fontWeight="bold" mb={6}>
+                {t.about.experience.title}
+              </Heading>
+              <Box>
                 {experiences.map((exp, index) => (
-                  <Card key={index}>
-                    <CardContent className="pt-6">
-                      <div className="mb-4 flex items-start justify-between">
-                        <div>
-                          <h3 className="text-lg font-semibold">{exp.title}</h3>
-                          <p className="text-muted-foreground">{exp.company}</p>
-                        </div>
-                        <span className="text-muted-foreground text-sm">{exp.period}</span>
-                      </div>
-                      <p className="text-muted-foreground mb-4">{exp.description}</p>
-                      <ul className="text-muted-foreground list-inside list-disc space-y-2">
-                        {exp.achievements.map((achievement, i) => (
-                          <li key={i}>{achievement}</li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                  <Box mb={6} key={index}>
+                    <Card>
+                      <CardContent>
+                        <Flex mb={4} align="flex-start" justify="space-between">
+                          <Box>
+                            <Heading as="h3" fontSize="lg" fontWeight="semibold">
+                              {exp.title}
+                            </Heading>
+                            <Text color="gray.500">{exp.company}</Text>
+                          </Box>
+                          <Text color="gray.500" fontSize="sm">{exp.period}</Text>
+                        </Flex>
+                        <Text color="gray.500" mb={4}>{exp.description}</Text>
+                        <Box as="ul" color="gray.500" pl={4} style={{ listStyleType: 'disc' }}>
+                          {exp.achievements.map((achievement, i) => (
+                            <Box as="li" key={i} mb={2}>
+                              {achievement}
+                            </Box>
+                          ))}
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Box>
                 ))}
-              </div>
+              </Box>
             </m.section>
           </m.div>
-        </div>
+        </Box>
       </m.div>
     </LazyMotion>
   );

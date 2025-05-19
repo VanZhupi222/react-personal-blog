@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { GradientParallaxSection } from '@/components/ui/ParallaxSection';
 import { Languages } from 'lucide-react';
+import { Box, Flex, Button, Text, Heading, Grid, GridItem, IconButton, VStack } from '@chakra-ui/react';
 
 export default function WelcomePage() {
   const { t, locale, setLocale } = useTranslations();
@@ -15,21 +16,35 @@ export default function WelcomePage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className="h-screen overflow-y-auto perspective-1000">
+      <Box h="100vh" overflowY="auto" perspective="1000px">
         {/* 语言切换按钮 */}
-        <m.button
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.5 }}
-          onClick={toggleLocale}
-          className="fixed top-4 right-4 z-50 p-2 rounded-full
-                   bg-white/10 backdrop-blur-sm border border-white/10
-                   text-white hover:bg-white/20 transition-colors
-                   flex items-center gap-2 text-sm"
         >
-          <Languages className="w-4 h-4" />
-          <span>{locale === 'en' ? '中文' : 'English'}</span>
-        </m.button>
+          <IconButton
+            position="fixed"
+            top={4}
+            right={4}
+            zIndex={50}
+            onClick={toggleLocale}
+            size="sm"
+            variant="ghost"
+            bg="whiteAlpha.100"
+            backdropFilter="blur(8px)"
+            borderWidth={1}
+            borderColor="whiteAlpha.100"
+            color="white"
+            _hover={{ bg: 'whiteAlpha.200' }}
+            aria-label="Switch language"
+          >
+            <Languages size={16} />
+            <Text ml={2} fontSize="sm">
+              {locale === 'en' ? '中文' : 'English'}
+            </Text>
+          </IconButton>
+        </m.div>
 
         {/* Hero Section - 深邃的午夜蓝到深紫渐变 */}
         <GradientParallaxSection
@@ -42,53 +57,94 @@ export default function WelcomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-sm space-y-6 text-center sm:max-w-none sm:space-y-8"
           >
-            <m.div
-              className="space-y-2"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
-            >
-              <h1 className="text-4xl leading-tight font-bold text-white drop-shadow-sm sm:text-6xl md:text-7xl">
-                {t.welcome.name}
-              </h1>
-              <h2 className="text-3xl font-bold text-white/90 drop-shadow-sm sm:text-5xl md:text-6xl">
-                {t.welcome.nickname}
-              </h2>
-            </m.div>
+            <Box maxW={{ base: 'sm', sm: 'none' }} mx="auto" textAlign="center">
+              <VStack gap={{ base: 6, sm: 8 }}>
+                <m.div
+                  initial={{ scale: 0.95 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                >
+                  <VStack gap={2}>
+                    <Heading
+                      as="h1"
+                      fontSize={{ base: '3xl', sm: '5xl', md: '6xl' }}
+                      fontWeight="bold"
+                      color="white"
+                      textShadow="sm"
+                      lineHeight="tight"
+                    >
+                      {t.welcome.name}
+                    </Heading>
+                    <Text
+                      fontSize={{ base: 'xl', sm: '2xl', md: '3xl' }}
+                      fontWeight="semibold"
+                      color="whiteAlpha.900"
+                      textShadow="sm"
+                      mt={2}
+                    >
+                      Zhupi222
+                    </Text>
+                    <Text
+                      fontSize={{ base: 'xl', sm: '2xl', md: '3xl' }}
+                      fontWeight="semibold"
+                      color="whiteAlpha.900"
+                      textShadow="sm"
+                      mt={1}
+                    >
+                      范世杰
+                    </Text>
+                  </VStack>
+                </m.div>
 
-            <m.p
-              className="flex flex-col items-center justify-center gap-2 text-lg text-white/80 sm:flex-row sm:gap-4 sm:text-xl"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              <span>{t.welcome.role.fullstack}</span>
-              <span className="hidden sm:inline text-white/60">|</span>
-              <span>{t.welcome.role.tech}</span>
-              <span className="hidden sm:inline text-white/60">|</span>
-              <span>{t.welcome.role.game}</span>
-            </m.p>
+                <m.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                  <Flex
+                    direction={{ base: 'column', sm: 'row' }}
+                    align="center"
+                    justify="center"
+                    gap={{ base: 2, sm: 4 }}
+                    fontSize={{ base: 'lg', sm: 'xl' }}
+                    color="whiteAlpha.800"
+                  >
+                    <Text>{t.welcome.role.fullstack}</Text>
+                    <Text display={{ base: 'none', sm: 'block' }} color="whiteAlpha.600">|</Text>
+                    <Text>{t.welcome.role.tech}</Text>
+                    <Text display={{ base: 'none', sm: 'block' }} color="whiteAlpha.600">|</Text>
+                    <Text>{t.welcome.role.game}</Text>
+                  </Flex>
+                </m.div>
 
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="pt-4"
-            >
-              <Link
-                href="/home"
-                className="inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium
-                         bg-white/10 text-white hover:bg-white/20
-                         shadow-md transition-all hover:scale-105
-                         focus-visible:outline-none focus-visible:ring-2
-                         focus-visible:ring-white focus-visible:ring-offset-2
-                         disabled:pointer-events-none disabled:opacity-50"
-              >
-                {t.welcome.enter}
-              </Link>
-            </m.div>
+                <m.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                >
+                  <Box pt={4}>
+                    <Link href="/home">
+                      <Button
+                        h={11}
+                        px={8}
+                        fontSize="sm"
+                        fontWeight="medium"
+                        bg="whiteAlpha.100"
+                        color="white"
+                        _hover={{ bg: 'whiteAlpha.200', transform: 'scale(1.05)' }}
+                        _focus={{ outline: 'none', ring: 2, ringColor: 'white', ringOffset: 2 }}
+                        _disabled={{ pointerEvents: 'none', opacity: 0.5 }}
+                        transition="all"
+                        boxShadow="md"
+                      >
+                        {t.welcome.enter}
+                      </Button>
+                    </Link>
+                  </Box>
+                </m.div>
+              </VStack>
+            </Box>
           </m.div>
         </GradientParallaxSection>
 
@@ -104,20 +160,34 @@ export default function WelcomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center"
           >
-            <h2 className="text-4xl font-bold mb-8 text-white drop-shadow-sm">{t.welcome.techStack.title}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {t.welcome.techStack.items.map((tech) => (
-                <div
-                  key={tech}
-                  className="bg-white/5 backdrop-blur-sm rounded-lg p-6 hover:scale-105
-                           transition-transform border border-white/10 hover:bg-white/10"
-                >
-                  <h3 className="text-xl font-semibold text-white">{tech}</h3>
-                </div>
-              ))}
-            </div>
+            <Box textAlign="center">
+              <Heading as="h2" fontSize="4xl" fontWeight="bold" mb={8} color="white" textShadow="sm">
+                {t.welcome.techStack.title}
+              </Heading>
+              <Grid
+                templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }}
+                gap={8}
+              >
+                {t.welcome.techStack.items.map((tech) => (
+                  <GridItem
+                    key={tech}
+                    bg="whiteAlpha.50"
+                    backdropFilter="blur(8px)"
+                    borderRadius="lg"
+                    p={6}
+                    _hover={{ transform: 'scale(1.05)', bg: 'whiteAlpha.100' }}
+                    transition="transform"
+                    borderWidth={1}
+                    borderColor="whiteAlpha.100"
+                  >
+                    <Heading as="h3" fontSize="xl" fontWeight="semibold" color="white">
+                      {tech}
+                    </Heading>
+                  </GridItem>
+                ))}
+              </Grid>
+            </Box>
           </m.div>
         </GradientParallaxSection>
 
@@ -133,21 +203,35 @@ export default function WelcomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center"
           >
-            <h2 className="text-4xl font-bold mb-8 text-white drop-shadow-sm">{t.welcome.projects.title}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {t.welcome.projects.items.map((project) => (
-                <div
-                  key={project.title}
-                  className="bg-white/5 backdrop-blur-sm rounded-lg p-8 hover:scale-105
-                           transition-transform border border-white/10 hover:bg-white/10"
-                >
-                  <h3 className="text-2xl font-semibold mb-4 text-white">{project.title}</h3>
-                  <p className="text-white/80">{project.description}</p>
-                </div>
-              ))}
-            </div>
+            <Box textAlign="center">
+              <Heading as="h2" fontSize="4xl" fontWeight="bold" mb={8} color="white" textShadow="sm">
+                {t.welcome.projects.title}
+              </Heading>
+              <Grid
+                templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
+                gap={8}
+              >
+                {t.welcome.projects.items.map((project) => (
+                  <GridItem
+                    key={project.title}
+                    bg="whiteAlpha.50"
+                    backdropFilter="blur(8px)"
+                    borderRadius="lg"
+                    p={8}
+                    _hover={{ transform: 'scale(1.05)', bg: 'whiteAlpha.100' }}
+                    transition="transform"
+                    borderWidth={1}
+                    borderColor="whiteAlpha.100"
+                  >
+                    <Heading as="h3" fontSize="2xl" fontWeight="semibold" mb={4} color="white">
+                      {project.title}
+                    </Heading>
+                    <Text color="whiteAlpha.800">{project.description}</Text>
+                  </GridItem>
+                ))}
+              </Grid>
+            </Box>
           </m.div>
         </GradientParallaxSection>
 
@@ -163,29 +247,39 @@ export default function WelcomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center"
           >
-            <h2 className="text-4xl font-bold mb-8 text-white drop-shadow-sm">{t.welcome.contact.title}</h2>
-            <div className="max-w-2xl mx-auto">
-              <p className="text-xl mb-8 text-white/80">
-                {t.welcome.contact.description}
-              </p>
-              <div className="flex justify-center space-x-6">
-                {t.welcome.contact.platforms.map((platform) => (
-                  <button
-                    key={platform}
-                    className="bg-white/5 backdrop-blur-sm rounded-lg px-6 py-3
-                             hover:scale-105 transition-transform border border-white/10
-                             text-white hover:bg-white/10"
-                  >
-                    {platform}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <Box textAlign="center">
+              <Heading as="h2" fontSize="4xl" fontWeight="bold" mb={8} color="white" textShadow="sm">
+                {t.welcome.contact.title}
+              </Heading>
+              <Box maxW="2xl" mx="auto">
+                <Text fontSize="xl" mb={8} color="whiteAlpha.800">
+                  {t.welcome.contact.description}
+                </Text>
+                <Flex justify="center" gap={6}>
+                  {t.welcome.contact.platforms.map((platform) => (
+                    <Button
+                      key={platform}
+                      bg="whiteAlpha.50"
+                      backdropFilter="blur(8px)"
+                      borderRadius="lg"
+                      px={6}
+                      py={3}
+                      _hover={{ transform: 'scale(1.05)', bg: 'whiteAlpha.100' }}
+                      transition="transform"
+                      borderWidth={1}
+                      borderColor="whiteAlpha.100"
+                      color="white"
+                    >
+                      {platform}
+                    </Button>
+                  ))}
+                </Flex>
+              </Box>
+            </Box>
           </m.div>
         </GradientParallaxSection>
-      </div>
+      </Box>
     </LazyMotion>
   );
 }

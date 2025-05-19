@@ -1,26 +1,49 @@
-import { cn } from '@/lib/utils';
+import { Box, Heading, Text, Flex } from '@chakra-ui/react';
 
 interface CardProps {
   children: React.ReactNode;
-  className?: string;
 }
 
-export function Card({ children, className }: CardProps) {
-  return <div className={cn('bg-card rounded-lg border p-6', className)}>{children}</div>;
+export function Card({ children }: CardProps) {
+  return (
+    <Box
+      bg="popover"
+      borderRadius="lg"
+      borderWidth={1}
+      borderColor="border"
+      p={6}
+      boxShadow="md"
+      className="dark:bg-popover dark:border-border"
+    >
+      {children}
+    </Box>
+  );
 }
 
-export function CardHeader({ children, className }: CardProps) {
-  return <div className={cn('mb-4 flex items-start justify-between', className)}>{children}</div>;
+export function CardHeader({ children }: CardProps) {
+  return (
+    <Flex mb={4} align="flex-start" justify="space-between">
+      {children}
+    </Flex>
+  );
 }
 
-export function CardTitle({ children, className }: CardProps) {
-  return <h3 className={cn('text-xl font-semibold', className)}>{children}</h3>;
+export function CardTitle({ children }: CardProps) {
+  return (
+    <Heading as="h3" size="md" fontWeight="semibold" className="text-foreground">
+      {children}
+    </Heading>
+  );
 }
 
-export function CardDescription({ children, className }: CardProps) {
-  return <p className={cn('text-muted-foreground', className)}>{children}</p>;
+export function CardDescription({ children }: CardProps) {
+  return (
+    <Text className="text-muted-foreground">
+      {children}
+    </Text>
+  );
 }
 
-export function CardContent({ children, className }: CardProps) {
-  return <div className={cn('', className)}>{children}</div>;
+export function CardContent({ children }: CardProps) {
+  return <Box>{children}</Box>;
 }

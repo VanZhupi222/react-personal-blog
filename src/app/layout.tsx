@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
+import { Inter } from 'next/font/google';
+import type { Metadata } from 'next';
+import { Provider } from '@/components/ui/provider';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Navbar } from '@/components/layout/Navbar';
 
@@ -15,12 +16,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
-          <div className="relative min-h-screen">
-            <Navbar />
-            <main>{children}</main>
-          </div>
-        </ThemeProvider>
+        <Provider>
+          <ThemeProvider>
+            <div className="relative min-h-screen">
+              <Navbar />
+              <main>{children}</main>
+            </div>
+          </ThemeProvider>
+        </Provider>
       </body>
     </html>
   );

@@ -5,6 +5,7 @@ import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import { LanguageSwitch } from './LanguageSwitch';
+import { Box, Flex, IconButton } from '@chakra-ui/react';
 
 const controlVariants = {
   hidden: { opacity: 0, y: -20 },
@@ -30,16 +31,33 @@ export function ControlPanel() {
       initial="hidden"
       animate="visible"
       variants={controlVariants}
-      className="bg-background/95 dark:bg-accent/30 border-border/40 dark:border-accent/30 fixed top-4 right-4 z-50 flex items-center gap-2 rounded-full border p-2 shadow-sm backdrop-blur"
     >
+      <Box
+        position="fixed"
+        top={4}
+        right={4}
+        zIndex={50}
+        bg="white"
+        borderRadius="full"
+        borderWidth={1}
+        borderColor="gray.200"
+        p={2}
+        boxShadow="sm"
+        backdropFilter="blur(8px)"
+    >
+        <Flex gap={2} align="center">
       <LanguageSwitch />
-      <button
+          <IconButton
+            aria-label="Toggle theme"
         onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        className="text-foreground hover:bg-accent dark:hover:bg-accent/50 inline-flex h-8 w-8 items-center justify-center rounded-full"
-        aria-label="Toggle theme"
+            size="sm"
+            variant="ghost"
+            _hover={{ bg: 'gray.100' }}
       >
         {mounted ? theme === 'light' ? <Moon size={18} /> : <Sun size={18} /> : null}
-      </button>
+          </IconButton>
+        </Flex>
+      </Box>
     </motion.div>
   );
 }

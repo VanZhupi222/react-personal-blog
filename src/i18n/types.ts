@@ -67,11 +67,13 @@ export interface Translations {
         ranking: string;
         completion: string;
         reputation: string;
+        error: string;
       };
       steam: {
         title: string;
         status: string;
         placeholder: string;
+        error: string;
       };
     };
   };

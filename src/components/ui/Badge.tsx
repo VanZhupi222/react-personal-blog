@@ -1,22 +1,28 @@
 import { Tag } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Box } from '@chakra-ui/react';
 
 interface BadgeProps {
   children: React.ReactNode;
   icon?: boolean;
-  className?: string;
 }
 
-export function Badge({ children, icon = false, className }: BadgeProps) {
+export function Badge({ children, icon = false }: BadgeProps) {
   return (
-    <span
-      className={cn(
-        'bg-secondary text-secondary-foreground inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm',
-        className
-      )}
+    <Box
+      as="span"
+      display="inline-flex"
+      alignItems="center"
+      gap={1}
+      background="#f3f4f6"
+      color="#1f2937"
+      px={3}
+      py={1}
+      borderRadius="md"
+      fontWeight={500}
+      fontSize="sm"
     >
-      {icon && <Tag className="h-3 w-3" />}
+      {icon && <Tag style={{ width: 14, height: 14 }} />}
       {children}
-    </span>
+    </Box>
   );
 }

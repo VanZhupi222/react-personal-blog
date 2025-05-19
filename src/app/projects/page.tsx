@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { Box, Flex, Grid, Heading, Text, Link as ChakraLink, IconButton } from '@chakra-ui/react';
 
 const projects = [
   {
@@ -66,69 +67,80 @@ export default function ProjectsPage() {
   return (
     <LazyMotion features={domAnimation}>
       <m.div className="flex min-h-[100dvh] items-center justify-center">
-        <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <Box mx="auto" w="full" maxW="7xl" px={4} py={24}>
           <m.div
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="space-y-8"
           >
             <m.div variants={itemVariants}>
               <PageHeader heading={t.projects.title} text={t.projects.description} />
             </m.div>
 
-            <div className="grid gap-8">
+            <Grid gap={8}>
               {projects.map((project, index) => (
                 <m.div key={index} variants={itemVariants}>
-                  <Card className="overflow-hidden">
+                  <Card>
                     <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle>{project.title}</CardTitle>
-                        <div className="flex gap-4">
-                          <a
-                            href={project.links.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            <GithubIcon className="h-5 w-5" />
-                          </a>
-                          <a
-                            href={project.links.live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            <ExternalLink className="h-5 w-5" />
-                          </a>
-                        </div>
-                      </div>
+                      <Flex align="center" justify="space-between">
+                        <CardTitle>
+                          {project.title}
+                        </CardTitle>
+                        <Flex gap={4}>
+                          <ChakraLink href={project.links.github} target="_blank" rel="noopener noreferrer">
+                            <IconButton
+                              aria-label="GitHub"
+                              variant="ghost"
+                              size="sm"
+                              color="gray.500"
+                              _hover={{ color: 'gray.800', bg: 'gray.100' }}
+                            >
+                              <GithubIcon size={20} />
+                            </IconButton>
+                          </ChakraLink>
+                          <ChakraLink href={project.links.live} target="_blank" rel="noopener noreferrer">
+                            <IconButton
+                              aria-label="Live Demo"
+                              variant="ghost"
+                              size="sm"
+                              color="gray.500"
+                              _hover={{ color: 'gray.800', bg: 'gray.100' }}
+                            >
+                              <ExternalLink size={20} />
+                            </IconButton>
+                          </ChakraLink>
+                        </Flex>
+                      </Flex>
                     </CardHeader>
 
                     <CardContent>
-                      <p className="text-muted-foreground mb-4">{project.description}</p>
+                      <Text color="gray.500" mb={4}>{project.description}</Text>
 
-                      <div className="mb-6 flex flex-wrap gap-2">
+                      <Flex mb={6} flexWrap="wrap" gap={2}>
                         {project.tags.map((tag) => (
                           <Badge key={tag}>{tag}</Badge>
                         ))}
-                      </div>
+                      </Flex>
 
-                      <div className="space-y-2">
-                        <h3 className="font-semibold">{t.projects.highlights}:</h3>
-                        <ul className="text-muted-foreground list-inside list-disc space-y-1">
+                      <Box mb={2}>
+                        <Heading as="h3" fontSize="md" fontWeight="semibold" mb={2}>
+                          {t.projects.highlights}:
+                        </Heading>
+                        <Box as="ul" color="gray.500" pl={4} style={{ listStyleType: 'disc' }}>
                           {project.highlights.map((highlight, i) => (
-                            <li key={i}>{highlight}</li>
+                            <Box as="li" key={i} mb={1}>
+                              {highlight}
+                            </Box>
                           ))}
-                        </ul>
-                      </div>
+                        </Box>
+                      </Box>
                     </CardContent>
                   </Card>
                 </m.div>
               ))}
-            </div>
+            </Grid>
           </m.div>
-        </div>
+        </Box>
       </m.div>
     </LazyMotion>
   );

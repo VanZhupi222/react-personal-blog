@@ -75,11 +75,13 @@ const en: Translations = {
         ranking: 'Ranking',
         completion: 'Completion',
         reputation: 'Reputation',
+        error: 'Unable to load LeetCode data. Please try again later.',
       },
       steam: {
         title: 'Steam Achievements',
         status: 'Coming Soon',
         placeholder: 'Steam achievements will be displayed here',
+        error: 'Unable to load Steam data. Please try again later.',
       },
     },
   },

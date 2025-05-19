@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { Box, Flex, Grid, Heading, Text, Link as ChakraLink } from '@chakra-ui/react';
 
 const posts = [
   {
@@ -61,53 +62,57 @@ export default function BlogPage() {
   return (
     <LazyMotion features={domAnimation}>
       <m.div
-        className="flex min-h-[100dvh] items-center justify-center"
+        style={{ display: 'flex', minHeight: '100dvh', alignItems: 'center', justifyContent: 'center' }}
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <Box mx="auto" w="full" maxW="7xl" px={4} py={24}>
           <m.div variants={itemVariants}>
             <PageHeader heading={t.blog.title} text={t.blog.description} />
           </m.div>
 
-          <m.div className="mt-12 grid gap-6" variants={containerVariants}>
-            {posts.map((post, index) => (
-              <m.div key={index} variants={itemVariants}>
-                <Card className="group hover:border-primary transition-colors">
-                  <CardHeader>
-                    <CardTitle className="group-hover:text-primary transition-colors">
-                      <a href={`/blog/${post.slug}`}>{post.title}</a>
-                    </CardTitle>
-                  </CardHeader>
+          <m.div style={{ marginTop: 48 }} variants={containerVariants}>
+            <Grid gap={6}>
+              {posts.map((post, index) => (
+                <m.div key={index} variants={itemVariants}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>
+                        <ChakraLink href={`/blog/${post.slug}`} fontWeight="bold" fontSize="xl" _hover={{ color: 'blue.600' }}>
+                          {post.title}
+                        </ChakraLink>
+                      </CardTitle>
+                    </CardHeader>
 
-                  <div className="text-muted-foreground mb-4 flex items-center gap-4 px-6 text-sm">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {post.date}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {post.readTime}
-                    </span>
-                  </div>
+                    <Flex color="gray.500" mb={4} align="center" gap={4} px={6} fontSize="sm">
+                      <Flex align="center" gap={1}>
+                        <Calendar size={16} />
+                        <span>{post.date}</span>
+                      </Flex>
+                      <Flex align="center" gap={1}>
+                        <Clock size={16} />
+                        <span>{post.readTime}</span>
+                      </Flex>
+                    </Flex>
 
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4">{post.description}</p>
+                    <CardContent>
+                      <Text color="gray.500" mb={4}>{post.description}</Text>
 
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.map((tag) => (
-                        <Badge key={tag} icon>
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </m.div>
-            ))}
+                      <Flex flexWrap="wrap" gap={2}>
+                        {post.tags.map((tag) => (
+                          <Badge key={tag} icon>
+                            {tag}
+                          </Badge>
+                        ))}
+                      </Flex>
+                    </CardContent>
+                  </Card>
+                </m.div>
+              ))}
+            </Grid>
           </m.div>
-        </div>
+        </Box>
       </m.div>
     </LazyMotion>
   );

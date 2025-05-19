@@ -1,46 +1,45 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { Flex, Heading, Text, Button } from '@chakra-ui/react';
 
 export default function NotFound() {
   const { t } = useTranslations();
 
   return (
-    <div className="bg-background flex min-h-screen items-center justify-center">
-      <div className="space-y-8 px-4 text-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-4"
+    <Flex minH="100vh" direction="column" align="center" justify="center" bg="gray.50" px={4}>
+      <Heading
+        fontSize={{ base: '7xl', md: '9xl' }}
+        fontWeight="extrabold"
+        color="blue.500"
+        mb={2}
+        letterSpacing="tight"
+        lineHeight="1"
+      >
+        404
+      </Heading>
+      <Text fontSize={{ base: 'xl', md: '2xl' }} color="gray.700" fontWeight="semibold" mb={10} mt={2}>
+        {t.notFound.description}
+      </Text>
+      <Link href="/">
+        <Button
+          size="lg"
+          colorScheme="blue"
+          borderRadius="full"
+          px={8}
+          py={6}
+          boxShadow="lg"
+          fontWeight="bold"
+          fontSize="lg"
+          _hover={{ transform: 'scale(1.05)', boxShadow: '2xl' }}
+          transition="all 0.2s"
         >
-          <h1 className="text-primary text-9xl font-bold">{t.notFound.title}</h1>
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <h2 className="text-foreground text-2xl font-semibold">{t.notFound.description}</h2>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <Link
-            href="/"
-            className="text-primary-foreground bg-primary inline-flex items-center rounded-lg px-6 py-3 text-base font-medium transition-opacity hover:opacity-90"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t.notFound.backHome}
-          </Link>
-        </motion.div>
-      </div>
-    </div>
+          <ArrowLeft style={{ marginRight: 8, width: 20, height: 20 }} />
+          {t.notFound.backHome}
+        </Button>
+      </Link>
+    </Flex>
   );
 }

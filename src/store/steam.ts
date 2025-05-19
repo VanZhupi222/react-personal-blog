@@ -8,6 +8,7 @@ interface SteamState {
   recentGames: ParsedGame[];
   ownedGames: ParsedGame[];
   ownedGamesLoading: boolean;
+  error: string | null;
   achievements: {
     [appid: string]: {
       total: number;
@@ -25,10 +26,11 @@ export const useSteamStore = create<SteamState>((set) => ({
   recentGames: [],
   ownedGames: [],
   ownedGamesLoading: false,
+  error: null,
   achievements: {},
   totalPlaytime: 0,
   fetchOwnedGames: async () => {
-    set({ ownedGamesLoading: true });
+    set({ ownedGamesLoading: true, error: null });
     try {
       const stats = await request.get('/api/steam/stats') as SteamStats;
       const ownedGames = stats.ownedGames.map((game: SteamGameStats) => ({
@@ -52,10 +54,14 @@ export const useSteamStore = create<SteamState>((set) => ({
         achievements: stats.achievements || {},
         totalPlaytime,
         ownedGamesLoading: false,
+        error: null,
       });
     } catch (error) {
       console.error('Failed to fetch Steam games:', error);
-      set({ ownedGamesLoading: false });
+      set({
+        ownedGamesLoading: false,
+        error: 'Failed to load Steam data. Please try again later.'
+      });
     }
   },
 }));

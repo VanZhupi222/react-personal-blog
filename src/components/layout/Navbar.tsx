@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes';
 import { motion } from 'framer-motion';
 import { LanguageSwitch } from '@/components/features/ControlPanel/LanguageSwitch';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { Box, Flex, Button, IconButton, VStack, Text, Heading } from '@chakra-ui/react';
 
 const languages = [
   { code: 'en', name: 'English' },
@@ -31,66 +32,97 @@ export function Navbar() {
   }
 
   return (
-    <nav className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
-      <div className="container flex h-14 items-center px-6 pr-1">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center">
-            <span className="font-bold">Zhupi222</span>
+    <Box
+      as="nav"
+      position="sticky"
+      top={0}
+      zIndex={50}
+      w="full"
+      borderBottomWidth={1}
+      borderColor="border"
+      bg="background"
+      backdropFilter="blur(8px)"
+      className="dark:bg-background dark:border-border"
+    >
+      <Flex
+        h={14}
+        align="center"
+        px={6}
+        pr={1}
+        maxW="container.xl"
+        mx="auto"
+      >
+        <Flex align="center" gap={8}>
+          <Link href="/">
+            <Heading as="span" size="md" fontWeight="bold" className="text-foreground">
+              Zhupi222
+            </Heading>
           </Link>
-          <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
-            <Link
-              href="/home"
-              className="hover:text-foreground/80 text-foreground/60 transition-colors"
-            >
-              {t.home.title}
+          <Flex
+            display={{ base: 'none', md: 'flex' }}
+            align="center"
+            gap={6}
+            fontSize="sm"
+            fontWeight="medium"
+          >
+            <Link href="/home">
+              <Text className="text-muted-foreground hover:text-foreground">
+                {t.home.title}
+              </Text>
             </Link>
-            <Link
-              href="/about"
-              className="hover:text-foreground/80 text-foreground/60 transition-colors"
-            >
-              {t.about.title}
+            <Link href="/about">
+              <Text className="text-muted-foreground hover:text-foreground">
+                {t.about.title}
+              </Text>
             </Link>
-            <Link
-              href="/projects"
-              className="hover:text-foreground/80 text-foreground/60 transition-colors"
-            >
-              {t.projects.title}
+            <Link href="/projects">
+              <Text className="text-muted-foreground hover:text-foreground">
+                {t.projects.title}
+              </Text>
             </Link>
-            <Link
-              href="/blog"
-              className="hover:text-foreground/80 text-foreground/60 transition-colors"
-            >
-              {t.blog.title}
+            <Link href="/blog">
+              <Text className="text-muted-foreground hover:text-foreground">
+                {t.blog.title}
+              </Text>
             </Link>
-            <Link
-              href="/contact"
-              className="hover:text-foreground/80 text-foreground/60 transition-colors"
-            >
-              {t.contact.title}
+            <Link href="/contact">
+              <Text className="text-muted-foreground hover:text-foreground">
+                {t.contact.title}
+              </Text>
             </Link>
-          </nav>
-        </div>
-        <div className="flex flex-1 items-center justify-end">
+          </Flex>
+        </Flex>
+        <Flex flex={1} align="center" justify="flex-end">
           {/* Desktop controls */}
-          <nav className="hidden items-center space-x-2 md:flex">
+          <Flex
+            display={{ base: 'none', md: 'flex' }}
+            align="center"
+            gap={2}
+          >
             <LanguageSwitch />
-            <button
-              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-              className="text-foreground hover:bg-accent inline-flex items-center justify-center rounded-md p-2.5"
+            <IconButton
               aria-label="Toggle theme"
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              size="sm"
+              variant="ghost"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent"
             >
               {mounted ? theme === 'light' ? <Moon size={20} /> : <Sun size={20} /> : null}
-            </button>
-          </nav>
+            </IconButton>
+          </Flex>
           {/* Mobile menu button */}
-          <button
-            className="text-foreground inline-flex items-center justify-center rounded-md p-2.5 md:hidden"
+          <IconButton
+            display={{ base: 'flex', md: 'none' }}
+            aria-label="Toggle menu"
             onClick={() => setIsOpen(!isOpen)}
+            size="sm"
+            variant="ghost"
+            className="text-muted-foreground hover:text-foreground hover:bg-accent"
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </div>
+          </IconButton>
+        </Flex>
+      </Flex>
 
       {/* Mobile menu */}
       {isOpen && (
@@ -98,100 +130,108 @@ export function Navbar() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-t backdrop-blur md:hidden"
         >
-          <div className="container py-4">
-            <nav className="flex flex-col space-y-4 px-6">
-              <Link
-                href="/home"
-                className="hover:text-foreground/80 text-foreground/60 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {t.home.title}
-              </Link>
-              <Link
-                href="/about"
-                className="hover:text-foreground/80 text-foreground/60 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {t.about.title}
-              </Link>
-              <Link
-                href="/projects"
-                className="hover:text-foreground/80 text-foreground/60 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {t.projects.title}
-              </Link>
-              <Link
-                href="/blog"
-                className="hover:text-foreground/80 text-foreground/60 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {t.blog.title}
-              </Link>
-              <Link
-                href="/contact"
-                className="hover:text-foreground/80 text-foreground/60 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {t.contact.title}
-              </Link>
-              <div className="space-y-4 border-t pt-4">
-                <div>
-                  <div className="text-muted-foreground/80 mb-2 px-2 text-sm font-medium">
-                    Language
-                  </div>
-                  <div className="space-y-1">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.code}
+          <Box
+            display={{ base: 'block', md: 'none' }}
+            borderTopWidth={1}
+            borderColor="border"
+            bg="background"
+            backdropFilter="blur(8px)"
+            className="dark:bg-background dark:border-border"
+          >
+            <Box py={4} maxW="container.xl" mx="auto">
+              <VStack align="stretch" gap={4} px={6}>
+                <Link href="/home" onClick={() => setIsOpen(false)}>
+                  <Text className="text-muted-foreground hover:text-foreground">
+                    {t.home.title}
+                  </Text>
+                </Link>
+                <Link href="/about" onClick={() => setIsOpen(false)}>
+                  <Text className="text-muted-foreground hover:text-foreground">
+                    {t.about.title}
+                  </Text>
+                </Link>
+                <Link href="/projects" onClick={() => setIsOpen(false)}>
+                  <Text className="text-muted-foreground hover:text-foreground">
+                    {t.projects.title}
+                  </Text>
+                </Link>
+                <Link href="/blog" onClick={() => setIsOpen(false)}>
+                  <Text className="text-muted-foreground hover:text-foreground">
+                    {t.blog.title}
+                  </Text>
+                </Link>
+                <Link href="/contact" onClick={() => setIsOpen(false)}>
+                  <Text className="text-muted-foreground hover:text-foreground">
+                    {t.contact.title}
+                  </Text>
+                </Link>
+                <Box borderTopWidth={1} borderColor="border" pt={4} className="dark:border-border">
+                  <VStack align="stretch" gap={4}>
+                    <Box>
+                      <Text fontSize="sm" fontWeight="medium" className="text-muted-foreground" mb={2} px={2}>
+                        Language
+                      </Text>
+                      <VStack align="stretch" gap={1}>
+                        {languages.map((lang) => (
+                          <Button
+                            key={lang.code}
+                            onClick={() => {
+                              setLocale(lang.code);
+                              setIsOpen(false);
+                            }}
+                            variant="ghost"
+                            justifyContent="flex-start"
+                            px={2}
+                            py={2}
+                            className={`${
+                              locale === lang.code
+                                ? 'bg-accent text-accent-foreground'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                            }`}
+                          >
+                            {lang.name}
+                          </Button>
+                        ))}
+                      </VStack>
+                    </Box>
+                    <Box>
+                      <Text fontSize="sm" fontWeight="medium" className="text-muted-foreground" mb={2} px={2}>
+                        Theme
+                      </Text>
+                      <Button
                         onClick={() => {
-                          setLocale(lang.code);
+                          setTheme(theme === 'light' ? 'dark' : 'light');
                           setIsOpen(false);
                         }}
-                        className={`flex w-full items-center rounded-md px-2 py-2 transition-colors ${
-                          locale === lang.code
-                            ? 'bg-accent/80 text-accent-foreground/90'
-                            : 'hover:bg-accent/20 text-muted-foreground hover:text-foreground'
-                        }`}
+                        variant="ghost"
+                        justifyContent="flex-start"
+                        px={2}
+                        py={2}
+                        className="text-muted-foreground hover:text-foreground hover:bg-accent"
                       >
-                        {lang.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground/80 mb-2 px-2 text-sm font-medium">
-                    Theme
-                  </div>
-                  <button
-                    onClick={() => {
-                      setTheme(theme === 'light' ? 'dark' : 'light');
-                      setIsOpen(false);
-                    }}
-                    className="hover:bg-accent/20 text-muted-foreground hover:text-foreground flex w-full items-center space-x-2 rounded-md px-2 py-2 transition-colors"
-                  >
-                    {mounted ? (
-                      theme === 'light' ? (
-                        <>
-                          <Moon size={20} className="opacity-70" />
-                          <span>Dark Mode</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sun size={20} className="opacity-70" />
-                          <span>Light Mode</span>
-                        </>
-                      )
-                    ) : null}
-                  </button>
-                </div>
-              </div>
-            </nav>
-          </div>
+                        {mounted ? (
+                          theme === 'light' ? (
+                            <>
+                              <Moon size={20} opacity={0.7} />
+                              <Text ml={2}>Dark Mode</Text>
+                            </>
+                          ) : (
+                            <>
+                              <Sun size={20} opacity={0.7} />
+                              <Text ml={2}>Light Mode</Text>
+                            </>
+                          )
+                        ) : null}
+                      </Button>
+                    </Box>
+                  </VStack>
+                </Box>
+              </VStack>
+            </Box>
+          </Box>
         </motion.div>
       )}
-    </nav>
+    </Box>
   );
 }

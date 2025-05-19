@@ -36,6 +36,8 @@ export interface SteamProfile {
   avatarfull: string;
   personastate: number; // 0: Offline, 1: Online, 2: Busy, 3: Away, 4: Snooze, 5: Looking to trade, 6: Looking to play
   lastlogoff: number;
+  game_count?: number;
+  achievement_count?: number;
 }
 
 export interface SteamStats {
