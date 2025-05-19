@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import type { SteamGameStats, SteamProfile, SteamStats, SteamAchievement, SteamAchievementSchema } from '@/lib/steam/types';
 
 class SteamAPI {
@@ -10,7 +9,11 @@ class SteamAPI {
     const apiKey = process.env.STEAM_API_KEY;
     const steamId = process.env.STEAM_ID;
 
-    console.log('apiKey', apiKey);
+    console.log('Steam API Config:', {
+      apiKey: apiKey ? '***' + apiKey.slice(-4) : undefined,
+      steamId: steamId ? '***' + steamId.slice(-4) : undefined
+    });
+
     if (!apiKey) {
       throw new Error('Steam API key is not configured');
     }
@@ -25,11 +28,9 @@ class SteamAPI {
 
   private async fetchJson<T>(endpoint: string): Promise<T> {
     const response = await fetch(`${this.baseUrl}${endpoint}`);
-
     if (!response.ok) {
-      throw new Error(`Steam API error: ${response.status} ${response.statusText}`);
+      throw new Error(`Steam API error: ${response.statusText}`);
     }
-
     return response.json();
   }
 
@@ -40,13 +41,7 @@ class SteamAPI {
         players: SteamProfile[];
       };
     }>(endpoint);
-
-    const profile = data.response.players[0];
-    if (!profile) {
-      throw new Error('Steam profile not found');
-    }
-
-    return profile;
+    return data.response.players[0];
   }
 
   async getRecentGames(): Promise<SteamGameStats[]> {
@@ -57,7 +52,6 @@ class SteamAPI {
         games: SteamGameStats[];
       };
     }>(endpoint);
-
     return data.response.games || [];
   }
 
@@ -69,7 +63,6 @@ class SteamAPI {
         games: SteamGameStats[];
       };
     }>(endpoint);
-
     return data.response.games || [];
   }
 
@@ -123,52 +116,19 @@ class SteamAPI {
 
     const totalPlaytime = ownedGames.reduce((total, game) => total + game.playtime_forever, 0);
 
-    // 获取所有游戏的成就信息
+    // 只统计成就总数，不请求具体成就内容
     const achievements: SteamStats['achievements'] = {};
-
-    // 首先处理最近玩过的游戏
-    const recentGameIds = new Set(recentGames.map(game => game.appid));
-    await Promise.all(
-      recentGames.map(async (game) => {
-        try {
-          const [playerAchievements, gameSchema] = await Promise.all([
-            this.getPlayerAchievements(game.appid),
-            this.getGameSchema(game.appid),
-          ]);
-
-          if (gameSchema.length > 0) {  // 移除 playerAchievements.length > 0 的检查
-            const achieved = playerAchievements.filter(a => a.achieved === 1).length;
-            achievements[game.appid] = {
-              total: gameSchema.length,
-              achieved,
-              percentage: (achieved / gameSchema.length) * 100,
-              gameName: game.name,
-            };
-            game.achievements = playerAchievements;
-          }
-        } catch (error) {
-          console.warn(`Failed to process achievements for game ${game.appid}:`, error);
-        }
-      })
-    );
-
-    // 然后处理其他有游戏时间的游戏
     await Promise.all(
       ownedGames
-        .filter(game => game.playtime_forever > 0 && !recentGameIds.has(game.appid))
+        .filter(game => game.playtime_forever > 0)
         .map(async (game) => {
           try {
-            const [playerAchievements, gameSchema] = await Promise.all([
-              this.getPlayerAchievements(game.appid),
-              this.getGameSchema(game.appid),
-            ]);
-
-            if (gameSchema.length > 0) {  // 移除 playerAchievements.length > 0 的检查
-              const achieved = playerAchievements.filter(a => a.achieved === 1).length;
+            const gameSchema = await this.getGameSchema(game.appid);
+            if (gameSchema.length > 0) {
               achievements[game.appid] = {
                 total: gameSchema.length,
-                achieved,
-                percentage: (achieved / gameSchema.length) * 100,
+                achieved: 0, // 以后再做
+                percentage: 0, // 以后再做
                 gameName: game.name,
               };
             }
@@ -178,27 +138,15 @@ class SteamAPI {
         })
     );
 
-    // 确保至少返回一个空对象
     return {
       profile,
       recentGames,
       totalPlaytime,
-      achievements: Object.keys(achievements).length > 0 ? achievements : {},
+      achievements,
       ownedGames: ownedGames.filter(game => game.playtime_forever > 0),
     };
   }
 }
 
-export async function GET() {
-  try {
-    const steamAPI = new SteamAPI();
-    const stats = await steamAPI.getUserStats();
-    return NextResponse.json(stats);
-  } catch (error) {
-    console.error('Steam API Error:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
-}
+export const steamAPI = new SteamAPI();
+export const getOwnedGames = () => steamAPI.getOwnedGames();
