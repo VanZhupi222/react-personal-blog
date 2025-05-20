@@ -1,6 +1,9 @@
 import { Translations } from '../types';
 
 const en: Translations = {
+  common: {
+    refresh: 'Refresh',
+  },
   welcome: {
     name: 'Shijie Fan | 范世杰',
     nickname: 'Zhupi222',

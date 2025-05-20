@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { motion, useAnimation } from 'framer-motion';
-import { useRef } from 'react';
 
 interface FeatureCardProps {
   href: string;
@@ -28,12 +27,12 @@ export function FeatureCard({
         onMouseEnter={() => controls.start({ scale: 1.12 })}
         onMouseLeave={() => controls.start({ scale: 1 })}
       >
-        <Card className="hover:bg-accent/10 h-full transition-colors group">
+        <Card className="bg-card text-card-foreground border-border group h-full min-w-[362px] border transition-colors">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center space-y-4 text-center">
-              <Icon className="h-8 w-8" />
+              <Icon className="text-primary-foreground h-8 w-8" />
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold">{title}</h3>
+                <h3 className="text-primary-foreground text-xl font-semibold">{title}</h3>
                 <p className="text-muted-foreground">{description}</p>
                 <motion.p
                   className="text-foreground/80 text-sm font-medium"

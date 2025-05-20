@@ -17,10 +17,10 @@ export function LeetCodeCard() {
   }, [stats, loading, error]);
 
   return (
-    <Card>
+    <Card className="bg-card text-card-foreground border-border border shadow-lg">
       <CardContent className="pt-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-xl font-semibold">
+          <h2 className="text-primary-foreground flex items-center gap-2 text-2xl font-bold">
             <Trophy className="h-5 w-5" />
             {t.home.activity.leetcode.title}
           </h2>
@@ -36,7 +36,7 @@ export function LeetCodeCard() {
           <>
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <span className="text-foreground ml-auto text-2xl font-extrabold">
+                <span className="text-secondary ml-auto text-3xl font-extrabold">
                   {stats.totalSolved}
                 </span>
                 <span className="text-muted-foreground text-lg font-semibold">
@@ -45,10 +45,10 @@ export function LeetCodeCard() {
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-foreground font-medium">
+                  <span className="text-primary-foreground font-medium">
                     {t.home.activity.leetcode.easy}
                   </span>
-                  <span className="text-foreground ml-auto text-sm font-semibold">
+                  <span className="text-leetcode-easy ml-auto text-sm font-semibold">
                     {stats.easySolved} / {stats.totalEasy}
                   </span>
                 </div>
@@ -61,10 +61,10 @@ export function LeetCodeCard() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-foreground font-medium">
+                  <span className="text-primary-foreground font-medium">
                     {t.home.activity.leetcode.medium}
                   </span>
-                  <span className="text-foreground ml-auto text-sm font-semibold">
+                  <span className="text-leetcode-medium ml-auto text-sm font-semibold">
                     {stats.mediumSolved} / {stats.totalMedium}
                   </span>
                 </div>
@@ -77,10 +77,10 @@ export function LeetCodeCard() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-foreground font-medium">
+                  <span className="text-primary-foreground font-medium">
                     {t.home.activity.leetcode.hard}
                   </span>
-                  <span className="text-foreground ml-auto text-sm font-semibold">
+                  <span className="text-leetcode-hard ml-auto text-sm font-semibold">
                     {stats.hardSolved} / {stats.totalHard}
                   </span>
                 </div>
@@ -95,17 +95,17 @@ export function LeetCodeCard() {
               </div>
               <div className="mt-6 flex items-center justify-between text-xs font-semibold">
                 <div className="flex items-center gap-1">
-                  <Star className="text-leetcode-completion h-4 w-4" />
+                  <Star className="text-secondary h-4 w-4" />
                   <span className="text-muted-foreground">
                     {t.home.activity.leetcode.completion}
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Award className="text-leetcode-ranking h-4 w-4" />
+                  <Award className="text-secondary h-4 w-4" />
                   <span className="text-muted-foreground">{t.home.activity.leetcode.ranking}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Medal className="text-leetcode-reputation h-4 w-4" />
+                  <Medal className="text-secondary h-4 w-4" />
                   <span className="text-muted-foreground">
                     {t.home.activity.leetcode.reputation}
                   </span>

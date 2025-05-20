@@ -32,11 +32,11 @@ export function SteamCard() {
   };
 
   return (
-    <Card>
+    <Card className="bg-card text-card-foreground border-border border shadow-lg">
       <CardContent className="relative flex h-full min-h-[320px] flex-col pt-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-xl font-semibold">
-            <Gamepad className="h-5 w-5" />
+          <h2 className="text-primary-foreground flex items-center gap-2 text-2xl font-bold">
+            <Gamepad className="text-primary-foreground h-5 w-5" />
             {t.home.activity.steam.title}
           </h2>
           <RefreshButton onClick={fetchOwnedGames} isLoading={ownedGamesLoading} />
@@ -55,24 +55,34 @@ export function SteamCard() {
                 className="h-12 w-12 rounded-full"
               />
               <div>
-                <h3 className="font-semibold">{profile.personaname}</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-primary-foreground font-semibold">{profile.personaname}</h3>
+                <p
+                  className="text-sm"
+                  style={{
+                    color:
+                      profile.personastate === 1 ? 'var(--steam-online)' : 'var(--steam-offline)',
+                  }}
+                >
                   {profile.personastate === 1 ? 'Online' : 'Offline'}
                 </p>
               </div>
               <div className="ml-auto text-right">
                 <div className="text-muted-foreground flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="text-muted-foreground h-4 w-4" />
                   <span className="text-sm">Total Playtime</span>
                 </div>
-                <p className="font-semibold">{formatPlaytime(totalPlaytime)}</p>
+                <p className="text-primary-foreground font-semibold">
+                  {formatPlaytime(totalPlaytime)}
+                </p>
               </div>
             </div>
 
             {/* Recent Games Section */}
             {recentGames.length > 0 && (
               <div>
-                <h4 className="text-muted-foreground mb-4 text-sm font-medium">Recent Games</h4>
+                <h4 className="text-muted-foreground border-border mb-4 border-b pb-2 text-sm font-medium">
+                  Recent Games
+                </h4>
                 <div className="space-y-4">
                   {recentGames.map((game: ParsedGame) => (
                     <div
@@ -104,9 +114,9 @@ export function SteamCard() {
             <div className="mt-2 flex justify-center">
               <Link
                 href="/achievements"
-                className="bg-background text-muted-foreground hover:text-foreground flex items-center gap-1 rounded-full border px-4 py-2 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                className="text-secondary-foreground bg-secondary hover:bg-secondary/90 flex items-center gap-1 rounded-full border-0 px-4 py-2 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               >
-                <Trophy className="h-4 w-4" />
+                <Trophy className="text-secondary-foreground h-4 w-4" />
                 <span className="text-sm">{t.home.activity.steam.viewAchievements}</span>
               </Link>
             </div>

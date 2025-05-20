@@ -1,4 +1,7 @@
 export interface Translations {
+  common: {
+    refresh: string;
+  };
   welcome: {
     name: string;
     nickname: string;
