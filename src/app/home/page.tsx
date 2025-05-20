@@ -1,15 +1,11 @@
 'use client';
 
-import { Code, User, Briefcase, Trophy, Gamepad, Star, Award, Medal } from 'lucide-react';
+import { Code, User, Briefcase } from 'lucide-react';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { FeatureCard } from '@/components/features/FeatureCard';
-import { Card, CardContent } from '@/components/ui/Card';
 import { useTranslations } from '@/lib/hooks/useTranslations';
-import { useLeetCodeStore } from '@/store/leetcode';
 import React from 'react';
 import { SteamCard } from '@/components/home/SteamCard';
-import { RefreshButton } from '@/components/ui/RefreshButton';
-import { useSteamStore } from '@/store/steam';
 import { LeetCodeCard } from '@/components/home/LeetCodeCard/index';
 
 const features = [
@@ -50,13 +46,6 @@ const itemVariants = {
 
 export default function Home() {
   const { t } = useTranslations();
-  const { stats, loading, error, fetchStats } = useLeetCodeStore();
-  const { fetchOwnedGames, ownedGamesLoading } = useSteamStore();
-
-  React.useEffect(() => {
-    fetchStats();
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <LazyMotion features={domAnimation}>

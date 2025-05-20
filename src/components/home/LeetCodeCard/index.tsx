@@ -10,6 +10,12 @@ export function LeetCodeCard() {
   const { t } = useTranslations();
   const { stats, loading, error, fetchStats } = useLeetCodeStore();
 
+  React.useEffect(() => {
+    if (!stats && !loading && !error) {
+      fetchStats();
+    }
+  }, [stats, loading, error]);
+
   return (
     <Card>
       <CardContent className="pt-6">
