@@ -72,6 +72,7 @@ export interface Translations {
         title: string;
         status: string;
         placeholder: string;
+        viewAchievements: string;
       };
     };
   };

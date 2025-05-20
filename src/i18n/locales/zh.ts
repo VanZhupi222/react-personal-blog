@@ -80,6 +80,7 @@ const zh: Translations = {
         title: 'Steam 成就',
         status: '即将推出',
         placeholder: '这里将显示 Steam 成就信息',
+        viewAchievements: '查看成就',
       },
     },
   },

@@ -80,6 +80,7 @@ const en: Translations = {
         title: 'Steam Achievements',
         status: 'Coming Soon',
         placeholder: 'Steam achievements will be displayed here',
+        viewAchievements: 'View Achievements',
       },
     },
   },
