@@ -62,6 +62,7 @@
   --color-design-button-text: var(--design-button-text);
   --color-design-leetcode-card: var(--design-leetcode-card);
   --color-design-steam-card: var(--design-steam-card);
+  --color-welcome-gradient-foreground: var(--welcome-gradient-foreground);
 }
 
 @layer base {
@@ -109,6 +110,7 @@
     --design-button-text: #ffffff;
     --design-leetcode-card: linear-gradient(135deg, #9c1b8c 0%, #4a1b9c 100%);
     --design-steam-card: #1b2b9c;
+    --welcome-gradient-foreground: #18122b;
   }
 
   .dark {
@@ -167,6 +169,7 @@
     --design-button-text: #ffffff;
     --design-leetcode-card: linear-gradient(135deg, #9c1b8c 0%, #4a1b9c 100%);
     --design-steam-card: #1b2b9c;
+    --welcome-gradient-foreground: #fff;
   }
 }
 
@@ -176,12 +179,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-/* 在移动设备上禁用视差效果 */
-@media only screen and (max-width: 768px) {
-  .parallax {
-    background-attachment: scroll;
   }
 }

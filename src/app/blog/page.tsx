@@ -74,9 +74,9 @@ export default function BlogPage() {
           <m.div className="mt-12 grid gap-6" variants={containerVariants}>
             {posts.map((post, index) => (
               <m.div key={index} variants={itemVariants}>
-                <Card className="group hover:border-primary transition-colors">
+                <Card className="group hover:border-primary-hover transition-colors">
                   <CardHeader>
-                    <CardTitle className="group-hover:text-primary transition-colors">
+                    <CardTitle className="group-hover:text-primary-hover transition-colors hover:underline">
                       <a href={`/blog/${post.slug}`}>{post.title}</a>
                     </CardTitle>
                   </CardHeader>
