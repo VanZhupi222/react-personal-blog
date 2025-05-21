@@ -1,12 +1,12 @@
 import axios from 'axios';
-import type { TranslationResponse } from '@/lib/translations/types';
+import type { Translations } from '@/i18n/types';
 
 class TranslationsAPI {
-  private readonly baseURL = '/api/translations';
+  private readonly baseURL = '/api/i18n';
 
-  async fetchTranslations(locale: string): Promise<TranslationResponse> {
+  async fetchTranslations(locale: string): Promise<Translations> {
     try {
-      const { data } = await axios.get<TranslationResponse>(`${this.baseURL}/${locale}`);
+      const { data } = await axios.get<Translations>(`${this.baseURL}?lang=${locale}`);
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

@@ -5,6 +5,7 @@ import { RefreshButton } from '@/components/ui/RefreshButton';
 import { useLeetCodeStore } from '@/store/leetcode';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import React from 'react';
+import { LeetCodeCardSkeleton } from './Skeleton';
 
 export function LeetCodeCard() {
   const { t } = useTranslations();
@@ -16,6 +17,10 @@ export function LeetCodeCard() {
     }
   }, [stats, loading, error]);
 
+  if (loading) {
+    return <LeetCodeCardSkeleton />;
+  }
+
   return (
     <Card className="bg-card text-card-foreground border-border border shadow-lg">
       <CardContent className="pt-6">
@@ -26,11 +31,7 @@ export function LeetCodeCard() {
           </h2>
           <RefreshButton onClick={fetchStats} isLoading={loading} />
         </div>
-        {loading ? (
-          <div className="flex min-h-[200px] items-center justify-center">
-            <Loader size="lg" />
-          </div>
-        ) : error ? (
+        {error ? (
           <p className="text-red-500">{error}</p>
         ) : stats ? (
           <>

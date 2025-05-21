@@ -9,6 +9,7 @@ import { useTranslations } from '@/lib/hooks/useTranslations';
 import Link from 'next/link';
 import type { ParsedGame } from '@/lib/steam/parse';
 import { RefreshButton } from '@/components/ui/RefreshButton';
+import { SteamCardSkeleton } from './Skeleton';
 
 function formatPlaytime(minutes: number): string {
   const hours = Math.floor(minutes / 60);
@@ -31,6 +32,10 @@ export function SteamCard() {
     window.open(`https://steamcommunity.com/app/${appid}`, '_blank');
   };
 
+  if (ownedGamesLoading) {
+    return <SteamCardSkeleton />;
+  }
+
   return (
     <Card className="bg-card text-card-foreground border-border border shadow-lg">
       <CardContent className="relative flex h-full min-h-[320px] flex-col pt-6">
@@ -41,11 +46,7 @@ export function SteamCard() {
           </h2>
           <RefreshButton onClick={fetchOwnedGames} isLoading={ownedGamesLoading} />
         </div>
-        {ownedGamesLoading ? (
-          <div className="flex min-h-[200px] items-center justify-center">
-            <Loader size="lg" />
-          </div>
-        ) : profile ? (
+        {profile ? (
           <div className="flex flex-1 flex-col space-y-6">
             {/* Profile Section */}
             <div className="flex items-center gap-4">
