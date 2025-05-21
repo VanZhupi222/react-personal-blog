@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Navbar } from '@/components/layout/Navbar';
+import { ClientLayout } from '@/components/layout/ClientLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,10 +17,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
-          <div className="relative min-h-screen">
-            <Navbar />
-            <main>{children}</main>
-          </div>
+          <ClientLayout>
+            <div className="relative min-h-screen">
+              <Navbar />
+              <main>{children}</main>
+            </div>
+          </ClientLayout>
         </ThemeProvider>
       </body>
     </html>
