@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { useEffect } from 'react';
 import { useAboutStore } from '@/store/aboutStore';
-import { SkeletonAbout } from '@/components/SkeletonAbout';
+import { SkeletonAbout } from '@/components/skeleton/SkeletonAbout';
 import { SkillCard } from '@/components/features/SkillCard';
 import { Card } from '@/components/ui/Card';
 
