@@ -1,23 +1,23 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Translations } from '@/i18n/types';
+import { Translations, Locale } from '@/i18n/types';
 import { translationsAPI } from '@/api/translations';
 import en from '@/i18n/locales/en';
 import zh from '@/i18n/locales/zh';
 
 interface TranslationsStoreState {
-  locale: string;
+  locale: Locale;
   translations: Translations;
   initialized: boolean;
   loaded: Record<string, Translations | undefined>;
   loading: boolean;
-  setLocale: (locale: string) => void;
-  setLocaleWithFetch: (locale: string) => Promise<void>;
-  fetchRemoteTranslations: (locale: string) => Promise<void>;
-  initTranslations: (locale: string) => Promise<void>;
+  setLocale: (locale: Locale) => void;
+  setLocaleWithFetch: (locale: Locale) => Promise<void>;
+  fetchRemoteTranslations: (locale: Locale) => Promise<void>;
+  initTranslations: (locale: Locale) => Promise<void>;
 }
 
-const defaultTranslations: Record<string, Translations> = { en, zh };
+const defaultTranslations: Record<Locale, Translations> = { en, zh };
 
 export const useTranslationsStore = create<TranslationsStoreState>()(
   devtools((set, get) => ({
@@ -26,7 +26,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
     initialized: false,
     loaded: {},
     loading: false,
-    setLocale: (locale: string) => {
+    setLocale: (locale: Locale) => {
       localStorage.setItem('preferred_locale', locale);
       const loaded = get().loaded;
       set({
@@ -35,7 +35,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
         loading: false,
       });
     },
-    setLocaleWithFetch: async (locale: string) => {
+    setLocaleWithFetch: async (locale: Locale) => {
       const loaded = get().loaded;
       if (loaded[locale]) {
         set({
@@ -64,7 +64,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
         });
       }
     },
-    fetchRemoteTranslations: async (locale: string) => {
+    fetchRemoteTranslations: async (locale: Locale) => {
       try {
         const translations = await translationsAPI.fetchTranslations(locale);
         set({ translations });
@@ -72,7 +72,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
         console.warn('Failed to fetch remote translations:', error);
       }
     },
-    initTranslations: async (locale: string) => {
+    initTranslations: async (locale: Locale) => {
       const { initialized } = get();
       if (initialized) return;
       set({ initialized: true, loading: true });
