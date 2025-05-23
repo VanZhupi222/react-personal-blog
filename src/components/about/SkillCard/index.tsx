@@ -32,7 +32,7 @@ export function SkillCardList({ skills }: SkillCardListProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {Object.entries(skills)
-        .filter(([_, items]) => Array.isArray(items) && items.length > 0)
+        .filter(([, items]) => Array.isArray(items) && items.length > 0)
         .map(([category, items]) => (
           <SkillCard
             key={category}

@@ -11,7 +11,7 @@ interface AboutStore {
   fetchAbout: () => Promise<void>;
 }
 
-export const useAboutStore = create<AboutStore>((set, get) => ({
+export const useAboutStore = create<AboutStore>((set) => ({
   data: null,
   loading: false,
   error: null,
@@ -29,8 +29,8 @@ export const useAboutStore = create<AboutStore>((set, get) => ({
       const rawData = await res.json();
       const parsedData = parseAboutData(rawData);
       set({ data: parsedData, loading: false });
-    } catch (error: any) {
-      set({ error: error.message || 'Unknown error', loading: false });
+    } catch (error: unknown) {
+      set({ error: error instanceof Error ? error.message : 'Unknown error', loading: false });
     }
   },
 }));

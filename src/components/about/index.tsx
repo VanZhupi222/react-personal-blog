@@ -35,7 +35,7 @@ export function AboutContent() {
 
   useEffect(() => {
     fetchAbout();
-  }, []);
+  }, [fetchAbout]);
 
   return (
     <LazyMotion features={domAnimation}>

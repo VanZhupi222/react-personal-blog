@@ -4,7 +4,7 @@ import type { Translations } from '@/i18n/types';
 export interface TranslationDoc extends Document {
   en?: Translations;
   zh?: Translations;
-  [lang: string]: any;
+  [lang: string]: unknown;
 }
 
 const TranslationSchema = new mongoose.Schema({}, { collection: 'translations', strict: false });

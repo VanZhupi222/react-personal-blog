@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Moon, Sun } from 'lucide-react';
 import { motion } from 'framer-motion';
+import type { Translations, Locale } from '@/i18n/types';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -9,9 +10,9 @@ interface MobileMenuProps {
   theme: string | undefined;
   setTheme: (theme: string) => void;
   mounted: boolean;
-  t: any;
-  locale: string;
-  setLocale: (locale: string) => void;
+  t: Translations;
+  locale: Locale;
+  setLocale: (locale: Locale) => Promise<void>;
 }
 
 export function MobileMenu({
@@ -76,8 +77,8 @@ export function MobileMenu({
                 </div>
                 <div className="space-y-1">
                   {[
-                    { code: 'en', name: 'English' },
-                    { code: 'zh', name: '中文' },
+                    { code: 'en' as const, name: 'English' },
+                    { code: 'zh' as const, name: '中文' },
                   ].map((lang) => (
                     <button
                       key={lang.code}
