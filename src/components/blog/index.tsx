@@ -30,12 +30,12 @@ const itemVariants = {
 };
 
 export function BlogListPage() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const { blogs, loading, error, fetchBlogs } = useBlogStore();
 
   useEffect(() => {
-    if (blogs.length === 0) fetchBlogs();
-  }, [fetchBlogs, blogs.length]);
+    if ((blogs[locale]?.length ?? 0) === 0) fetchBlogs();
+  }, [fetchBlogs, blogs, locale]);
 
   return (
     <LazyMotion features={domAnimation}>
@@ -55,12 +55,12 @@ export function BlogListPage() {
           {error && <ErrorFunc onRetry={fetchBlogs} />}
           {!loading && !error && (
             <m.div className="mt-12 grid gap-6" variants={containerVariants}>
-              {blogs.map((blog, index) => (
+              {(blogs[locale] || []).map((blog, index) => (
                 <m.div key={index} variants={itemVariants}>
                   <Card className="group hover:border-primary-hover transition-colors">
                     <CardHeader>
                       <CardTitle className="group-hover:text-primary-hover transition-colors hover:underline">
-                        <a href={`/blog/${blog.slug}`}>{blog.title}</a>
+                        <a href={`/blog/${blog.slug}`}>{blog.title || 'No Title'}</a>
                       </CardTitle>
                     </CardHeader>
 
@@ -77,7 +77,6 @@ export function BlogListPage() {
 
                     <CardContent>
                       <p className="text-muted-foreground mb-4">{blog.description}</p>
-
                       <div className="flex flex-wrap gap-2">
                         {blog.tags.map((tag) => (
                           <Badge key={tag} icon>
