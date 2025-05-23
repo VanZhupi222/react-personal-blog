@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
-import type { SteamGameStats, SteamProfile, SteamStats, SteamAchievement, SteamAchievementSchema } from '@/lib/steam/types';
+import type {
+  SteamGameStats,
+  SteamProfile,
+  SteamStats,
+  SteamAchievement,
+  SteamAchievementSchema,
+} from '@/lib/steam/types';
 
 class SteamAPI {
   private readonly baseUrl = 'https://api.steampowered.com';
   private readonly apiKey: string;
   private readonly steamId: string;
+  private readonly timeout = 10000; // 10 seconds timeout
 
   constructor() {
     const apiKey = process.env.STEAM_API_KEY;
@@ -24,13 +31,30 @@ class SteamAPI {
   }
 
   private async fetchJson<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
-    if (!response.ok) {
-      throw new Error(`Steam API error: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Steam API error: ${response.status} ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw new Error(`Request timeout after ${this.timeout}ms`);
+        }
+        throw new Error(`Steam API request failed: ${error.message}`);
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
     }
-
-    return response.json();
   }
 
   async getPlayerProfile(): Promise<SteamProfile> {
@@ -87,9 +111,9 @@ class SteamAPI {
 
       // 确保返回的成就数组中包含游戏名称
       const achievements = data.playerstats.achievements || [];
-      return achievements.map(achievement => ({
+      return achievements.map((achievement) => ({
         ...achievement,
-        gameName: data.playerstats.gameName // 添加游戏名称
+        gameName: data.playerstats.gameName, // 添加游戏名称
       }));
     } catch (error) {
       console.warn(`Failed to fetch achievements for app ${appid}:`, error);
@@ -115,77 +139,66 @@ class SteamAPI {
   }
 
   async getUserStats(): Promise<SteamStats> {
-    const [profile, recentGames, ownedGames] = await Promise.all([
-      this.getPlayerProfile(),
-      this.getRecentGames(),
-      this.getOwnedGames(),
-    ]);
+    try {
+      // 首先获取基本信息
+      const [profile, recentGames, ownedGames] = await Promise.all([
+        this.getPlayerProfile(),
+        this.getRecentGames(),
+        this.getOwnedGames(),
+      ]);
 
-    const totalPlaytime = ownedGames.reduce((total, game) => total + game.playtime_forever, 0);
+      const totalPlaytime = ownedGames.reduce((total, game) => total + game.playtime_forever, 0);
+      const achievements: SteamStats['achievements'] = {};
 
-    // 获取所有游戏的成就信息
-    const achievements: SteamStats['achievements'] = {};
+      // 限制并发请求数量
+      const recentGameIds = new Set(recentGames.map((game) => game.appid));
+      const gamesToProcess = [
+        ...recentGames,
+        ...ownedGames.filter((game) => game.playtime_forever > 0 && !recentGameIds.has(game.appid)),
+      ];
 
-    // 首先处理最近玩过的游戏
-    const recentGameIds = new Set(recentGames.map(game => game.appid));
-    await Promise.all(
-      recentGames.map(async (game) => {
-        try {
-          const [playerAchievements, gameSchema] = await Promise.all([
-            this.getPlayerAchievements(game.appid),
-            this.getGameSchema(game.appid),
-          ]);
+      // 每次处理3个游戏
+      const batchSize = 3;
+      for (let i = 0; i < gamesToProcess.length; i += batchSize) {
+        const batch = gamesToProcess.slice(i, i + batchSize);
+        await Promise.all(
+          batch.map(async (game) => {
+            try {
+              const [playerAchievements, gameSchema] = await Promise.all([
+                this.getPlayerAchievements(game.appid),
+                this.getGameSchema(game.appid),
+              ]);
 
-          if (gameSchema.length > 0) {  // 移除 playerAchievements.length > 0 的检查
-            const achieved = playerAchievements.filter(a => a.achieved === 1).length;
-            achievements[game.appid] = {
-              total: gameSchema.length,
-              achieved,
-              percentage: (achieved / gameSchema.length) * 100,
-              gameName: game.name,
-            };
-            game.achievements = playerAchievements;
-          }
-        } catch (error) {
-          console.warn(`Failed to process achievements for game ${game.appid}:`, error);
-        }
-      })
-    );
-
-    // 然后处理其他有游戏时间的游戏
-    await Promise.all(
-      ownedGames
-        .filter(game => game.playtime_forever > 0 && !recentGameIds.has(game.appid))
-        .map(async (game) => {
-          try {
-            const [playerAchievements, gameSchema] = await Promise.all([
-              this.getPlayerAchievements(game.appid),
-              this.getGameSchema(game.appid),
-            ]);
-
-            if (gameSchema.length > 0) {  // 移除 playerAchievements.length > 0 的检查
-              const achieved = playerAchievements.filter(a => a.achieved === 1).length;
-              achievements[game.appid] = {
-                total: gameSchema.length,
-                achieved,
-                percentage: (achieved / gameSchema.length) * 100,
-                gameName: game.name,
-              };
+              if (gameSchema.length > 0) {
+                const achieved = playerAchievements.filter((a) => a.achieved === 1).length;
+                achievements[game.appid] = {
+                  total: gameSchema.length,
+                  achieved,
+                  percentage: (achieved / gameSchema.length) * 100,
+                  gameName: game.name,
+                };
+                if (recentGameIds.has(game.appid)) {
+                  game.achievements = playerAchievements;
+                }
+              }
+            } catch (error) {
+              console.warn(`Failed to process achievements for game ${game.appid}:`, error);
             }
-          } catch (error) {
-            console.warn(`Failed to process achievements for game ${game.appid}:`, error);
-          }
-        })
-    );
+          })
+        );
+      }
 
-    // 确保至少返回一个空对象
-    return {
-      profile,
-      recentGames,
-      totalPlaytime,
-      achievements: Object.keys(achievements).length > 0 ? achievements : {},
-      ownedGames: ownedGames.filter(game => game.playtime_forever > 0),
-    };
+      return {
+        profile,
+        recentGames,
+        totalPlaytime,
+        achievements: Object.keys(achievements).length > 0 ? achievements : {},
+        ownedGames: ownedGames.filter((game) => game.playtime_forever > 0),
+      };
+    } catch (error) {
+      console.error('Failed to get user stats:', error);
+      throw error;
+    }
   }
 }
 
@@ -197,7 +210,10 @@ export async function GET() {
   } catch (error) {
     console.error('Steam API Error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString(),
+      },
       { status: 500 }
     );
   }
