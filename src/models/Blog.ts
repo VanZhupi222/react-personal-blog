@@ -8,6 +8,8 @@ const BlogSchema = new mongoose.Schema(
     readTime: String,
     tags: [String],
     slug: String,
+    language: String,
+    content: String,
   },
   { collection: 'blogs' }
 );

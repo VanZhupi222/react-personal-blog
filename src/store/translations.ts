@@ -11,9 +11,9 @@ interface TranslationsStoreState {
   initialized: boolean;
   loaded: Record<string, Translations | undefined>;
   loading: boolean;
+  error: string | null;
   setLocale: (locale: Locale) => void;
   setLocaleWithFetch: (locale: Locale) => Promise<void>;
-  fetchRemoteTranslations: (locale: Locale) => Promise<void>;
   initTranslations: (locale: Locale) => Promise<void>;
 }
 
@@ -46,7 +46,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
         localStorage.setItem('preferred_locale', locale);
         return;
       }
-      set({ loading: true });
+      set({ error: null, loading: true });
       try {
         const translations = await translationsAPI.fetchTranslations(locale);
         set((state) => ({
@@ -61,21 +61,14 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
           locale,
           translations: defaultTranslations[locale] || defaultTranslations.en,
           loading: false,
+          error: error instanceof Error ? error.message : 'Failed to fetch translations',
         });
-      }
-    },
-    fetchRemoteTranslations: async (locale: Locale) => {
-      try {
-        const translations = await translationsAPI.fetchTranslations(locale);
-        set({ translations });
-      } catch (error) {
-        console.warn('Failed to fetch remote translations:', error);
       }
     },
     initTranslations: async (locale: Locale) => {
       const { initialized } = get();
       if (initialized) return;
-      set({ initialized: true, loading: true });
+      set({ error: null, loading: true });
       try {
         const translations = await translationsAPI.fetchTranslations(locale);
         set((state) => ({
@@ -83,12 +76,14 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
           locale,
           loaded: { ...state.loaded, [locale]: translations },
           loading: false,
+          initialized: true,
         }));
       } catch (error) {
         set({
           translations: defaultTranslations[locale] || defaultTranslations.en,
           locale,
           loading: false,
+          error: error instanceof Error ? error.message : 'Failed to fetch translations',
         });
       }
     },

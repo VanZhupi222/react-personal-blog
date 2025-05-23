@@ -25,7 +25,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       const grouped = parseProjects(res);
       set({ projects: grouped, loading: false, initialized: true });
     } catch (err: any) {
-      set({ error: err.message || 'Failed to fetch', loading: false, initialized: true });
+      set({ error: err.message || 'Failed to fetch', loading: false });
     }
   },
 }));
