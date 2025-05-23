@@ -3,6 +3,11 @@ export type Locale = 'en' | 'zh';
 export interface Translations {
   common: {
     refresh: string;
+    error: {
+      title: string;
+      message: string;
+      retry: string;
+    };
   };
   welcome: {
     name: string;
@@ -78,6 +83,10 @@ export interface Translations {
         status: string;
         placeholder: string;
         viewAchievements: string;
+        totalPlaytime: string;
+        recentGames: string;
+        online: string;
+        offline: string;
       };
     };
   };

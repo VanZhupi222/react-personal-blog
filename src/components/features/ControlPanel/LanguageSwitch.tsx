@@ -9,8 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Locale } from '@/i18n/types';
 
-const languages = [
+const languages: { code: Locale; name: string }[] = [
   { code: 'en', name: 'English' },
   { code: 'zh', name: '中文' },
 ];

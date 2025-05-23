@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import { ErrorFunc } from '@/components/features/Error';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -51,7 +52,7 @@ export function BlogListPage() {
           </m.div>
           {/* loading/error/blogs 渲染在下方 */}
           {loading && <SkeletonBlogList />}
-          {error && <div className="text-red-500">{error}</div>}
+          {error && <ErrorFunc onRetry={fetchBlogs} />}
           {!loading && !error && (
             <m.div className="mt-12 grid gap-6" variants={containerVariants}>
               {blogs.map((blog, index) => (

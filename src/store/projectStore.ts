@@ -1,17 +1,11 @@
 import { create } from 'zustand';
 import { request } from '@/api/axios';
-
-interface Project {
-  _id: string;
-  title: string;
-  description: string;
-  tags: string[];
-  slug: string;
-  highlights: string[];
-}
+import { Project } from '@/lib/project/types';
+import { Locale } from '@/i18n/types';
+import { parseProjects } from '@/lib/project/parser';
 
 interface ProjectState {
-  projects: Project[];
+  projects: Record<Locale, Project[]>;
   loading: boolean;
   error: string | null;
   initialized: boolean;
@@ -19,7 +13,7 @@ interface ProjectState {
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
-  projects: [],
+  projects: { en: [], zh: [] },
   loading: false,
   error: null,
   initialized: false,
@@ -28,7 +22,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await request.get<Project[]>('/api/projects');
-      set({ projects: res, loading: false, initialized: true });
+      const grouped = parseProjects(res);
+      set({ projects: grouped, loading: false, initialized: true });
     } catch (err: any) {
       set({ error: err.message || 'Failed to fetch', loading: false, initialized: true });
     }

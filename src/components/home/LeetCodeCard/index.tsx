@@ -6,6 +6,7 @@ import { useLeetCodeStore } from '@/store/leetcode';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import React from 'react';
 import { LeetCodeCardSkeleton } from './Skeleton';
+import { ErrorFunc } from '@/components/features/Error';
 
 export function LeetCodeCard() {
   const { t } = useTranslations();
@@ -21,6 +22,10 @@ export function LeetCodeCard() {
     return <LeetCodeCardSkeleton />;
   }
 
+  if (error) {
+    return <ErrorFunc onRetry={fetchStats} />;
+  }
+
   return (
     <Card className="bg-card text-card-foreground border-border border shadow-lg">
       <CardContent className="pt-6">
@@ -31,9 +36,7 @@ export function LeetCodeCard() {
           </h2>
           <RefreshButton onClick={fetchStats} isLoading={loading} />
         </div>
-        {error ? (
-          <p className="text-red-500">{error}</p>
-        ) : stats ? (
+        {stats ? (
           <>
             <div>
               <div className="mb-4 flex items-center gap-2">
