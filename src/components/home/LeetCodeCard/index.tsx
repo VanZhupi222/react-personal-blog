@@ -22,10 +22,6 @@ export function LeetCodeCard() {
     return <LeetCodeCardSkeleton />;
   }
 
-  if (error) {
-    return <ErrorFunc onRetry={fetchStats} />;
-  }
-
   return (
     <Card className="bg-card text-card-foreground border-border border shadow-lg">
       <CardContent className="pt-6">
@@ -36,7 +32,9 @@ export function LeetCodeCard() {
           </h2>
           <RefreshButton onClick={fetchStats} isLoading={loading} />
         </div>
-        {stats ? (
+        {error ? (
+          <ErrorFunc onRetry={fetchStats} />
+        ) : stats ? (
           <>
             <div>
               <div className="mb-4 flex items-center gap-2">

@@ -125,6 +125,9 @@ const en: Translations = {
   },
   contact: {
     title: 'Contact',
+    github: 'GitHub',
+    emails: 'Email',
+    socials: 'Socials',
   },
   notFound: {
     title: '404',

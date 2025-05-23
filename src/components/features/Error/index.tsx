@@ -30,7 +30,7 @@ export function ErrorFunc({ onRetry }: ErrorProps) {
       {onRetry && (
         <button
           onClick={onRetry}
-          className="bg-primary text-primary-foreground hover:bg-primary-hover flex items-center gap-2 rounded px-4 py-2 font-semibold shadow transition-colors"
+          className="bg-primary text-primary-foreground hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded px-4 py-2 font-semibold shadow transition-colors"
         >
           <RefreshCw className="animate-spin-slow" size={20} /> {errorTranslations.retry}
         </button>
