@@ -118,6 +118,9 @@ export interface Translations {
   };
   contact: {
     title: string;
+    github: string;
+    emails: string;
+    socials: string;
   };
   notFound: {
     title: string;

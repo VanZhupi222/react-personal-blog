@@ -124,7 +124,10 @@ const zh: Translations = {
     readMore: '阅读更多',
   },
   contact: {
-    title: '联系我',
+    title: '联系',
+    github: 'GitHub',
+    emails: '邮箱',
+    socials: '社交网站',
   },
   notFound: {
     title: '404',
