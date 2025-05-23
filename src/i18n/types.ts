@@ -124,4 +124,27 @@ export interface Translations {
     description: string;
     backHome: string;
   };
+  achievements: {
+    title: string;
+    stats: {
+      totalGames: {
+        title: string;
+        subtitle: string;
+      };
+      totalPlaytime: {
+        title: string;
+        subtitle: string;
+      };
+      achievements: {
+        title: string;
+        subtitle: string;
+      };
+    };
+    gameCard: {
+      achievements: string;
+    };
+    pagination: {
+      page: string;
+    };
+  };
 }
