@@ -24,8 +24,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       const res = await request.get<Project[]>('/api/projects');
       const grouped = parseProjects(res);
       set({ projects: grouped, loading: false, initialized: true });
-    } catch (err: any) {
-      set({ error: err.message || 'Failed to fetch', loading: false });
+    } catch (err: unknown) {
+      set({ error: err instanceof Error ? err.message : 'Failed to fetch', loading: false });
     }
   },
 }));

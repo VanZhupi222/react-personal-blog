@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Trophy, ChevronLeft, ChevronRight, Medal, Gamepad2 } from 'lucide-react';
 import { Loader } from '@/components/ui/Loader';
 import { useSteamStore } from '@/store/steam';

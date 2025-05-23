@@ -1,8 +1,7 @@
 import { dbConnect } from '@/lib/db';
 import Contact from '@/models/Contact';
-import { NextRequest } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   await dbConnect();
   const doc = await Contact.findOne();
   if (!doc) {

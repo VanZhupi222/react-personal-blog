@@ -1,6 +1,5 @@
 import { Trophy, Star, Award, Medal } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
-import { Loader } from '@/components/ui/Loader';
 import { RefreshButton } from '@/components/ui/RefreshButton';
 import { useLeetCodeStore } from '@/store/leetcode';
 import { useTranslations } from '@/lib/hooks/useTranslations';
@@ -16,7 +15,7 @@ export function LeetCodeCard() {
     if (!stats && !loading && !error) {
       fetchStats();
     }
-  }, [stats, loading, error]);
+  }, [stats, loading, error, fetchStats]);
 
   if (loading) {
     return <LeetCodeCardSkeleton />;

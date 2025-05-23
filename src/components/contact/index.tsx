@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useContactStore } from '@/store/contactStore';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Mail, AtSign } from 'lucide-react';
 import {
   SiTiktok,
@@ -116,7 +115,7 @@ export default function ContactPage() {
                 </div>
               ),
             },
-          ].map((card, idx) => (
+          ].map((card) => (
             <m.div key={card.key} variants={itemVariants}>
               <ContactCard icon={card.icon} title={card.title}>
                 {card.content}

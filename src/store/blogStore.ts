@@ -24,8 +24,8 @@ export const useBlogStore = create<BlogState>((set, get) => ({
       const res = await request.get<Blog[]>('/api/blog');
       const grouped = parseBlogs(res); // 按 language 分组
       set({ blogs: grouped, loading: false, initialized: true });
-    } catch (err: any) {
-      set({ error: err.message || 'Failed to fetch', loading: false });
+    } catch (err: unknown) {
+      set({ error: err instanceof Error ? err.message : 'Failed to fetch', loading: false });
     }
   },
 }));
