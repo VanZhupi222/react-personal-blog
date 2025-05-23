@@ -28,8 +28,9 @@ const itemVariants = {
 };
 
 export function AboutContent() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const { data, loading, error, fetchAbout } = useAboutStore();
+  console.log(data);
 
   useEffect(() => {
     fetchAbout();
@@ -55,26 +56,27 @@ export function AboutContent() {
               <m.section variants={itemVariants} className="mt-16 space-y-6">
                 <h2 className="text-2xl font-bold">{t.about.skills.title}</h2>
                 <div className="grid gap-6 md:grid-cols-2">
-                  {Object.entries(data.skills)
-                    .filter(([_, items]) => Array.isArray(items) && items.length > 0)
-                    .map(([category, items]) => (
-                      <SkillCard
-                        key={category}
-                        title={
-                          t.about.skills.categories[
-                            category as keyof typeof t.about.skills.categories
-                          ] || category
-                        }
-                        items={items}
-                      />
-                    ))}
+                  {data.skills[locale] &&
+                    Object.entries(data.skills[locale]!)
+                      .filter(([_, items]) => Array.isArray(items) && items.length > 0)
+                      .map(([category, items]) => (
+                        <SkillCard
+                          key={category}
+                          title={
+                            t.about.skills.categories[
+                              category as keyof typeof t.about.skills.categories
+                            ] || category
+                          }
+                          items={items}
+                        />
+                      ))}
                 </div>
               </m.section>
 
               <m.section variants={itemVariants} className="space-y-6">
                 <h2 className="text-2xl font-bold">{t.about.experience.title}</h2>
                 <div className="space-y-6">
-                  {data.experiences.map((exp, index) => (
+                  {data.experiences[locale]?.map((exp, index) => (
                     <Card
                       key={index}
                       className="bg-card text-card-foreground border-border border shadow-lg"

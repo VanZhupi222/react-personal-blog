@@ -1,3 +1,5 @@
+export type Locale = 'en' | 'zh';
+
 export interface Translations {
   common: {
     refresh: string;
