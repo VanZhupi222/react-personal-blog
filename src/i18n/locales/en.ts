@@ -131,6 +131,29 @@ const en: Translations = {
     description: 'Sorry, the page you are looking for might have been moved or does not exist.',
     backHome: 'Back to Home',
   },
+  achievements: {
+    title: 'Achievement Progress',
+    stats: {
+      totalGames: {
+        title: 'Total Games',
+        subtitle: 'with >= {hours}h playtime',
+      },
+      totalPlaytime: {
+        title: 'Total Playtime',
+        subtitle: 'across all games',
+      },
+      achievements: {
+        title: 'Achievements',
+        subtitle: '{percentage} completed',
+      },
+    },
+    gameCard: {
+      achievements: '{achieved}/{total} achievements',
+    },
+    pagination: {
+      page: 'Page {current} of {total}',
+    },
+  },
 };
 
 export default en;

@@ -131,6 +131,29 @@ const zh: Translations = {
     description: '抱歉，您要找的页面可能已经被移动或不存在',
     backHome: '返回首页',
   },
+  achievements: {
+    title: '成就进度',
+    stats: {
+      totalGames: {
+        title: '游戏总数',
+        subtitle: '游戏时长 >= {hours}小时',
+      },
+      totalPlaytime: {
+        title: '总游戏时长',
+        subtitle: '所有游戏',
+      },
+      achievements: {
+        title: '成就',
+        subtitle: '完成度 {percentage}',
+      },
+    },
+    gameCard: {
+      achievements: '{achieved}/{total} 成就',
+    },
+    pagination: {
+      page: '第 {current} 页，共 {total} 页',
+    },
+  },
 };
 
 export default zh;
