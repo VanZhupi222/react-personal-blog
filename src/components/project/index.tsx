@@ -8,6 +8,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { Badge } from '@/components/ui/Badge';
+import { Project } from '@/lib/project/types';
+import { ErrorFunc } from '@/components/features/Error';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -23,7 +25,7 @@ const itemVariants = {
 };
 
 export function ProjectListPage() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const { projects, loading, error, fetchProjects } = useProjectStore();
 
   useEffect(() => {
@@ -43,21 +45,23 @@ export function ProjectListPage() {
             <PageHeader heading={t.projects.title} text={t.projects.description} />
           </m.div>
           {loading && <SkeletonProjectList />}
-          {error && <div className="text-red-500">{error}</div>}
+          {error && <ErrorFunc onRetry={fetchProjects} />}
           {!loading && !error && (
             <m.div className="mt-12 grid gap-6" variants={containerVariants}>
-              {projects.map((project, index) => (
+              {projects[locale]?.map((project: Project, index: number) => (
                 <m.div key={index} variants={itemVariants}>
                   <Card className="group hover:border-primary-hover transition-colors">
                     <CardHeader>
                       <CardTitle className="group-hover:text-primary-hover transition-colors hover:underline">
-                        <a href={`/projects/${project.slug}`}>{project.title}</a>
+                        <a href={project.url} target="_blank" rel="noopener noreferrer">
+                          {project.title}
+                        </a>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p className="text-muted-foreground mb-4">{project.description}</p>
                       <div className="mb-2 flex flex-wrap gap-2">
-                        {project.tags.map((tag) => (
+                        {project.tags.map((tag: string) => (
                           <Badge key={tag} icon={false}>
                             {tag}
                           </Badge>
@@ -66,7 +70,7 @@ export function ProjectListPage() {
                       <div className="space-y-2">
                         <h3 className="font-semibold">{t.projects.highlights}:</h3>
                         <ul className="text-muted-foreground list-inside list-disc space-y-1">
-                          {project.highlights.map((highlight, i) => (
+                          {project.highlights.map((highlight: string, i: number) => (
                             <li key={i}>{highlight}</li>
                           ))}
                         </ul>

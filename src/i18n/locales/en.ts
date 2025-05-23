@@ -3,6 +3,11 @@ import { Translations } from '../types';
 const en: Translations = {
   common: {
     refresh: 'Refresh',
+    error: {
+      title: 'Oops! Something went wrong.',
+      message: "But don't worry, you can try again!",
+      retry: 'Retry',
+    },
   },
   welcome: {
     name: 'Shijie Fan | 范世杰',
@@ -10,7 +15,7 @@ const en: Translations = {
     role: {
       fullstack: 'Full-stack Developer',
       tech: 'Tech Enthusiast',
-      game: 'Game Lover',
+      game: 'Gamer',
     },
     enter: 'Enter',
     techStack: {
@@ -21,19 +26,20 @@ const en: Translations = {
       title: 'Featured Projects',
       items: [
         {
-          title: 'Project 1',
-          description: 'Description of project 1',
+          title: 'Personal Blog',
+          description: 'A modern personal website built with Next.js, React, and MongoDB.',
         },
         {
-          title: 'Project 2',
-          description: 'Description of project 2',
+          title: 'Date Picker',
+          description:
+            'A calendar component built in Salesforce using LWC (Lightning Web Component), based on native HTML, CSS, and JavaScript.',
         },
       ],
     },
     contact: {
       title: 'Get In Touch',
       description: 'Feel free to reach out for collaborations or just a friendly hello',
-      platforms: ['GitHub', 'LinkedIn', 'Email'],
+      platforms: ['GitHub', 'WeChat', 'Email'],
     },
   },
   home: {
@@ -84,6 +90,10 @@ const en: Translations = {
         status: 'Coming Soon',
         placeholder: 'Steam achievements will be displayed here',
         viewAchievements: 'View Achievements',
+        totalPlaytime: 'Total Playtime',
+        recentGames: 'Recent Games',
+        online: 'Online',
+        offline: 'Offline',
       },
     },
   },
