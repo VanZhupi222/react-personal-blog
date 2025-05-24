@@ -1,4 +1,4 @@
-import type { ParsedGame } from '@/lib/steam/parse';
+import type { ParsedGame } from '@/lib/steam/parser';
 
 export const MIN_PLAYTIME_HOURS = 2;
 export const ITEMS_PER_PAGE = 5;

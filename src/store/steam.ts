@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import type { SteamStats, SteamGameStats } from '@/lib/steam/types';
-import type { ParsedGame } from '@/lib/steam/parse';
+import type { SteamStats } from '@/lib/steam/types';
+import type { ParsedGame } from '@/lib/steam/parser';
 import { request } from '@/api/axios';
+import { parseGamesArray, sortGamesByPlaytime } from '@/lib/steam/parser';
 
 interface SteamState {
   profile: SteamStats['profile'] | null;
@@ -9,14 +10,7 @@ interface SteamState {
   ownedGames: ParsedGame[];
   ownedGamesLoading: boolean;
   error: string | null;
-  achievements: {
-    [appid: string]: {
-      total: number;
-      achieved: number;
-      percentage: number;
-      gameName: string;
-    };
-  };
+  achievements: SteamStats['achievements'];
   totalPlaytime: number;
   fetchOwnedGames: () => Promise<void>;
 }
@@ -33,30 +27,15 @@ export const useSteamStore = create<SteamState>((set) => ({
     set({ ownedGamesLoading: true, error: null });
     try {
       const stats = (await request.get('/api/steam/stats')) as SteamStats;
-      const ownedGames = stats.ownedGames.map((game: SteamGameStats) => ({
-        appid: game.appid,
-        name: game.name,
-        playtime: game.playtime_forever,
-        icon: game.img_icon_url,
-        logo: game.img_logo_url,
-      }));
-      const totalPlaytime = ownedGames.reduce((sum, g) => sum + g.playtime, 0);
       set({
         profile: stats.profile,
-        recentGames: stats.recentGames.map((game: SteamGameStats) => ({
-          appid: game.appid,
-          name: game.name,
-          playtime: game.playtime_forever,
-          icon: game.img_icon_url,
-          logo: game.img_logo_url,
-        })),
-        ownedGames,
+        recentGames: sortGamesByPlaytime(parseGamesArray(stats.recentGames)),
+        ownedGames: sortGamesByPlaytime(parseGamesArray(stats.ownedGames)),
         achievements: stats.achievements || {},
-        totalPlaytime,
+        totalPlaytime: stats.totalPlaytime,
         ownedGamesLoading: false,
       });
     } catch (error: unknown) {
-      console.error('Failed to fetch Steam games:', error);
       set({
         ownedGamesLoading: false,
         error: error instanceof Error ? error.message : 'Failed to fetch Steam games',

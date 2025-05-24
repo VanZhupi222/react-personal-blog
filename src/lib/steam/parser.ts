@@ -37,3 +37,7 @@ export function parseGameStats(raw: SteamGameStats): ParsedGame {
 export function parseGamesArray(rawArr: SteamGameStats[]): ParsedGame[] {
   return Array.isArray(rawArr) ? rawArr.map(parseGameStats) : [];
 }
+
+export function sortGamesByPlaytime(games: ParsedGame[]): ParsedGame[] {
+  return [...games].sort((a, b) => b.playtime - a.playtime);
+}

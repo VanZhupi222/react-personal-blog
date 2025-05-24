@@ -6,7 +6,7 @@ import { Trophy, ChevronLeft, ChevronRight, Medal } from 'lucide-react';
 import { useSteamStore } from '@/store/steam';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/hooks/useTranslations';
-import type { ParsedGame } from '@/lib/steam/parse';
+import type { ParsedGame } from '@/lib/steam/parser';
 import {
   filterGamesByPlaytime,
   paginateGames,

@@ -1,5 +1,5 @@
 import { ExternalLink } from 'lucide-react';
-import type { ParsedGame } from '@/lib/steam/parse';
+import type { ParsedGame } from '@/lib/steam/parser';
 
 export interface RecentGamesSectionProps {
   recentGames: ParsedGame[];
