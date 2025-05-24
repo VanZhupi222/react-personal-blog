@@ -8,6 +8,11 @@ const zh: Translations = {
       message: '别担心，你可以再试一次！',
       retry: '重试',
     },
+    update: {
+      title: '发现新版本',
+      message: '请刷新页面以获取最新内容',
+      refresh: '立即刷新',
+    },
   },
   welcome: {
     name: 'Shijie Fan | 范世杰',

@@ -1,4 +1,10 @@
-import type { SteamGameStats, SteamProfile, SteamStats, SteamAchievement, SteamAchievementSchema } from '@/lib/steam/types';
+import type {
+  SteamGameStats,
+  SteamProfile,
+  SteamStats,
+  SteamAchievement,
+  SteamAchievementSchema,
+} from '@/lib/steam/types';
 
 class SteamAPI {
   private readonly baseUrl = 'https://api.steampowered.com';
@@ -11,7 +17,7 @@ class SteamAPI {
 
     console.log('Steam API Config:', {
       apiKey: apiKey ? '***' + apiKey.slice(-4) : undefined,
-      steamId: steamId ? '***' + steamId.slice(-4) : undefined
+      steamId: steamId ? '***' + steamId.slice(-4) : undefined,
     });
 
     if (!apiKey) {
@@ -80,9 +86,9 @@ class SteamAPI {
 
       // 确保返回的成就数组中包含游戏名称
       const achievements = data.playerstats.achievements || [];
-      return achievements.map(achievement => ({
+      return achievements.map((achievement) => ({
         ...achievement,
-        gameName: data.playerstats.gameName // 添加游戏名称
+        gameName: data.playerstats.gameName, // 添加游戏名称
       }));
     } catch (error) {
       console.warn(`Failed to fetch achievements for app ${appid}:`, error);
@@ -120,7 +126,7 @@ class SteamAPI {
     const achievements: SteamStats['achievements'] = {};
     await Promise.all(
       ownedGames
-        .filter(game => game.playtime_forever > 0)
+        .filter((game) => game.playtime_forever > 0)
         .map(async (game) => {
           try {
             const gameSchema = await this.getGameSchema(game.appid);
@@ -143,7 +149,7 @@ class SteamAPI {
       recentGames,
       totalPlaytime,
       achievements,
-      ownedGames: ownedGames.filter(game => game.playtime_forever > 0),
+      ownedGames: ownedGames.filter((game) => game.playtime_forever > 0),
     };
   }
 }

@@ -4,12 +4,15 @@ import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Navbar } from '@/components/layout/Navbar';
 import { ClientLayout } from '@/components/layout/ClientLayout';
+import { UpdateNotification } from '@/components/UpdateNotification';
+import { Toaster } from 'sonner';
+import { APP_NAME, APP_DESCRIPTION } from '@/config/app';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "SF's Portfolio",
-  description: 'Personal website and portfolio',
+  title: APP_NAME,
+  description: APP_DESCRIPTION,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -22,6 +25,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Navbar />
               <main>{children}</main>
             </div>
+            <UpdateNotification />
+            <Toaster position="top-center" />
           </ClientLayout>
         </ThemeProvider>
       </body>

@@ -1,206 +1,145 @@
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
-import { Trophy, ChevronLeft, ChevronRight, Medal, Gamepad2 } from 'lucide-react';
-import { Loader } from '@/components/ui/Loader';
+import { AchievementsStatsCard } from './AchievementsStatsCard';
+import { AchievementsGameCard } from './AchievementsGameCard';
+import { CardImage } from '@/components/ui/Card';
+import { Trophy, ChevronLeft, ChevronRight, Medal } from 'lucide-react';
 import { useSteamStore } from '@/store/steam';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import type { ParsedGame } from '@/lib/steam/parse';
-
-const ITEMS_PER_PAGE = 5;
-const MIN_PLAYTIME_HOURS = 2;
-
-function formatPlaytime(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
-  if (hours < 1) {
-    return `${minutes}m`;
-  }
-  return `${hours}h`;
-}
-
-function formatPercentage(value: number): string {
-  return value.toFixed(1) + '%';
-}
+import {
+  filterGamesByPlaytime,
+  paginateGames,
+  MIN_PLAYTIME_HOURS,
+  ITEMS_PER_PAGE,
+} from '@/lib/achievements/parser';
+import { formatPlaytime } from '@/lib/utils/format';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AchievementsPageSkeleton } from '@/components/skeleton/AchievementsPageSkeleton';
+import { ErrorFunc } from '@/components/features/Error';
 
 export function AchievementsPage() {
   const { t } = useTranslations();
-  const { ownedGames, ownedGamesLoading, fetchOwnedGames, achievements } = useSteamStore();
+  const { ownedGames, ownedGamesLoading, fetchOwnedGames, error } = useSteamStore();
   const [currentPage, setCurrentPage] = useState(1);
+  const [hoveredAppId, setHoveredAppId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!ownedGames.length) fetchOwnedGames();
   }, [ownedGames.length, fetchOwnedGames]);
 
   if (ownedGamesLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader size="lg" />
-      </div>
-    );
+    return <AchievementsPageSkeleton />;
+  }
+  if (error) {
+    return <ErrorFunc onRetry={fetchOwnedGames} />;
   }
 
-  // 只展示有一定游戏时长的游戏
-  const filteredGames: ParsedGame[] = ownedGames.filter(
-    (g) => g.playtime >= MIN_PLAYTIME_HOURS * 60
-  );
-  // 排序：优先成就百分比，其次游戏时长，最后首字母
-  const sortedGames = filteredGames.sort((a, b) => {
-    const aAch = achievements[a.appid]?.percentage ?? 0;
-    const bAch = achievements[b.appid]?.percentage ?? 0;
-    if (bAch !== aAch) return bAch - aAch;
-    if (b.playtime !== a.playtime) return b.playtime - a.playtime;
-    return a.name.localeCompare(b.name);
-  });
+  const filteredGames: ParsedGame[] = filterGamesByPlaytime(ownedGames);
+  const totalPages = Math.ceil(filteredGames.length / ITEMS_PER_PAGE);
+  const currentItems = paginateGames(filteredGames, currentPage, ITEMS_PER_PAGE);
 
-  const totalPages = Math.ceil(sortedGames.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentItems = sortedGames.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  // 统计总时长和成就
-  const totalPlaytime = sortedGames.reduce((sum, game) => sum + game.playtime, 0);
-  const totalAchievements = Object.values(achievements).reduce((sum, game) => sum + game.total, 0);
-  const achievedAchievements = Object.values(achievements).reduce(
-    (sum, game) => sum + game.achieved,
-    0
-  );
-  const achievementPercentage =
-    totalAchievements > 0 ? (achievedAchievements / totalAchievements) * 100 : 0;
-
-  const translations = t?.achievements;
-  if (!translations) {
-    console.error('Achievements translations not found');
-    return null;
-  }
+  const hoveredGame = currentItems.find((g) => g.appid === hoveredAppId);
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="mb-6 text-3xl font-bold">{translations.title}</h1>
-      <div className="mb-8 grid grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm font-medium">
-              <Trophy className="h-4 w-4 text-yellow-500" />
-              {translations.stats.totalGames.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{sortedGames.length}</div>
-            <p className="text-muted-foreground text-xs">
-              {translations.stats.totalGames.subtitle.replace(
-                '{hours}',
-                MIN_PLAYTIME_HOURS.toString()
-              )}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm font-medium">
-              <Medal className="h-4 w-4 text-yellow-500" />
-              {translations.stats.totalPlaytime.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatPlaytime(totalPlaytime)}</div>
-            <p className="text-muted-foreground text-xs">
-              {translations.stats.totalPlaytime.subtitle}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm font-medium">
-              <Gamepad2 className="h-4 w-4 text-blue-500" />
-              {translations.stats.achievements.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {achievedAchievements}/{totalAchievements}
-            </div>
-            <p className="text-muted-foreground text-xs">
-              {translations.stats.achievements.subtitle.replace(
-                '{percentage}',
-                formatPercentage(achievementPercentage)
-              )}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="relative container mx-auto py-8">
+      {/* 背景层 */}
+      <AnimatePresence mode="wait">
+        {hoveredGame && (
+          <motion.div
+            key={hoveredGame.appid}
+            className="pointer-events-none fixed inset-0 z-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            style={{
+              backgroundImage: `url(https://cdn.cloudflare.steamstatic.com/steam/apps/${hoveredGame.appid}/library_hero.jpg)`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(8px) brightness(0.6)',
+            }}
+          />
+        )}
+      </AnimatePresence>
 
-      <div className="mb-6 space-y-4">
-        {currentItems.map((item) => {
-          const gameAchievements = achievements[item.appid];
-          return (
-            <Card key={item.appid}>
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-4">
-                  <img
-                    src={`https://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.logo}.jpg`}
-                    alt={item.name}
-                    className="h-16 min-h-16 w-16 min-w-16 rounded-md bg-gray-100 object-cover"
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.icon}.jpg`;
-                    }}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-3 flex items-center gap-2">
-                      <h2 className="truncate text-lg font-semibold">{item.name}</h2>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-4">
-                          <span className="text-muted-foreground">
-                            {formatPlaytime(item.playtime)}
-                          </span>
-                          {gameAchievements && (
-                            <span className="text-muted-foreground">
-                              {translations.gameCard.achievements
-                                .replace('{achieved}', gameAchievements.achieved.toString())
-                                .replace('{total}', gameAchievements.total.toString())}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {gameAchievements && (
-                        <Progress value={gameAchievements.percentage} className="h-2" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm">
-            {translations.pagination.page
-              .replace('{current}', currentPage.toString())
-              .replace('{total}', totalPages.toString())}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+      {/* 内容区 */}
+      <div className="relative z-10">
+        {/* 高斯模糊毛玻璃标题条 */}
+        <div className="relative mb-6 w-fit">
+          <div className="bg-card-30 absolute inset-0 rounded-lg backdrop-blur" />
+          <h1 className="relative z-10 px-6 py-2 text-3xl font-bold">{t.achievements.title}</h1>
         </div>
-      )}
+        <div className="mb-8 grid grid-cols-3 gap-4">
+          <AchievementsStatsCard
+            icon={<Trophy className="h-4 w-4 text-yellow-500" />}
+            title={t.achievements.stats.totalGames.title}
+            value={filteredGames.length}
+            subtitle={t.achievements.stats.totalGames.subtitle.replace(
+              '{hours}',
+              MIN_PLAYTIME_HOURS.toString()
+            )}
+          />
+          <AchievementsStatsCard
+            icon={<Medal className="h-4 w-4 text-yellow-500" />}
+            title={t.achievements.stats.totalPlaytime.title}
+            value={formatPlaytime(filteredGames.reduce((sum, g) => sum + g.playtime, 0))}
+            subtitle={t.achievements.stats.totalPlaytime.subtitle}
+          />
+        </div>
+
+        <div className="flex min-h-[340px] w-full">
+          {/* 左侧：游戏列表 */}
+          <div className="mx-auto w-1/2 space-y-4">
+            {currentItems.map((item) => {
+              const isHovered = hoveredAppId === item.appid;
+              return (
+                <AchievementsGameCard
+                  key={item.appid}
+                  item={item}
+                  isHovered={isHovered}
+                  t={{
+                    ...t,
+                    formatPlaytime,
+                  }}
+                  onMouseEnter={() => setHoveredAppId(item.appid)}
+                  onMouseLeave={() => setHoveredAppId(null)}
+                />
+              );
+            })}
+          </div>
+          {/* 右侧：大图展示区 */}
+          <div className="relative flex w-1/2 items-center justify-center">
+            <CardImage hoveredGame={hoveredGame} />
+          </div>
+        </div>
+
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm">
+              {t.achievements.pagination.page
+                .replace('{current}', currentPage.toString())
+                .replace('{total}', totalPages.toString())}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -8,6 +8,11 @@ const en: Translations = {
       message: "But don't worry, you can try again!",
       retry: 'Retry',
     },
+    update: {
+      title: 'New Version Available',
+      message: 'Please refresh the page to get the latest content',
+      refresh: 'Refresh Now',
+    },
   },
   welcome: {
     name: 'Shijie Fan | 范世杰',

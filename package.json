@@ -31,6 +31,8 @@
     "react-spinners": "^0.17.0",
     "recharts": "^2.15.3",
     "rehype-highlight": "^7.0.2",
+    "sonner": "^2.0.3",
+    "swr": "^2.3.3",
     "tailwind-merge": "^3.3.0",
     "zustand": "^5.0.4"
   },
