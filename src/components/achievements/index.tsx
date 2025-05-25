@@ -23,6 +23,7 @@ export function AchievementsPage() {
   const { t, locale } = useTranslations();
   const { ownedGames, ownedGamesLoading, fetchOwnedGames, error } = useSteamStore();
   const [currentPage, setCurrentPage] = useState(1);
+  const [direction, setDirection] = useState(1);
   const [hoveredAppId, setHoveredAppId] = useState<number | null>(null);
   const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
   const {
@@ -72,6 +73,11 @@ export function AchievementsPage() {
     if (appid !== selectedAppId) {
       fetchAchievementOnClick(appid);
     }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setDirection(newPage > currentPage ? 1 : -1);
+    setCurrentPage(newPage);
   };
 
   return (
@@ -181,7 +187,8 @@ export function AchievementsPage() {
               currentPage={currentPage}
               total={filteredGames.length}
               pageSize={ITEMS_PER_PAGE}
-              onPageChange={setCurrentPage}
+              onPageChange={handlePageChange}
+              direction={direction}
               labels={{
                 prev: t.achievements.pagination.prev,
                 next: t.achievements.pagination.next,

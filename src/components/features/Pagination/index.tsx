@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface PaginationProps {
   currentPage: number;
@@ -8,7 +8,6 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
   disabled?: boolean;
   className?: string;
-  direction?: 'ltr' | 'rtl'; // 可选，动画方向
   labels?: {
     prev: string;
     next: string;
@@ -39,7 +38,6 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   disabled = false,
   className = '',
-  direction = 'ltr',
   labels = { prev: 'Prev', next: 'Next', goTo: 'Go to' },
 }) => {
   const totalPages = Math.ceil(total / pageSize) || 1;
