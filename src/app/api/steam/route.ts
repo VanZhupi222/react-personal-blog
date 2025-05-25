@@ -11,13 +11,12 @@ class SteamAPI {
   private readonly baseUrl = 'https://api.steampowered.com';
   private readonly apiKey: string;
   private readonly steamId: string;
-  private readonly timeout = 10000; // 10 seconds timeout
+  private readonly timeout = 15000; // 15 seconds timeout
 
   constructor() {
     const apiKey = process.env.STEAM_API_KEY;
     const steamId = process.env.STEAM_ID;
 
-    console.log('apiKey', apiKey);
     if (!apiKey) {
       throw new Error('Steam API key is not configured');
     }
@@ -109,11 +108,10 @@ class SteamAPI {
         };
       }>(endpoint);
 
-      // 确保返回的成就数组中包含游戏名称
       const achievements = data.playerstats.achievements || [];
       return achievements.map((achievement) => ({
         ...achievement,
-        gameName: data.playerstats.gameName, // 添加游戏名称
+        gameName: data.playerstats.gameName,
       }));
     } catch (error) {
       console.warn(`Failed to fetch achievements for app ${appid}:`, error);
@@ -140,7 +138,6 @@ class SteamAPI {
 
   async getUserStats(): Promise<SteamStats> {
     try {
-      // 首先获取基本信息
       const [profile, recentGames, ownedGames] = await Promise.all([
         this.getPlayerProfile(),
         this.getRecentGames(),
@@ -148,51 +145,11 @@ class SteamAPI {
       ]);
 
       const totalPlaytime = ownedGames.reduce((total, game) => total + game.playtime_forever, 0);
-      const achievements: SteamStats['achievements'] = {};
-
-      // 限制并发请求数量
-      const recentGameIds = new Set(recentGames.map((game) => game.appid));
-      const gamesToProcess = [
-        ...recentGames,
-        ...ownedGames.filter((game) => game.playtime_forever > 0 && !recentGameIds.has(game.appid)),
-      ];
-
-      // 每次处理3个游戏
-      const batchSize = 3;
-      for (let i = 0; i < gamesToProcess.length; i += batchSize) {
-        const batch = gamesToProcess.slice(i, i + batchSize);
-        await Promise.all(
-          batch.map(async (game) => {
-            try {
-              const [playerAchievements, gameSchema] = await Promise.all([
-                this.getPlayerAchievements(game.appid),
-                this.getGameSchema(game.appid),
-              ]);
-
-              if (gameSchema.length > 0) {
-                const achieved = playerAchievements.filter((a) => a.achieved === 1).length;
-                achievements[game.appid] = {
-                  total: gameSchema.length,
-                  achieved,
-                  percentage: (achieved / gameSchema.length) * 100,
-                  gameName: game.name,
-                };
-                if (recentGameIds.has(game.appid)) {
-                  game.achievements = playerAchievements;
-                }
-              }
-            } catch (error) {
-              console.warn(`Failed to process achievements for game ${game.appid}:`, error);
-            }
-          })
-        );
-      }
 
       return {
         profile,
         recentGames,
         totalPlaytime,
-        achievements: Object.keys(achievements).length > 0 ? achievements : {},
         ownedGames: ownedGames.filter((game) => game.playtime_forever > 0),
       };
     } catch (error) {

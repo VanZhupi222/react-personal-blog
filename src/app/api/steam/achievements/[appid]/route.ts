@@ -1,23 +1,25 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { steamAPI } from '@/api/steam';
 
-export async function GET(request: Request, { params }: { params: { appid: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ appid: string }> }
+) {
   try {
-    const appid = parseInt(params?.appid, 10);
-    if (isNaN(appid)) {
+    const { appid } = await params;
+    const appidNum = parseInt(appid, 10);
+    if (isNaN(appidNum)) {
       return NextResponse.json({ error: 'Invalid appid' }, { status: 400 });
     }
 
-    // 获取语言参数
     const url = new URL(request.url);
     const lang = url.searchParams.get('language') || 'english';
 
     const [playerAchievements, gameSchema] = await Promise.all([
-      steamAPI.getPlayerAchievements(appid, lang),
-      steamAPI.getGameSchema(appid, lang),
+      steamAPI.getPlayerAchievements(appidNum, lang),
+      steamAPI.getGameSchema(appidNum, lang),
     ]);
 
-    // 合并玩家成就和游戏成就信息
     const achievements = gameSchema.map((schema) => {
       const playerAchievement = playerAchievements.find((pa) => pa.apiname === schema.name);
 

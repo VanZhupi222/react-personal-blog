@@ -39,8 +39,8 @@ export function AchievementsPagePC() {
   });
 
   useEffect(() => {
-    if (!ownedGames.length) fetchOwnedGames();
-  }, [ownedGames.length, fetchOwnedGames]);
+    if (!ownedGames.length && !ownedGamesLoading) fetchOwnedGames();
+  }, [ownedGames.length, ownedGamesLoading, fetchOwnedGames]);
 
   useEffect(() => {
     if (selectedAppId) {

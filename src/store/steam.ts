@@ -11,7 +11,6 @@ interface SteamState {
   ownedGames: ParsedGame[];
   ownedGamesLoading: boolean;
   error: string | null;
-  achievements: SteamStats['achievements'];
   totalPlaytime: number;
   fetchOwnedGames: () => Promise<void>;
   achievementDetail: { [appid_locale: string]: AchievementDetail[] };
@@ -25,7 +24,6 @@ export const useSteamStore = create<SteamState>((set, get) => ({
   recentGames: [],
   ownedGames: [],
   ownedGamesLoading: false,
-  achievements: {},
   totalPlaytime: 0,
   error: null,
   achievementDetail: {},
@@ -39,7 +37,6 @@ export const useSteamStore = create<SteamState>((set, get) => ({
         profile: stats.profile,
         recentGames: sortGamesByPlaytime(parseGamesArray(stats.recentGames)),
         ownedGames: sortGamesByPlaytime(parseGamesArray(stats.ownedGames)),
-        achievements: stats.achievements || {},
         totalPlaytime: stats.totalPlaytime,
         ownedGamesLoading: false,
       });
@@ -54,13 +51,11 @@ export const useSteamStore = create<SteamState>((set, get) => ({
     set({ achievementDetailLoading: true, achievementDetailError: null });
     try {
       const locale = useTranslationsStore.getState().locale || 'en';
-      console.log('fetchAchievementDetail', appid, locale);
       const steamLangMap: Record<string, string> = {
         en: 'english',
         zh: 'schinese',
       };
       const steamLang = steamLangMap[locale] || 'english';
-      console.log('steamLang', steamLang);
       const cacheKey = `${appid}_${locale}`;
       const achievementDetail = get().achievementDetail;
       if (achievementDetail[cacheKey]) {
