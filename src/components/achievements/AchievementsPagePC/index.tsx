@@ -127,25 +127,35 @@ export function AchievementsPagePC() {
             <div className="mb-2 text-center text-sm text-gray-500">
               {t.achievements.clickToView}
             </div>
-            {currentItems.map((item) => {
-              const isHovered = hoveredAppId === item.appid;
-              return (
-                <div key={item.appid} className="w-full">
-                  <AchievementsGameCard
-                    item={item}
-                    isHovered={isHovered}
-                    isMobile={false}
-                    t={{
-                      ...t,
-                      formatPlaytime,
-                    }}
-                    onMouseEnter={() => setHoveredAppId(item.appid)}
-                    onMouseLeave={() => setHoveredAppId(null)}
-                    onClick={() => handleGameClick(item.appid)}
-                  />
-                </div>
-              );
-            })}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.35, ease: 'easeInOut' }}
+              >
+                {currentItems.map((item) => {
+                  const isHovered = hoveredAppId === item.appid;
+                  return (
+                    <div key={item.appid} className="mb-4 w-full">
+                      <AchievementsGameCard
+                        item={item}
+                        isHovered={isHovered}
+                        isMobile={false}
+                        t={{
+                          ...t,
+                          formatPlaytime,
+                        }}
+                        onMouseEnter={() => setHoveredAppId(item.appid)}
+                        onMouseLeave={() => setHoveredAppId(null)}
+                        onClick={() => handleGameClick(item.appid)}
+                      />
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
             {/* 占位补齐，保证高度一致，避免最后一页高度跳变（仅PC端） */}
             {Array.from({ length: Math.max(0, 5 - currentItems.length) }).map((_, idx) => (
               <div key={`placeholder-${idx}`} className="h-[137.5px] md:h-[137.5px]" />

@@ -27,7 +27,6 @@ export function SteamCard() {
 
   useEffect(() => {
     if (!profile && !ownedGamesLoading) {
-      console.log('fetching owned games');
       fetchOwnedGames();
     }
   }, [profile, fetchOwnedGames, ownedGamesLoading]);

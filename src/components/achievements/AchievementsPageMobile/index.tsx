@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { AchievementsStatsCard } from '../AchievementsStatsCard';
 import { AchievementsGameCard } from '../AchievementsGameCard';
 import { Trophy, Medal } from 'lucide-react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import { PaginationMobile } from '@/components/features/Pagination/PaginationMobile';
 import {
   MIN_PLAYTIME_HOURS,
@@ -100,23 +100,33 @@ export function AchievementsPageMobile() {
             <div className="mb-2 text-center text-sm text-gray-500">
               {t.achievements.clickToView}
             </div>
-            {currentItems.map((item) => (
-              <div key={item.appid} className="w-full">
-                <AchievementsGameCard
-                  item={item}
-                  isHovered={hoveredAppId === item.appid}
-                  isMobile={true}
-                  t={{ ...t, formatPlaytime }}
-                  onMouseEnter={() => setHoveredAppId(item.appid)}
-                  onMouseLeave={() => setHoveredAppId(null)}
-                  onClick={() => {
-                    setSelectedAppId(item.appid);
-                    setHoveredAppId(item.appid);
-                    fetchAchievementOnClick(item.appid);
-                  }}
-                />
-              </div>
-            ))}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.35, ease: 'easeInOut' }}
+              >
+                {currentItems.map((item) => (
+                  <div key={item.appid} className="mb-4 w-full">
+                    <AchievementsGameCard
+                      item={item}
+                      isHovered={hoveredAppId === item.appid}
+                      isMobile={true}
+                      t={{ ...t, formatPlaytime }}
+                      onMouseEnter={() => setHoveredAppId(item.appid)}
+                      onMouseLeave={() => setHoveredAppId(null)}
+                      onClick={() => {
+                        setSelectedAppId(item.appid);
+                        setHoveredAppId(item.appid);
+                        fetchAchievementOnClick(item.appid);
+                      }}
+                    />
+                  </div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
           <Transition appear show={!!selectedGame} as="div">
             <Dialog as="div" className="relative z-50" onClose={() => setSelectedAppId(null)}>
@@ -145,7 +155,7 @@ export function AchievementsPageMobile() {
                     leaveTo="opacity-0 scale-95"
                   >
                     {!!selectedGame && (
-                      <Dialog.Panel className="bg-card flex max-h-[80vh] w-full max-w-lg transform flex-col overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
+                      <DialogPanel className="bg-card flex max-h-[80vh] w-full max-w-lg transform flex-col overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
                         {/* 顶部大图 */}
                         <img
                           src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedGame.appid}/library_hero.jpg`}
@@ -163,7 +173,9 @@ export function AchievementsPageMobile() {
                               }
                             />
                           ) : modalCurrentItems.length === 0 ? (
-                            <div className="text-muted-foreground py-8 text-center">暂无成就</div>
+                            <div className="text-muted-foreground py-8 text-center">
+                              {t.achievements.noAchievements}
+                            </div>
                           ) : (
                             <AnimatePresence mode="wait" initial={false}>
                               <motion.div
@@ -221,7 +233,7 @@ export function AchievementsPageMobile() {
                             />
                           </div>
                         )}
-                      </Dialog.Panel>
+                      </DialogPanel>
                     )}
                   </Transition>
                 </div>
