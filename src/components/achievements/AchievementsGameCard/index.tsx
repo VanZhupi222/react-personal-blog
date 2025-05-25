@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 export function AchievementsGameCard({
   item,
   isHovered,
+  isMobile = false,
   t,
   onMouseEnter,
   onMouseLeave,
@@ -10,6 +11,7 @@ export function AchievementsGameCard({
 }: {
   item: any;
   isHovered: boolean;
+  isMobile?: boolean;
   t: any;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -17,7 +19,7 @@ export function AchievementsGameCard({
 }) {
   return (
     <Card
-      className={`min-h-[138px] cursor-pointer transition-all duration-300 ${isHovered ? 'ring-primary bg-accent/80 scale-105 ring-2' : ''}`}
+      className={`min-h-[138px] cursor-pointer transition-all duration-300 ${!isMobile && isHovered ? 'ring-primary bg-accent/80 scale-105 ring-2' : ''}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}

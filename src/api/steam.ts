@@ -71,7 +71,6 @@ class SteamAPI {
     appid: number,
     lang: string = 'english'
   ): Promise<SteamAchievement[]> {
-    console.log('getPlayerAchievements', appid, lang);
     const endpoint = `/ISteamUserStats/GetPlayerAchievements/v1/?key=${this.apiKey}&steamid=${this.steamId}&appid=${appid}&l=${lang}`;
     try {
       const data = await this.fetchJson<{
@@ -94,7 +93,6 @@ class SteamAPI {
   }
 
   async getGameSchema(appid: number, lang: string = 'english'): Promise<SteamAchievementSchema[]> {
-    console.log('getGameSchema', appid, lang);
     const endpoint = `/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${appid}&l=${lang}`;
     try {
       const data = await this.fetchJson<{

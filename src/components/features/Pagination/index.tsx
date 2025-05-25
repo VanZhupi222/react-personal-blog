@@ -8,6 +8,8 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
   disabled?: boolean;
   className?: string;
+  isMobile?: boolean;
+  mobileSimple?: boolean;
   labels?: {
     prev: string;
     next: string;
@@ -38,6 +40,8 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   disabled = false,
   className = '',
+  isMobile = false,
+  mobileSimple = false,
   labels = { prev: 'Prev', next: 'Next', goTo: 'Go to' },
 }) => {
   const totalPages = Math.ceil(total / pageSize) || 1;
@@ -57,8 +61,55 @@ export const Pagination: React.FC<PaginationProps> = ({
     setInput('');
   };
 
+  if (mobileSimple && isMobile) {
+    // 手机端简化分页：只显示左右箭头和输入框
+    return (
+      <div className={`flex w-full flex-row items-center justify-between gap-2 ${className}`}>
+        <button
+          className={`rounded border px-2 py-1 text-sm transition-colors duration-150 ${
+            currentPage === 1 || disabled
+              ? 'border-muted bg-muted text-muted-foreground cursor-not-allowed'
+              : 'border-border bg-background text-foreground hover:border-primary-hover hover:text-primary-hover hover:bg-muted cursor-pointer'
+          } `}
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1 || disabled}
+          aria-label={labels.prev}
+        >
+          &lt;
+        </button>
+        <div className="flex flex-col items-center">
+          <input
+            type="text"
+            className="focus:text-primary-foreground w-12 rounded border px-2 py-1 text-sm focus:outline-none"
+            value={input}
+            onChange={handleInputChange}
+            onBlur={handleInputGo}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleInputGo();
+            }}
+            disabled={disabled}
+            placeholder={currentPage.toString()}
+          />
+          <span className="text-muted-foreground mt-1 block text-xs">{labels.goTo || 'Go to'}</span>
+        </div>
+        <button
+          className={`rounded border px-2 py-1 text-sm transition-colors duration-150 ${
+            currentPage === totalPages || disabled
+              ? 'border-muted bg-muted text-muted-foreground cursor-not-allowed'
+              : 'border-border bg-background text-foreground hover:border-primary-hover hover:text-primary-hover hover:bg-muted cursor-pointer'
+          } `}
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages || disabled}
+          aria-label={labels.next}
+        >
+          &gt;
+        </button>
+      </div>
+    );
+  }
+  // PC端/默认分页
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex flex-row items-center justify-center gap-2 ${className}`}>
       <button
         className={`rounded border px-2 py-1 text-sm transition-colors duration-150 ${
           currentPage === 1 || disabled
@@ -71,7 +122,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       >
         &lt;
       </button>
-      <span className="relative flex gap-1">
+      <span className={`relative flex gap-1`}>
         {pages.map((p, idx) =>
           p === '...' ? (
             <motion.span
@@ -119,10 +170,9 @@ export const Pagination: React.FC<PaginationProps> = ({
       >
         &gt;
       </button>
-      <span className="ml-2 text-sm text-gray-500">{labels.goTo || 'Go to'}</span>
       <input
         type="text"
-        className="focus:text-primary-foreground w-12 rounded border px-2 py-1 text-sm focus:outline-none"
+        className="focus:text-primary-foreground mx-2 w-12 rounded border px-2 py-1 text-sm focus:outline-none"
         value={input}
         onChange={handleInputChange}
         onBlur={handleInputGo}
@@ -131,6 +181,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         }}
         disabled={disabled}
         placeholder={currentPage.toString()}
+        style={{ textAlign: 'center' }}
       />
     </div>
   );
