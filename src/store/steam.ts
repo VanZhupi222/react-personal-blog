@@ -77,10 +77,11 @@ export const useSteamStore = create<SteamState>((set, get) => ({
         },
         achievementDetailLoading: false,
       });
-    } catch (e: any) {
+    } catch (error: unknown) {
       set({
         achievementDetailLoading: false,
-        achievementDetailError: e.message || 'Error fetching achievements',
+        achievementDetailError:
+          error instanceof Error ? error.message : 'Error fetching achievements',
       });
     }
   },

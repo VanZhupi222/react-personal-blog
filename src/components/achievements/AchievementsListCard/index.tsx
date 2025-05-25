@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { AchievementCard } from './AchievementCard';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { Pagination } from '@/components/features/Pagination';
+import type { ParsedGame } from '@/lib/steam/parser';
 
 interface Achievement {
   name: string;
@@ -18,14 +19,14 @@ interface Achievement {
 }
 
 interface AchievementsListCardProps {
-  selectedGame?: any;
+  selectedGame?: ParsedGame;
   achievements: Achievement[];
   loading?: boolean;
   error?: string | null;
   onRetry?: () => void;
 }
 
-function CardImage({ hoveredGame }: { hoveredGame: any }) {
+function CardImage({ hoveredGame }: { hoveredGame: ParsedGame | undefined }) {
   if (!hoveredGame) return null;
   return (
     <img

@@ -1,4 +1,19 @@
 import { Card, CardContent } from '@/components/ui/Card';
+import type { ParsedGame } from '@/lib/steam/parser';
+
+interface Translations {
+  formatPlaytime: (playtime: number) => string;
+}
+
+interface AchievementsGameCardProps {
+  item: ParsedGame;
+  isHovered: boolean;
+  isMobile?: boolean;
+  t: Translations;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+  onClick?: () => void;
+}
 
 export function AchievementsGameCard({
   item,
@@ -8,15 +23,7 @@ export function AchievementsGameCard({
   onMouseEnter,
   onMouseLeave,
   onClick,
-}: {
-  item: any;
-  isHovered: boolean;
-  isMobile?: boolean;
-  t: any;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-  onClick?: () => void;
-}) {
+}: AchievementsGameCardProps) {
   return (
     <Card
       className={`min-h-[138px] cursor-pointer transition-all duration-300 ${!isMobile && isHovered ? 'ring-primary bg-accent/80 scale-105 ring-2' : ''}`}

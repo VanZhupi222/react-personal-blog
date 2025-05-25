@@ -6,6 +6,11 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
+interface Game {
+  appid: number;
+  name: string;
+}
+
 export function Card({ children, className, ...props }: CardProps) {
   return (
     <div className={cn('bg-card rounded-lg border p-6', className)} {...props}>
@@ -54,7 +59,7 @@ export function CardContent({
   return <div className={cn('', className)}>{children}</div>;
 }
 
-export function CardImage({ hoveredGame }: { hoveredGame: any }) {
+export function CardImage({ hoveredGame }: { hoveredGame: Game | null }) {
   return (
     <AnimatePresence mode="wait">
       {hoveredGame ? (

@@ -33,7 +33,14 @@ export function UpdateNotification() {
         onAction: () => window.location.reload(),
       });
     }
-  }, [data, locale, loading]);
+  }, [
+    data,
+    locale,
+    loading,
+    t.common.update.title,
+    t.common.update.message,
+    t.common.update.refresh,
+  ]);
 
   return null;
 }
