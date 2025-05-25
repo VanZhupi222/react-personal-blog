@@ -8,6 +8,11 @@ export interface Translations {
       message: string;
       retry: string;
     };
+    update: {
+      title: string;
+      message: string;
+      refresh: string;
+    };
   };
   welcome: {
     name: string;
@@ -148,6 +153,12 @@ export interface Translations {
     };
     pagination: {
       page: string;
+      prev: string;
+      next: string;
+      goTo: string;
     };
+    clickToView: string;
+    achieved: string;
+    noAchievements: string;
   };
 }

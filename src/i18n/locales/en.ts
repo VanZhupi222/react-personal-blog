@@ -8,6 +8,11 @@ const en: Translations = {
       message: "But don't worry, you can try again!",
       retry: 'Retry',
     },
+    update: {
+      title: 'New Version Available',
+      message: 'Please refresh the page to get the latest content',
+      refresh: 'Refresh Now',
+    },
   },
   welcome: {
     name: 'Shijie Fan | 范世杰',
@@ -155,7 +160,13 @@ const en: Translations = {
     },
     pagination: {
       page: 'Page {current} of {total}',
+      prev: 'Prev',
+      next: 'Next',
+      goTo: 'Go to',
     },
+    clickToView: 'Click on a game card to view achievements',
+    achieved: 'Achieved',
+    noAchievements: 'No achievements yet.',
   },
 };
 

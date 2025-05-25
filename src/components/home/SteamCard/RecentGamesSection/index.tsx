@@ -1,5 +1,5 @@
 import { ExternalLink } from 'lucide-react';
-import type { ParsedGame } from '@/lib/steam/parse';
+import type { ParsedGame } from '@/lib/steam/parser';
 
 export interface RecentGamesSectionProps {
   recentGames: ParsedGame[];
@@ -31,9 +31,9 @@ export function RecentGamesSection({
             onClick={() => onGameClick(game.appid)}
           >
             <img
-              src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.logo}.jpg`}
+              src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`}
               alt={game.name}
-              className="h-10 w-auto max-w-[64px]"
+              className="h-8 w-16 rounded object-cover object-center"
               onError={(e) => {
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg`;

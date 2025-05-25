@@ -27,6 +27,28 @@ export interface SteamAchievementSchema {
   icongray: string;
 }
 
+export interface AchievementDetail extends SteamAchievementSchema {
+  achieved: number;
+  unlocktime: number;
+}
+
+export interface SteamGameSchemaResponse {
+  game: {
+    availableGameStats?: {
+      achievements?: SteamAchievementSchema[];
+    };
+  };
+}
+
+export interface SteamPlayerAchievementsResponse {
+  playerstats: {
+    steamID: string;
+    gameName: string;
+    achievements: SteamAchievement[];
+    success: boolean;
+  };
+}
+
 export interface SteamProfile {
   steamid: string;
   personaname: string;
@@ -46,8 +68,6 @@ export interface SteamStats {
   achievements?: {
     [appid: string]: {
       total: number;
-      achieved: number;
-      percentage: number;
       gameName: string;
     };
   };

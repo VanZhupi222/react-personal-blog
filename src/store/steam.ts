@@ -1,7 +1,9 @@
 import { create } from 'zustand';
-import type { SteamStats, SteamGameStats } from '@/lib/steam/types';
-import type { ParsedGame } from '@/lib/steam/parse';
+import type { SteamStats, AchievementDetail } from '@/lib/steam/types';
+import type { ParsedGame } from '@/lib/steam/parser';
 import { request } from '@/api/axios';
+import { parseGamesArray, sortGamesByPlaytime } from '@/lib/steam/parser';
+import { useTranslationsStore } from '@/store/translations';
 
 interface SteamState {
   profile: SteamStats['profile'] | null;
@@ -9,57 +11,72 @@ interface SteamState {
   ownedGames: ParsedGame[];
   ownedGamesLoading: boolean;
   error: string | null;
-  achievements: {
-    [appid: string]: {
-      total: number;
-      achieved: number;
-      percentage: number;
-      gameName: string;
-    };
-  };
   totalPlaytime: number;
   fetchOwnedGames: () => Promise<void>;
+  achievementDetail: { [appid_locale: string]: AchievementDetail[] };
+  achievementDetailLoading: boolean;
+  achievementDetailError: string | null;
+  fetchAchievementDetail: (appid: number) => Promise<void>;
 }
 
-export const useSteamStore = create<SteamState>((set) => ({
+export const useSteamStore = create<SteamState>((set, get) => ({
   profile: null,
   recentGames: [],
   ownedGames: [],
   ownedGamesLoading: false,
-  achievements: {},
   totalPlaytime: 0,
   error: null,
+  achievementDetail: {},
+  achievementDetailLoading: false,
+  achievementDetailError: null,
   fetchOwnedGames: async () => {
     set({ ownedGamesLoading: true, error: null });
     try {
       const stats = (await request.get('/api/steam/stats')) as SteamStats;
-      const ownedGames = stats.ownedGames.map((game: SteamGameStats) => ({
-        appid: game.appid,
-        name: game.name,
-        playtime: game.playtime_forever,
-        icon: game.img_icon_url,
-        logo: game.img_logo_url,
-      }));
-      const totalPlaytime = ownedGames.reduce((sum, g) => sum + g.playtime, 0);
       set({
         profile: stats.profile,
-        recentGames: stats.recentGames.map((game: SteamGameStats) => ({
-          appid: game.appid,
-          name: game.name,
-          playtime: game.playtime_forever,
-          icon: game.img_icon_url,
-          logo: game.img_logo_url,
-        })),
-        ownedGames,
-        achievements: stats.achievements || {},
-        totalPlaytime,
+        recentGames: sortGamesByPlaytime(parseGamesArray(stats.recentGames)),
+        ownedGames: sortGamesByPlaytime(parseGamesArray(stats.ownedGames)),
+        totalPlaytime: stats.totalPlaytime,
         ownedGamesLoading: false,
       });
     } catch (error: unknown) {
-      console.error('Failed to fetch Steam games:', error);
       set({
         ownedGamesLoading: false,
         error: error instanceof Error ? error.message : 'Failed to fetch Steam games',
+      });
+    }
+  },
+  fetchAchievementDetail: async (appid: number) => {
+    set({ achievementDetailLoading: true, achievementDetailError: null });
+    try {
+      const locale = useTranslationsStore.getState().locale || 'en';
+      const steamLangMap: Record<string, string> = {
+        en: 'english',
+        zh: 'schinese',
+      };
+      const steamLang = steamLangMap[locale] || 'english';
+      const cacheKey = `${appid}_${locale}`;
+      const achievementDetail = get().achievementDetail;
+      if (achievementDetail[cacheKey]) {
+        set({ achievementDetailLoading: false });
+        return;
+      }
+      const data = (await request.get(
+        `/api/steam/achievements/${appid}?language=${steamLang}`
+      )) as AchievementDetail[];
+      set({
+        achievementDetail: {
+          ...achievementDetail,
+          [cacheKey]: data,
+        },
+        achievementDetailLoading: false,
+      });
+    } catch (error: unknown) {
+      set({
+        achievementDetailLoading: false,
+        achievementDetailError:
+          error instanceof Error ? error.message : 'Error fetching achievements',
       });
     }
   },

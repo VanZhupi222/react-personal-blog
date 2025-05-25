@@ -8,6 +8,11 @@ const zh: Translations = {
       message: '别担心，你可以再试一次！',
       retry: '重试',
     },
+    update: {
+      title: '发现新版本',
+      message: '请刷新页面以获取最新内容',
+      refresh: '立即刷新',
+    },
   },
   welcome: {
     name: 'Shijie Fan | 范世杰',
@@ -139,11 +144,11 @@ const zh: Translations = {
     stats: {
       totalGames: {
         title: '游戏总数',
-        subtitle: '游戏时长 >= {hours}小时',
+        subtitle: '游玩时间超过 {hours} 小时',
       },
       totalPlaytime: {
-        title: '总游戏时长',
-        subtitle: '所有游戏',
+        title: '总游戏时间',
+        subtitle: '所有游戏的总游玩时间',
       },
       achievements: {
         title: '成就',
@@ -151,11 +156,17 @@ const zh: Translations = {
       },
     },
     gameCard: {
-      achievements: '{achieved}/{total} 成就',
+      achievements: '成就 {achieved}/{total}',
     },
     pagination: {
       page: '第 {current} 页，共 {total} 页',
+      prev: '上一页',
+      next: '下一页',
+      goTo: '跳转到',
     },
+    clickToView: '点击游戏卡片可查看成就',
+    achieved: '已达成',
+    noAchievements: '暂无成就',
   },
 };
 

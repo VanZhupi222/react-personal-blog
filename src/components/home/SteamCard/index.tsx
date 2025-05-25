@@ -26,8 +26,10 @@ export function SteamCard() {
     useSteamStore();
 
   useEffect(() => {
-    if (!profile) fetchOwnedGames();
-  }, [profile, fetchOwnedGames]);
+    if (!profile && !ownedGamesLoading) {
+      fetchOwnedGames();
+    }
+  }, [profile, fetchOwnedGames, ownedGamesLoading]);
 
   const handleGameClick = (appid: number) => {
     window.open(`https://steamcommunity.com/app/${appid}`, '_blank');

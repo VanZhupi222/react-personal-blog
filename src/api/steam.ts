@@ -1,4 +1,10 @@
-import type { SteamGameStats, SteamProfile, SteamStats, SteamAchievement, SteamAchievementSchema } from '@/lib/steam/types';
+import type {
+  SteamGameStats,
+  SteamProfile,
+  SteamStats,
+  SteamAchievement,
+  SteamAchievementSchema,
+} from '@/lib/steam/types';
 
 class SteamAPI {
   private readonly baseUrl = 'https://api.steampowered.com';
@@ -8,11 +14,6 @@ class SteamAPI {
   constructor() {
     const apiKey = process.env.STEAM_API_KEY;
     const steamId = process.env.STEAM_ID;
-
-    console.log('Steam API Config:', {
-      apiKey: apiKey ? '***' + apiKey.slice(-4) : undefined,
-      steamId: steamId ? '***' + steamId.slice(-4) : undefined
-    });
 
     if (!apiKey) {
       throw new Error('Steam API key is not configured');
@@ -66,8 +67,11 @@ class SteamAPI {
     return data.response.games || [];
   }
 
-  async getPlayerAchievements(appid: number): Promise<SteamAchievement[]> {
-    const endpoint = `/ISteamUserStats/GetPlayerAchievements/v1/?key=${this.apiKey}&steamid=${this.steamId}&appid=${appid}&l=english`;
+  async getPlayerAchievements(
+    appid: number,
+    lang: string = 'english'
+  ): Promise<SteamAchievement[]> {
+    const endpoint = `/ISteamUserStats/GetPlayerAchievements/v1/?key=${this.apiKey}&steamid=${this.steamId}&appid=${appid}&l=${lang}`;
     try {
       const data = await this.fetchJson<{
         playerstats: {
@@ -77,12 +81,10 @@ class SteamAPI {
           success: boolean;
         };
       }>(endpoint);
-
-      // 确保返回的成就数组中包含游戏名称
       const achievements = data.playerstats.achievements || [];
-      return achievements.map(achievement => ({
+      return achievements.map((achievement) => ({
         ...achievement,
-        gameName: data.playerstats.gameName // 添加游戏名称
+        gameName: data.playerstats.gameName,
       }));
     } catch (error) {
       console.warn(`Failed to fetch achievements for app ${appid}:`, error);
@@ -90,8 +92,8 @@ class SteamAPI {
     }
   }
 
-  async getGameSchema(appid: number): Promise<SteamAchievementSchema[]> {
-    const endpoint = `/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${appid}&l=english`;
+  async getGameSchema(appid: number, lang: string = 'english'): Promise<SteamAchievementSchema[]> {
+    const endpoint = `/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${appid}&l=${lang}`;
     try {
       const data = await this.fetchJson<{
         game: {
@@ -120,15 +122,13 @@ class SteamAPI {
     const achievements: SteamStats['achievements'] = {};
     await Promise.all(
       ownedGames
-        .filter(game => game.playtime_forever > 0)
+        .filter((game) => game.playtime_forever > 0)
         .map(async (game) => {
           try {
             const gameSchema = await this.getGameSchema(game.appid);
             if (gameSchema.length > 0) {
               achievements[game.appid] = {
                 total: gameSchema.length,
-                achieved: 0, // 以后再做
-                percentage: 0, // 以后再做
                 gameName: game.name,
               };
             }
@@ -143,8 +143,29 @@ class SteamAPI {
       recentGames,
       totalPlaytime,
       achievements,
-      ownedGames: ownedGames.filter(game => game.playtime_forever > 0),
+      ownedGames: ownedGames.filter((game) => game.playtime_forever > 0),
     };
+  }
+
+  /**
+   * 获取全局成就稀有度
+   * https://partner.steamgames.com/doc/webapi/ISteamUserStats#GetGlobalAchievementPercentagesForApp
+   */
+  async getGlobalAchievementPercentagesForApp(
+    appid: number
+  ): Promise<{ name: string; percent: number }[]> {
+    const endpoint = `/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v1/?gameid=${appid}`;
+    try {
+      const data = await this.fetchJson<{
+        achievementpercentages: {
+          achievements: { name: string; percent: number }[];
+        };
+      }>(endpoint);
+      return data.achievementpercentages.achievements || [];
+    } catch (error) {
+      console.warn(`Failed to fetch global achievement percentages for app ${appid}:`, error);
+      return [];
+    }
   }
 }
 
