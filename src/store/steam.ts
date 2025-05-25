@@ -1,8 +1,9 @@
 import { create } from 'zustand';
-import type { SteamStats } from '@/lib/steam/types';
+import type { SteamStats, AchievementDetail } from '@/lib/steam/types';
 import type { ParsedGame } from '@/lib/steam/parser';
 import { request } from '@/api/axios';
 import { parseGamesArray, sortGamesByPlaytime } from '@/lib/steam/parser';
+import { useTranslationsStore } from '@/store/translations';
 
 interface SteamState {
   profile: SteamStats['profile'] | null;
@@ -13,13 +14,13 @@ interface SteamState {
   achievements: SteamStats['achievements'];
   totalPlaytime: number;
   fetchOwnedGames: () => Promise<void>;
-  achievementDetail: any[];
+  achievementDetail: { [appid_locale: string]: AchievementDetail[] };
   achievementDetailLoading: boolean;
   achievementDetailError: string | null;
   fetchAchievementDetail: (appid: number) => Promise<void>;
 }
 
-export const useSteamStore = create<SteamState>((set) => ({
+export const useSteamStore = create<SteamState>((set, get) => ({
   profile: null,
   recentGames: [],
   ownedGames: [],
@@ -27,7 +28,7 @@ export const useSteamStore = create<SteamState>((set) => ({
   achievements: {},
   totalPlaytime: 0,
   error: null,
-  achievementDetail: [],
+  achievementDetail: {},
   achievementDetailLoading: false,
   achievementDetailError: null,
   fetchOwnedGames: async () => {
@@ -52,13 +53,32 @@ export const useSteamStore = create<SteamState>((set) => ({
   fetchAchievementDetail: async (appid: number) => {
     set({ achievementDetailLoading: true, achievementDetailError: null });
     try {
-      const res = await fetch(`/api/steam/achievements/${appid}`);
-      if (!res.ok) throw new Error('Failed to fetch achievements');
-      const data = await res.json();
-      set({ achievementDetail: data, achievementDetailLoading: false });
+      const locale = useTranslationsStore.getState().locale || 'en';
+      console.log('fetchAchievementDetail', appid, locale);
+      const steamLangMap: Record<string, string> = {
+        en: 'english',
+        zh: 'schinese',
+      };
+      const steamLang = steamLangMap[locale] || 'english';
+      console.log('steamLang', steamLang);
+      const cacheKey = `${appid}_${locale}`;
+      const achievementDetail = get().achievementDetail;
+      if (achievementDetail[cacheKey]) {
+        set({ achievementDetailLoading: false });
+        return;
+      }
+      const data = (await request.get(
+        `/api/steam/achievements/${appid}?language=${steamLang}`
+      )) as AchievementDetail[];
+      set({
+        achievementDetail: {
+          ...achievementDetail,
+          [cacheKey]: data,
+        },
+        achievementDetailLoading: false,
+      });
     } catch (e: any) {
       set({
-        achievementDetail: [],
         achievementDetailLoading: false,
         achievementDetailError: e.message || 'Error fetching achievements',
       });

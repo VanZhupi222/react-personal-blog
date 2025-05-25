@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslations } from '@/lib/hooks/useTranslations';
 
 interface AchievementCardProps {
   achievement: {
@@ -28,7 +29,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
   onMouseLeave,
   className = '',
 }) => {
-  console.log('ach', ach);
+  const { t } = useTranslations();
   if (isFloating) {
     return (
       <div
@@ -53,7 +54,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
           </div>
           {ach.achieved ? (
             <div className="text-achievement-green mt-1 text-xs">
-              已达成 {formatUnlockTime(ach.unlocktime)}
+              {t.achievements.achieved} {formatUnlockTime(ach.unlocktime)}
             </div>
           ) : null}
         </div>
@@ -87,7 +88,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
           </div>
           {ach.achieved ? (
             <div className="text-achievement-green text-xs">
-              已达成 {formatUnlockTime(ach.unlocktime)}
+              {t.achievements.achieved} {formatUnlockTime(ach.unlocktime)}
             </div>
           ) : null}
         </div>

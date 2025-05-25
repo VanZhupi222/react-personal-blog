@@ -17,7 +17,7 @@ export function AchievementsGameCard({
 }) {
   return (
     <Card
-      className={`cursor-pointer transition-all duration-300 ${isHovered ? 'ring-primary bg-accent/80 scale-105 ring-2' : ''}`}
+      className={`min-h-[138px] cursor-pointer transition-all duration-300 ${isHovered ? 'ring-primary bg-accent/80 scale-105 ring-2' : ''}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}

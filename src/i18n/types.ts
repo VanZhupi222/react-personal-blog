@@ -153,6 +153,11 @@ export interface Translations {
     };
     pagination: {
       page: string;
+      prev: string;
+      next: string;
+      goTo: string;
     };
+    clickToView: string;
+    achieved: string;
   };
 }

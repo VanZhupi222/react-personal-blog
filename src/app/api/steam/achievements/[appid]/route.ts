@@ -8,9 +8,13 @@ export async function GET(request: Request, { params }: { params: { appid: strin
       return NextResponse.json({ error: 'Invalid appid' }, { status: 400 });
     }
 
+    // 获取语言参数
+    const url = new URL(request.url);
+    const lang = url.searchParams.get('language') || 'english';
+
     const [playerAchievements, gameSchema] = await Promise.all([
-      steamAPI.getPlayerAchievements(appid),
-      steamAPI.getGameSchema(appid),
+      steamAPI.getPlayerAchievements(appid, lang),
+      steamAPI.getGameSchema(appid, lang),
     ]);
 
     // 合并玩家成就和游戏成就信息

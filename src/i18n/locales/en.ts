@@ -160,7 +160,12 @@ const en: Translations = {
     },
     pagination: {
       page: 'Page {current} of {total}',
+      prev: 'Prev',
+      next: 'Next',
+      goTo: 'Go to',
     },
+    clickToView: 'Click on a game card to view achievements',
+    achieved: 'Achieved',
   },
 };
 

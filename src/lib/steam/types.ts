@@ -27,6 +27,11 @@ export interface SteamAchievementSchema {
   icongray: string;
 }
 
+export interface AchievementDetail extends SteamAchievementSchema {
+  achieved: number;
+  unlocktime: number;
+}
+
 export interface SteamGameSchemaResponse {
   game: {
     availableGameStats?: {
@@ -63,8 +68,6 @@ export interface SteamStats {
   achievements?: {
     [appid: string]: {
       total: number;
-      achieved: number;
-      percentage: number;
       gameName: string;
     };
   };

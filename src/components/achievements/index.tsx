@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AchievementsStatsCard } from './AchievementsStatsCard';
 import { AchievementsGameCard } from './AchievementsGameCard';
-import { CardImage } from '@/components/ui/Card';
-import { Trophy, ChevronLeft, ChevronRight, Medal } from 'lucide-react';
+import { Trophy, Medal } from 'lucide-react';
 import { useSteamStore } from '@/store/steam';
-import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import type { ParsedGame } from '@/lib/steam/parser';
 import {
@@ -18,11 +16,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AchievementsPageSkeleton } from '@/components/skeleton/AchievementsPageSkeleton';
 import { ErrorFunc } from '@/components/features/Error';
 import { AchievementsListCard } from './AchievementsListCard';
-import { AchievementsCardSkeleton } from '@/components/skeleton/AchievementsCardSkeleton';
 import { useFetchOnClick } from '@/lib/hooks/useFetchOnClick';
+import { Pagination } from '@/components/features/Pagination';
 
 export function AchievementsPage() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const { ownedGames, ownedGamesLoading, fetchOwnedGames, error } = useSteamStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredAppId, setHoveredAppId] = useState<number | null>(null);
@@ -44,6 +42,12 @@ export function AchievementsPage() {
     if (!ownedGames.length) fetchOwnedGames();
   }, [ownedGames.length, fetchOwnedGames]);
 
+  useEffect(() => {
+    if (selectedAppId) {
+      fetchAchievementOnClick(selectedAppId);
+    }
+  }, [locale, selectedAppId, fetchAchievementOnClick]);
+
   if (ownedGamesLoading) {
     return <AchievementsPageSkeleton />;
   }
@@ -57,6 +61,10 @@ export function AchievementsPage() {
 
   const hoveredGame = currentItems.find((g) => g.appid === hoveredAppId);
   const selectedGame = selectedAppId ? currentItems.find((g) => g.appid === selectedAppId) : null;
+
+  const achievements = selectedGame
+    ? achievementDetail[`${selectedGame.appid}_${locale}`] || []
+    : [];
 
   const handleGameClick = (appid: number) => {
     setSelectedAppId(appid === selectedAppId ? null : appid);
@@ -116,10 +124,11 @@ export function AchievementsPage() {
         <div className="flex min-h-[340px] w-full">
           {/* 左侧：游戏列表 */}
           <div className="mx-auto w-1/2 space-y-4">
-            <div className="mb-2 text-center text-sm text-gray-500">点击游戏卡片可查看成就</div>
+            <div className="mb-2 text-center text-sm text-gray-500">
+              {t.achievements.clickToView}
+            </div>
             {currentItems.map((item) => {
               const isHovered = hoveredAppId === item.appid;
-              const isSelected = selectedAppId === item.appid;
               return (
                 <div key={item.appid}>
                   <AchievementsGameCard
@@ -136,6 +145,10 @@ export function AchievementsPage() {
                 </div>
               );
             })}
+            {/* 占位补齐，保证高度一致，避免最后一页高度跳变 */}
+            {Array.from({ length: Math.max(0, 5 - currentItems.length) }).map((_, idx) => (
+              <div key={`placeholder-${idx}`} className="h-[138px] md:h-[138px]" />
+            ))}
           </div>
           {/* 右侧：大图展示区+成就内容 */}
           <div className="relative mt-6 flex min-h-[340px] w-1/2 flex-col items-start justify-start">
@@ -151,7 +164,7 @@ export function AchievementsPage() {
                 >
                   <AchievementsListCard
                     selectedGame={selectedGame}
-                    achievements={achievementDetail}
+                    achievements={achievements}
                     loading={achievementDetailLoading}
                     error={achievementDetailError}
                     onRetry={() => fetchAchievementOnClick(selectedGame.appid)}
@@ -163,28 +176,18 @@ export function AchievementsPage() {
         </div>
 
         {totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm">
-              {t.achievements.pagination.page
-                .replace('{current}', currentPage.toString())
-                .replace('{total}', totalPages.toString())}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+          <div className="mt-8 flex items-center justify-center">
+            <Pagination
+              currentPage={currentPage}
+              total={filteredGames.length}
+              pageSize={ITEMS_PER_PAGE}
+              onPageChange={setCurrentPage}
+              labels={{
+                prev: t.achievements.pagination.prev,
+                next: t.achievements.pagination.next,
+                goTo: t.achievements.pagination.goTo,
+              }}
+            />
           </div>
         )}
       </div>
