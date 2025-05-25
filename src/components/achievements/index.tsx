@@ -17,12 +17,28 @@ import { formatPlaytime } from '@/lib/utils/format';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AchievementsPageSkeleton } from '@/components/skeleton/AchievementsPageSkeleton';
 import { ErrorFunc } from '@/components/features/Error';
+import { AchievementsListCard } from './AchievementsListCard';
+import { AchievementsCardSkeleton } from '@/components/skeleton/AchievementsCardSkeleton';
+import { useFetchOnClick } from '@/lib/hooks/useFetchOnClick';
 
 export function AchievementsPage() {
   const { t } = useTranslations();
   const { ownedGames, ownedGamesLoading, fetchOwnedGames, error } = useSteamStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredAppId, setHoveredAppId] = useState<number | null>(null);
+  const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
+  const {
+    achievementDetail,
+    achievementDetailLoading,
+    achievementDetailError,
+    fetchAchievementDetail,
+  } = useSteamStore();
+
+  const { handleClick: fetchAchievementOnClick } = useFetchOnClick({
+    fetchData: fetchAchievementDetail,
+    loading: achievementDetailLoading,
+    error: achievementDetailError,
+  });
 
   useEffect(() => {
     if (!ownedGames.length) fetchOwnedGames();
@@ -40,6 +56,15 @@ export function AchievementsPage() {
   const currentItems = paginateGames(filteredGames, currentPage, ITEMS_PER_PAGE);
 
   const hoveredGame = currentItems.find((g) => g.appid === hoveredAppId);
+  const selectedGame = selectedAppId ? currentItems.find((g) => g.appid === selectedAppId) : null;
+
+  const handleGameClick = (appid: number) => {
+    setSelectedAppId(appid === selectedAppId ? null : appid);
+    setHoveredAppId(appid);
+    if (appid !== selectedAppId) {
+      fetchAchievementOnClick(appid);
+    }
+  };
 
   return (
     <div className="relative container mx-auto py-8">
@@ -91,26 +116,49 @@ export function AchievementsPage() {
         <div className="flex min-h-[340px] w-full">
           {/* 左侧：游戏列表 */}
           <div className="mx-auto w-1/2 space-y-4">
+            <div className="mb-2 text-center text-sm text-gray-500">点击游戏卡片可查看成就</div>
             {currentItems.map((item) => {
               const isHovered = hoveredAppId === item.appid;
+              const isSelected = selectedAppId === item.appid;
               return (
-                <AchievementsGameCard
-                  key={item.appid}
-                  item={item}
-                  isHovered={isHovered}
-                  t={{
-                    ...t,
-                    formatPlaytime,
-                  }}
-                  onMouseEnter={() => setHoveredAppId(item.appid)}
-                  onMouseLeave={() => setHoveredAppId(null)}
-                />
+                <div key={item.appid}>
+                  <AchievementsGameCard
+                    item={item}
+                    isHovered={isHovered}
+                    t={{
+                      ...t,
+                      formatPlaytime,
+                    }}
+                    onMouseEnter={() => setHoveredAppId(item.appid)}
+                    onMouseLeave={() => setHoveredAppId(null)}
+                    onClick={() => handleGameClick(item.appid)}
+                  />
+                </div>
               );
             })}
           </div>
-          {/* 右侧：大图展示区 */}
-          <div className="relative flex w-1/2 items-center justify-center">
-            <CardImage hoveredGame={hoveredGame} />
+          {/* 右侧：大图展示区+成就内容 */}
+          <div className="relative mt-6 flex min-h-[340px] w-1/2 flex-col items-start justify-start">
+            <AnimatePresence mode="wait">
+              {selectedGame && (
+                <motion.div
+                  key={selectedGame.appid}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.04 }}
+                  transition={{ duration: 0.5, ease: 'easeInOut' }}
+                  className="flex h-full w-full justify-center"
+                >
+                  <AchievementsListCard
+                    selectedGame={selectedGame}
+                    achievements={achievementDetail}
+                    loading={achievementDetailLoading}
+                    error={achievementDetailError}
+                    onRetry={() => fetchAchievementOnClick(selectedGame.appid)}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 

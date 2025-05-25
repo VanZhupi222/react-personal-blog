@@ -13,6 +13,10 @@ interface SteamState {
   achievements: SteamStats['achievements'];
   totalPlaytime: number;
   fetchOwnedGames: () => Promise<void>;
+  achievementDetail: any[];
+  achievementDetailLoading: boolean;
+  achievementDetailError: string | null;
+  fetchAchievementDetail: (appid: number) => Promise<void>;
 }
 
 export const useSteamStore = create<SteamState>((set) => ({
@@ -23,6 +27,9 @@ export const useSteamStore = create<SteamState>((set) => ({
   achievements: {},
   totalPlaytime: 0,
   error: null,
+  achievementDetail: [],
+  achievementDetailLoading: false,
+  achievementDetailError: null,
   fetchOwnedGames: async () => {
     set({ ownedGamesLoading: true, error: null });
     try {
@@ -39,6 +46,21 @@ export const useSteamStore = create<SteamState>((set) => ({
       set({
         ownedGamesLoading: false,
         error: error instanceof Error ? error.message : 'Failed to fetch Steam games',
+      });
+    }
+  },
+  fetchAchievementDetail: async (appid: number) => {
+    set({ achievementDetailLoading: true, achievementDetailError: null });
+    try {
+      const res = await fetch(`/api/steam/achievements/${appid}`);
+      if (!res.ok) throw new Error('Failed to fetch achievements');
+      const data = await res.json();
+      set({ achievementDetail: data, achievementDetailLoading: false });
+    } catch (e: any) {
+      set({
+        achievementDetail: [],
+        achievementDetailLoading: false,
+        achievementDetailError: e.message || 'Error fetching achievements',
       });
     }
   },

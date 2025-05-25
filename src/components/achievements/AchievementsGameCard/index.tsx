@@ -6,18 +6,21 @@ export function AchievementsGameCard({
   t,
   onMouseEnter,
   onMouseLeave,
+  onClick,
 }: {
   item: any;
   isHovered: boolean;
   t: any;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  onClick?: () => void;
 }) {
   return (
     <Card
       className={`cursor-pointer transition-all duration-300 ${isHovered ? 'ring-primary bg-accent/80 scale-105 ring-2' : ''}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
       <CardContent className="pt-6">
         <div className="flex items-start gap-4">

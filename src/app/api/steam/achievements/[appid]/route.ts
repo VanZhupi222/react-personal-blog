@@ -3,7 +3,7 @@ import { steamAPI } from '@/api/steam';
 
 export async function GET(request: Request, { params }: { params: { appid: string } }) {
   try {
-    const appid = parseInt(params.appid, 10);
+    const appid = parseInt(params?.appid, 10);
     if (isNaN(appid)) {
       return NextResponse.json({ error: 'Invalid appid' }, { status: 400 });
     }

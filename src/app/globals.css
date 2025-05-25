@@ -64,6 +64,10 @@
   --color-design-leetcode-card: var(--design-leetcode-card);
   --color-design-steam-card: var(--design-steam-card);
   --color-welcome-gradient-foreground: var(--welcome-gradient-foreground);
+  --color-steam-achievement: var(--steam-achievement);
+  --color-achievement-green: #22c55e;
+  --color-achievement-gray: #9ca3af;
+  --color-achievement-darkgreen: #15803d;
 }
 
 @layer base {
@@ -113,6 +117,10 @@
     --design-leetcode-card: linear-gradient(135deg, #9c1b8c 0%, #4a1b9c 100%);
     --design-steam-card: #1b2b9c;
     --welcome-gradient-foreground: #18122b;
+    --steam-achievement: #f9f9fb;
+    --achievement-green: #22c55e;
+    --achievement-gray: #9ca3af;
+    --achievement-darkgreen: #15803d;
   }
 
   .dark {
@@ -173,6 +181,10 @@
     --design-leetcode-card: linear-gradient(135deg, #9c1b8c 0%, #4a1b9c 100%);
     --design-steam-card: #1b2b9c;
     --welcome-gradient-foreground: #fff;
+    --steam-achievement: #2a2340;
+    --achievement-green: #4ade80;
+    --achievement-gray: #bdbdbd;
+    --achievement-darkgreen: #166534;
   }
 }
 
