@@ -32,7 +32,7 @@ export const useSteamStore = create<SteamState>((set, get) => ({
   fetchOwnedGames: async () => {
     set({ ownedGamesLoading: true, error: null });
     try {
-      const stats = (await request.get('/api/steam/stats')) as SteamStats;
+      const stats = (await request.get('/api/steam')) as SteamStats;
       set({
         profile: stats.profile,
         recentGames: sortGamesByPlaytime(parseGamesArray(stats.recentGames)),

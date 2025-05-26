@@ -37,10 +37,6 @@ export function AchievementsGameCard({
             src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`}
             alt={item.name}
             className="h-16 w-32 rounded-md bg-gray-100 object-cover object-center"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.icon}.jpg`;
-            }}
           />
           <div className="min-w-0 flex-1">
             <div className="mb-3 flex items-center gap-2">

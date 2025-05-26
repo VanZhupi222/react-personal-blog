@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { leetcodeAPI } from '@/api/leetcode';
-import type { LeetCodeStats } from '@/lib/leetcode/types';
+import { request } from '@/api/axios';
+import { parseLeetCodeStats } from '@/lib/leetcode/parser';
+import { leetcodeQuery } from '@/lib/leetcode/queries';
+import type { LeetCodeStats, LeetCodeResponse } from '@/lib/leetcode/types';
 
 interface LeetCodeState {
-  // 状态
   stats: LeetCodeStats | null;
   loading: boolean;
   error: string | null;
@@ -13,7 +14,6 @@ interface LeetCodeState {
   // actions
   setUsername: (username: string) => void;
   fetchStats: () => Promise<void>;
-  retryFetch: () => Promise<void>;
   reset: () => void;
 }
 
@@ -31,7 +31,6 @@ export const useLeetCodeStore = create<LeetCodeState>()(
 
       setUsername: (username: string) => {
         set({ username }, false, 'leetcode/setUsername');
-        // 当用户名改变时自动获取数据
         get().fetchStats();
       },
 
@@ -40,8 +39,12 @@ export const useLeetCodeStore = create<LeetCodeState>()(
           set({ loading: true, error: null }, false, 'leetcode/fetchStats/pending');
 
           const username = get().username;
-          const stats = await leetcodeAPI.getUserStats(username);
+          const data = await request.post<{ data: LeetCodeResponse }>('/api/leetcode', {
+            query: leetcodeQuery,
+            variables: { username },
+          });
 
+          const stats = parseLeetCodeStats(data.data);
           set({ stats, loading: false }, false, 'leetcode/fetchStats/fulfilled');
         } catch (error) {
           const errorMessage =
@@ -54,14 +57,7 @@ export const useLeetCodeStore = create<LeetCodeState>()(
             false,
             'leetcode/fetchStats/rejected'
           );
-          // 发生错误时自动重试
-          get().retryFetch();
         }
-      },
-
-      retryFetch: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 3000)); // 等待3秒
-        await get().fetchStats();
       },
 
       reset: () => {

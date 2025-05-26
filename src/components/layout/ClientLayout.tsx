@@ -18,9 +18,11 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
         const browserLocale = navigator.language.startsWith('zh') ? 'zh' : 'en';
         detectedLocale = savedLocale || browserLocale;
       }
-      store.initTranslations(detectedLocale);
+      if (!loading) {
+        store.initTranslations(detectedLocale);
+      }
     }
-  }, []);
+  }, [loading]);
 
   return (
     <>

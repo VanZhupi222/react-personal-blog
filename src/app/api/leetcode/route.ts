@@ -1,30 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { request } from '@/api/axios';
 
-export async function POST(request: NextRequest) {
+export async function POST(requestObj: NextRequest) {
   try {
-    const body = await request.json();
-
-    const response = await fetch('https://leetcode.com/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0', // 添加 User-Agent 避免被拦截
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok) {
-      throw new Error(`LeetCode API responded with status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    // 验证响应数据
-    if (!data.data?.matchedUser) {
-      throw new Error('Invalid response from LeetCode API');
-    }
-
+    const body = await requestObj.json();
+    const data = await request.post('https://leetcode.com/graphql', body);
     return NextResponse.json(data);
   } catch (error) {
     console.error('LeetCode API Error:', error);
@@ -35,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// 预防其他 HTTP 方法
+// 只允许 POST 方法，其他方法返回 405
 export async function GET() {
   return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
 }
