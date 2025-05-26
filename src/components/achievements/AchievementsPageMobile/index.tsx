@@ -37,14 +37,14 @@ export function AchievementsPageMobile() {
   const [modalPage, setModalPage] = useState(1);
 
   useEffect(() => {
-    if (!ownedGames.length) fetchOwnedGames();
-  }, [ownedGames.length, fetchOwnedGames]);
+    if (!ownedGames.length && !ownedGamesLoading) fetchOwnedGames();
+  }, [ownedGames.length, ownedGamesLoading, fetchOwnedGames]);
 
   useEffect(() => {
-    if (selectedAppId) {
+    if (selectedAppId && !achievementDetailLoading) {
       fetchAchievementOnClick(selectedAppId);
     }
-  }, [locale, selectedAppId, fetchAchievementOnClick]);
+  }, [locale, selectedAppId, fetchAchievementOnClick, achievementDetailLoading]);
 
   useEffect(() => {
     setModalPage(1);
@@ -116,7 +116,10 @@ export function AchievementsPageMobile() {
             open={!!selectedGame}
             onClose={() => setSelectedAppId(null)}
             selectedGame={selectedGame ?? undefined}
-            achievements={achievements}
+            achievements={achievements.map((a) => ({
+              ...a,
+              achieved: !!a.achieved,
+            }))}
             modalPage={modalPage}
             modalTotalPages={modalTotalPages}
             setModalPage={setModalPage}

@@ -13,6 +13,7 @@ interface Achievement {
   description?: string;
   icon?: string;
   rarity?: number;
+  achieved?: boolean;
 }
 
 interface Game {
@@ -122,7 +123,7 @@ export function AchievementsModal({
                                   .map((ach, idx) => (
                                     <div
                                       key={idx}
-                                      className="bg-muted mb-4 flex items-center gap-3 rounded p-3"
+                                      className={`bg-muted mb-4 flex items-center gap-3 rounded p-3 ${ach.achieved ? 'border-achievement-green border-2' : ''}`}
                                     >
                                       {ach?.icon && (
                                         <img
@@ -132,10 +133,12 @@ export function AchievementsModal({
                                         />
                                       )}
                                       <div className="flex-1">
-                                        <div className="font-medium">
+                                        <div
+                                          className={`line-clamp-1 font-medium ${ach.achieved ? 'text-achievement-darkgreen' : 'text-achievement-gray'}`}
+                                        >
                                           {ach?.displayName || ach?.name}
                                         </div>
-                                        <div className="text-muted-foreground text-xs">
+                                        <div className="text-muted-foreground line-clamp-2 text-xs">
                                           {ach?.description}
                                         </div>
                                         {typeof ach.rarity === 'number' && (
