@@ -9,6 +9,7 @@ interface AchievementCardProps {
     description: string;
     achieved: number;
     unlocktime: number;
+    rarity?: number;
   };
   isFloating?: boolean;
   onMouseEnter?: () => void;
@@ -37,60 +38,98 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <img
-          src={ach.achieved ? ach.icon : ach.icongray}
-          alt={ach.displayName}
-          className="mr-4 h-12 w-12 rounded border bg-white object-cover object-center shadow"
-          loading="lazy"
-        />
-        <div className="min-w-0 flex-1">
-          <div
-            className={`text-lg font-semibold ${ach.achieved ? 'text-achievement-darkgreen' : 'text-achievement-gray'}`}
-          >
-            {ach.displayName}
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <img
+              src={ach.achieved ? ach.icon : ach.icongray}
+              alt={ach.displayName}
+              className={`h-12 w-12 bg-white object-cover object-center shadow ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
+              loading="lazy"
+            />
           </div>
-          <div className="text-achievement-gray mt-1 text-xs break-words whitespace-normal">
-            {ach.description}
-          </div>
-          {ach.achieved ? (
-            <div className="text-achievement-green mt-1 text-xs">
-              {t.achievements.achieved} {formatUnlockTime(ach.unlocktime)}
+          <div className="min-w-0 flex-1">
+            <div
+              className={`text-lg font-semibold ${ach.achieved ? 'text-achievement-darkgreen' : 'text-achievement-gray'}`}
+            >
+              {ach.displayName}
             </div>
-          ) : null}
+            <div className="text-achievement-gray mt-1 text-xs break-words whitespace-normal">
+              {ach.description}
+            </div>
+            {ach.achieved ? (
+              <div className="text-achievement-green mt-1 text-xs">
+                {t.achievements.achieved} {formatUnlockTime(ach.unlocktime)}
+              </div>
+            ) : null}
+            {typeof ach.rarity === 'number' && (
+              <div
+                className={`text-xs font-bold ${ach.rarity < 10 ? 'text-achievement-rare-glow-strong' : 'text-achievement-gray'}`}
+                style={
+                  ach.rarity < 10
+                    ? {
+                        textShadow:
+                          '0 0 4px var(--color-achievement-rare-text-shadow), 0 0 8px var(--color-achievement-rare-glow)',
+                      }
+                    : undefined
+                }
+              >
+                {t.achievements.ownedByPercent.replace('{percent}', ach.rarity.toFixed(1))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
   }
   return (
     <div
-      className={`group bg-steam-achievement hover:bg-steam-achievement/80 relative flex min-h-[72px] cursor-pointer items-center gap-3 rounded-lg p-2 shadow-sm transition-all duration-300 ${className}`}
+      className={`group bg-steam-achievement hover:bg-steam-achievement/80 relative flex min-h-[5.5rem] items-center gap-3 rounded-lg p-2 shadow-sm transition-all duration-300 ${className}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       style={{ zIndex: 1 }}
     >
-      <img
-        src={ach.achieved ? ach.icon : ach.icongray}
-        alt={ach.displayName}
-        className="h-10 w-10 rounded border bg-white object-cover object-center shadow"
-        loading="lazy"
-      />
-      <div className="min-w-0 flex-1">
-        <div
-          className={`font-semibold ${ach.achieved ? 'text-achievement-darkgreen' : 'text-achievement-gray'} truncate`}
-        >
-          {ach.displayName}
+      <div className="flex items-center gap-3">
+        <div className="relative">
+          <img
+            src={ach.achieved ? ach.icon : ach.icongray}
+            alt={ach.displayName}
+            className={`h-10 w-10 bg-white object-cover object-center shadow ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
+            loading="lazy"
+          />
         </div>
-        <div className="flex flex-col">
+        <div className="min-w-0 flex-1">
           <div
-            className={`${ach.achieved ? 'line-clamp-1' : 'line-clamp-2'} text-achievement-gray text-xs`}
+            className={`line-clamp-1 max-w-full font-semibold ${ach.achieved ? 'text-achievement-darkgreen' : 'text-achievement-gray'}`}
           >
-            {ach.description}
+            {ach.displayName}
           </div>
-          {ach.achieved ? (
-            <div className="text-achievement-green text-xs">
-              {t.achievements.achieved} {formatUnlockTime(ach.unlocktime)}
+          <div className="flex flex-col">
+            <div
+              className={`${ach.achieved ? 'line-clamp-1' : 'line-clamp-2'} text-achievement-gray text-xs`}
+            >
+              {ach.description}
             </div>
-          ) : null}
+            {ach.achieved ? (
+              <div className="text-achievement-green text-xs">
+                {t.achievements.achieved} {formatUnlockTime(ach.unlocktime)}
+              </div>
+            ) : null}
+            {typeof ach.rarity === 'number' && (
+              <div
+                className={`text-xs font-bold ${ach.rarity < 10 ? 'text-achievement-rare-glow-strong' : 'text-achievement-gray'}`}
+                style={
+                  ach.rarity < 10
+                    ? {
+                        textShadow:
+                          '0 0 4px var(--color-achievement-rare-text-shadow), 0 0 8px var(--color-achievement-rare-glow)',
+                      }
+                    : undefined
+                }
+              >
+                {t.achievements.ownedByPercent.replace('{percent}', ach.rarity.toFixed(1))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

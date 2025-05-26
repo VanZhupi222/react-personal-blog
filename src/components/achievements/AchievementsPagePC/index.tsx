@@ -121,12 +121,12 @@ export function AchievementsPagePC() {
           />
         </div>
 
-        <div className="flex min-h-[340px] w-full flex-col md:flex-row">
+        {/* 提示文字移到flex外部 */}
+        <div className="mb-2 text-center text-sm text-gray-500">{t.achievements.clickToView}</div>
+        <div className="flex min-h-[40rem] w-full flex-col md:flex-row">
           {/* 左侧：游戏列表 */}
           <div className="mx-auto w-full space-y-4 px-2 md:w-1/2">
-            <div className="mb-2 text-center text-sm text-gray-500">
-              {t.achievements.clickToView}
-            </div>
+            {/* 游戏卡片列表 */}
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={currentPage}
@@ -135,13 +135,13 @@ export function AchievementsPagePC() {
                 exit={{ opacity: 0, x: -40 }}
                 transition={{ duration: 0.35, ease: 'easeInOut' }}
               >
-                {currentItems.map((item) => {
-                  const isHovered = hoveredAppId === item.appid;
+                {currentItems.map((item, idx) => {
+                  const isLast = idx === currentItems.length - 1;
                   return (
-                    <div key={item.appid} className="mb-4 w-full">
+                    <div key={item.appid} className={isLast ? 'w-full' : 'mb-4 w-full'}>
                       <AchievementsGameCard
                         item={item}
-                        isHovered={isHovered}
+                        isHovered={hoveredAppId === item.appid}
                         isMobile={false}
                         t={{
                           ...t,
@@ -154,15 +154,15 @@ export function AchievementsPagePC() {
                     </div>
                   );
                 })}
+                {/* 占位补齐，保证高度一致，避免最后一页高度跳变（仅PC端） */}
+                {Array.from({ length: Math.max(0, 5 - currentItems.length) }).map((_, idx) => (
+                  <div key={`placeholder-${idx}`} className="mb-4 h-[8.625rem] md:h-[8.625rem]" />
+                ))}
               </motion.div>
             </AnimatePresence>
-            {/* 占位补齐，保证高度一致，避免最后一页高度跳变（仅PC端） */}
-            {Array.from({ length: Math.max(0, 5 - currentItems.length) }).map((_, idx) => (
-              <div key={`placeholder-${idx}`} className="h-[137.5px] md:h-[137.5px]" />
-            ))}
           </div>
           {/* 右侧：大图展示区+成就内容（仅桌面端） */}
-          <div className="relative mt-6 flex min-h-[340px] w-full flex-col items-start justify-start md:w-1/2">
+          <div className="relative flex max-h-[80vh] min-h-[340px] w-full flex-col items-start justify-start md:w-1/2">
             <AnimatePresence mode="wait">
               {selectedGame && (
                 <motion.div

@@ -1,80 +1,109 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface PaginationMobileProps {
   currentPage: number;
   total: number;
   pageSize: number;
   onPageChange: (page: number) => void;
-  disabled?: boolean;
   labels?: {
-    prev: string;
-    next: string;
+    prev?: string;
+    next?: string;
     goTo?: string;
   };
+  disabled?: boolean;
 }
 
-export const PaginationMobile: React.FC<PaginationMobileProps> = ({
+export function PaginationMobile({
   currentPage,
   total,
   pageSize,
   onPageChange,
+  labels = { prev: '<', next: '>', goTo: 'Go' },
   disabled = false,
-  labels = { prev: 'Prev', next: 'Next', goTo: 'Go to' },
-}) => {
-  const totalPages = Math.ceil(total / pageSize) || 1;
-  const [input, setInput] = useState('');
+}: PaginationMobileProps) {
+  const totalPages = Math.ceil(total / pageSize);
+  const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/[^\d]/g, '');
-    setInput(val);
+    setInputValue(e.target.value.replace(/[^0-9]/g, ''));
   };
+
   const handleInputGo = () => {
-    const num = Number(input);
-    if (num >= 1 && num <= totalPages && num !== currentPage) {
-      onPageChange(num);
+    const p = Number(inputValue);
+    if (p >= 1 && p <= totalPages) {
+      onPageChange(p);
+      setInputValue('');
     }
-    setInput('');
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleInputGo();
   };
 
   return (
-    <div className="flex w-full flex-row items-center justify-center gap-2">
-      <button
-        className={`rounded border px-2 py-1 text-sm transition-colors duration-150 ${
-          currentPage === 1 || disabled
-            ? 'border-muted bg-muted text-muted-foreground cursor-not-allowed'
-            : 'border-border bg-background text-foreground hover:border-primary-hover hover:text-primary-hover hover:bg-muted cursor-pointer'
-        } `}
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage === 1 || disabled}
-        aria-label={labels.prev}
-      >
-        &lt;
-      </button>
-      <input
-        type="text"
-        className="focus:text-primary-foreground mx-2 w-12 rounded border px-2 py-1 text-sm focus:outline-none"
-        value={input}
-        onChange={handleInputChange}
-        onBlur={handleInputGo}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleInputGo();
+    <div className="w-full">
+      <div className="flex w-full items-center justify-center gap-2 py-2">
+        <button
+          className="rounded px-2 py-1 text-lg font-bold disabled:opacity-50"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={disabled || currentPage === 1}
+          aria-label="Previous page"
+        >
+          {labels.prev}
+        </button>
+        <span className="mx-2 text-base">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          className="rounded px-2 py-1 text-lg font-bold disabled:opacity-50"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={disabled || currentPage === totalPages}
+          aria-label="Next page"
+        >
+          {labels.next}
+        </button>
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          className="ml-4 w-12 rounded border px-1 py-0.5 text-center text-base outline-none"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          disabled={disabled}
+          placeholder={labels.goTo || 'Go'}
+          aria-label="Go to page"
+        />
+        <button
+          className="bg-primary ml-1 rounded px-2 py-1 text-white disabled:opacity-50"
+          onClick={handleInputGo}
+          disabled={
+            disabled || !inputValue || Number(inputValue) < 1 || Number(inputValue) > totalPages
+          }
+        >
+          {labels.goTo || 'Go'}
+        </button>
+      </div>
+      <Swiper
+        modules={[Pagination]}
+        spaceBetween={0}
+        slidesPerView={1}
+        pagination={{
+          clickable: true,
+          type: 'progressbar',
         }}
-        disabled={disabled}
-        placeholder={currentPage.toString()}
-        style={{ textAlign: 'center' }}
-      />
-      <button
-        className={`rounded border px-2 py-1 text-sm transition-colors duration-150 ${
-          currentPage === totalPages || disabled
-            ? 'border-muted bg-muted text-muted-foreground cursor-not-allowed'
-            : 'border-border bg-background text-foreground hover:border-primary-hover hover:text-primary-hover hover:bg-muted cursor-pointer'
-        } `}
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage === totalPages || disabled}
-        aria-label={labels.next}
+        onSlideChange={(swiper) => onPageChange(swiper.activeIndex + 1)}
+        initialSlide={currentPage - 1}
+        className="mt-2 h-1 w-full"
       >
-        &gt;
-      </button>
+        {Array.from({ length: totalPages }).map((_, index) => (
+          <SwiperSlide key={index} />
+        ))}
+      </Swiper>
     </div>
   );
-};
+}

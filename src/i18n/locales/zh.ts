@@ -167,6 +167,7 @@ const zh: Translations = {
     clickToView: '点击游戏卡片可查看成就',
     achieved: '已达成',
     noAchievements: '暂无成就',
+    ownedByPercent: '稀有度：{percent}%',
   },
 };
 

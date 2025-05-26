@@ -31,3 +31,15 @@ export function paginateGames(
   const startIndex = (currentPage - 1) * itemsPerPage;
   return games.slice(startIndex, startIndex + itemsPerPage);
 }
+
+// 按已完成优先，组内按稀有度升序排序
+export function sortAchievementsByStatusAndRarity<T extends { achieved: number; rarity?: number }>(
+  achievements: T[]
+): T[] {
+  return [...achievements].sort((a, b) => {
+    if (a.achieved !== b.achieved) return b.achieved - a.achieved;
+    const rarityA = typeof a.rarity === 'number' ? a.rarity : 9999;
+    const rarityB = typeof b.rarity === 'number' ? b.rarity : 9999;
+    return rarityA - rarityB;
+  });
+}

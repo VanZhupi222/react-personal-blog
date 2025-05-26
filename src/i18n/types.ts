@@ -160,5 +160,6 @@ export interface Translations {
     clickToView: string;
     achieved: string;
     noAchievements: string;
+    ownedByPercent: string;
   };
 }

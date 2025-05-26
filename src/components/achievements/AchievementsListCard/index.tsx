@@ -91,7 +91,7 @@ export function AchievementsListCard({
             <AnimatePresence mode="wait" initial={false}>
               <motion.ul
                 key={page}
-                className="relative grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-10"
+                className="relative grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-x-10"
                 ref={ulRef}
                 initial={{ opacity: 0, x: 40 * direction }}
                 animate={{ opacity: 1, x: 0 }}
@@ -143,7 +143,6 @@ export function AchievementsListCard({
                 ))}
               </motion.ul>
             </AnimatePresence>
-            <div className="flex-1" />
           </div>
         )}
         <div className="mt-6 flex justify-center">

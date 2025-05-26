@@ -4,6 +4,7 @@ import type { ParsedGame } from '@/lib/steam/parser';
 import { request } from '@/api/axios';
 import { parseGamesArray, sortGamesByPlaytime } from '@/lib/steam/parser';
 import { useTranslationsStore } from '@/store/translations';
+import { sortAchievementsByStatusAndRarity } from '@/lib/achievements/parser';
 
 interface SteamState {
   profile: SteamStats['profile'] | null;
@@ -68,7 +69,7 @@ export const useSteamStore = create<SteamState>((set, get) => ({
       set({
         achievementDetail: {
           ...achievementDetail,
-          [cacheKey]: data,
+          [cacheKey]: sortAchievementsByStatusAndRarity(data),
         },
         achievementDetailLoading: false,
       });
