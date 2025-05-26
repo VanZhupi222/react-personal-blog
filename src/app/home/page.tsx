@@ -56,9 +56,9 @@ export default function HomePage() {
         animate="visible"
         variants={containerVariants}
       >
-        <main className="bg-background mx-auto min-h-screen w-full max-w-md px-4 py-8">
+        <main className="bg-background min-h-screen w-full px-4 py-8 md:px-8">
           {/* Welcome Section */}
-          <section className="mx-auto mb-8 w-full max-w-md text-center">
+          <section className="mx-auto mb-8 w-full max-w-6xl text-center md:mb-16">
             <m.div variants={itemVariants}>
               <h1 className="text-primary-foreground mb-4 text-6xl font-bold">{t.home.welcome}</h1>
               <p className="text-muted-foreground text-xl">{t.home.description}</p>
@@ -66,7 +66,7 @@ export default function HomePage() {
           </section>
 
           {/* Cards Section */}
-          <section className="mx-auto mb-8 grid w-full max-w-md grid-cols-1 gap-6">
+          <section className="mx-auto mb-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:mb-16 md:grid-cols-3 md:justify-items-center md:gap-8">
             {featureCards.map((card) => (
               <m.div key={card.href} variants={itemVariants}>
                 <FeatureCard {...card} />
@@ -75,11 +75,11 @@ export default function HomePage() {
           </section>
 
           {/* Activity Tracking Section */}
-          <m.section className="mx-auto w-full max-w-md" variants={itemVariants}>
+          <m.section className="mx-auto w-full max-w-6xl" variants={itemVariants}>
             <h2 className="text-secondary mb-8 text-center text-4xl font-bold">
               {t.home.activity.title}
             </h2>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
               <LeetCodeCard />
               <SteamCard />
             </div>

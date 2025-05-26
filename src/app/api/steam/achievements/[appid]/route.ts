@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SteamAPI } from '../../route';
+import { SteamAPI } from '@/api/steam';
+import type { SteamAchievementSchema, SteamAchievement } from '@/lib/steam/types';
 
 const steamAPI = new SteamAPI();
 
@@ -23,8 +24,10 @@ export async function GET(
       steamAPI.getGlobalAchievementRarity(appidNum),
     ]);
 
-    const achievements = gameSchema.map((schema) => {
-      const playerAchievement = playerAchievements.find((pa) => pa.apiname === schema.name);
+    const achievements = gameSchema.map((schema: SteamAchievementSchema) => {
+      const playerAchievement = playerAchievements.find(
+        (pa: SteamAchievement) => pa.apiname === schema.name
+      );
       const rarityRaw = globalRarity[schema.name];
       const rarity = rarityRaw !== undefined ? Number(rarityRaw) : undefined;
       return {
