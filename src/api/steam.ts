@@ -6,23 +6,25 @@ import type {
   SteamAchievementSchema,
 } from '@/lib/steam/types';
 import { request } from '@/api/axios';
+import { API_CONFIG, API_TIMEOUT } from './config';
+import { CONFIG_ERRORS, API_ERRORS } from '@/lib/constants/errors';
 
 export class SteamAPI {
-  private readonly baseUrl = 'https://api.steampowered.com';
+  private readonly baseUrl = API_CONFIG.STEAM.BASE;
   private readonly apiKey: string;
   private readonly steamId: string;
-  private readonly timeout = 15000; // 15 seconds timeout
+  private readonly timeout = API_TIMEOUT.LONG;
 
   constructor() {
     const apiKey = process.env.STEAM_API_KEY;
     const steamId = process.env.STEAM_ID;
 
     if (!apiKey) {
-      throw new Error('Steam API key is not configured');
+      throw new Error(CONFIG_ERRORS.STEAM_API_KEY_MISSING);
     }
 
     if (!steamId) {
-      throw new Error('Steam ID is not configured');
+      throw new Error(CONFIG_ERRORS.STEAM_ID_MISSING);
     }
 
     this.apiKey = apiKey;
@@ -30,7 +32,7 @@ export class SteamAPI {
   }
 
   async getPlayerProfile(): Promise<SteamProfile> {
-    const endpoint = `/ISteamUser/GetPlayerSummaries/v2/?key=${this.apiKey}&steamids=${this.steamId}`;
+    const endpoint = API_CONFIG.STEAM.ENDPOINTS.PLAYER_SUMMARIES(this.apiKey, this.steamId);
     const data = await request.get<{
       response: {
         players: SteamProfile[];
@@ -39,14 +41,14 @@ export class SteamAPI {
 
     const profile = data.response.players[0];
     if (!profile) {
-      throw new Error('Steam profile not found');
+      throw new Error(API_ERRORS.STEAM_PROFILE_NOT_FOUND);
     }
 
     return profile;
   }
 
   async getRecentGames(): Promise<SteamGameStats[]> {
-    const endpoint = `/IPlayerService/GetRecentlyPlayedGames/v1/?key=${this.apiKey}&steamid=${this.steamId}&count=5`;
+    const endpoint = API_CONFIG.STEAM.ENDPOINTS.RECENT_GAMES(this.apiKey, this.steamId);
     const data = await request.get<{
       response: {
         total_count: number;
@@ -58,7 +60,7 @@ export class SteamAPI {
   }
 
   async getOwnedGames(): Promise<SteamGameStats[]> {
-    const endpoint = `/IPlayerService/GetOwnedGames/v1/?key=${this.apiKey}&steamid=${this.steamId}&include_appinfo=true&include_played_free_games=true`;
+    const endpoint = API_CONFIG.STEAM.ENDPOINTS.OWNED_GAMES(this.apiKey, this.steamId);
     const data = await request.get<{
       response: {
         game_count: number;
@@ -73,7 +75,12 @@ export class SteamAPI {
     appid: number,
     lang: string = 'english'
   ): Promise<SteamAchievement[]> {
-    const endpoint = `/ISteamUserStats/GetPlayerAchievements/v1/?key=${this.apiKey}&steamid=${this.steamId}&appid=${appid}&l=${lang}`;
+    const endpoint = API_CONFIG.STEAM.ENDPOINTS.PLAYER_ACHIEVEMENTS(
+      this.apiKey,
+      this.steamId,
+      appid,
+      lang
+    );
     try {
       const data = await request.get<{
         playerstats: {
@@ -90,13 +97,13 @@ export class SteamAPI {
         gameName: data.playerstats.gameName,
       }));
     } catch (error) {
-      console.warn(`Failed to fetch achievements for app ${appid}:`, error);
-      return [];
+      console.warn(`${API_ERRORS.STEAM_ACHIEVEMENTS_FETCH_FAILED} ${appid}:`, error);
+      throw error;
     }
   }
 
   async getGameSchema(appid: number, lang: string = 'english'): Promise<SteamAchievementSchema[]> {
-    const endpoint = `/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${appid}&l=${lang}`;
+    const endpoint = API_CONFIG.STEAM.ENDPOINTS.GAME_SCHEMA(this.apiKey, appid, lang);
     try {
       const data = await request.get<{
         game: {
@@ -107,13 +114,13 @@ export class SteamAPI {
       }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
       return data.game.availableGameStats.achievements || [];
     } catch (error) {
-      console.warn(`Failed to fetch schema for app ${appid}:`, error);
-      return [];
+      console.warn(`${API_ERRORS.STEAM_SCHEMA_FETCH_FAILED} ${appid}:`, error);
+      throw error;
     }
   }
 
   async getGlobalAchievementRarity(appid: number): Promise<Record<string, number>> {
-    const endpoint = `/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=${appid}`;
+    const endpoint = API_CONFIG.STEAM.ENDPOINTS.GLOBAL_ACHIEVEMENTS(appid);
     try {
       const data = await request.get<{
         achievementpercentages: {
@@ -126,8 +133,8 @@ export class SteamAPI {
       });
       return result;
     } catch (error) {
-      console.warn(`Failed to fetch global achievement rarity for app ${appid}:`, error);
-      return {};
+      console.warn(`${API_ERRORS.STEAM_GLOBAL_ACHIEVEMENTS_FETCH_FAILED} ${appid}:`, error);
+      throw error;
     }
   }
 
@@ -148,7 +155,7 @@ export class SteamAPI {
         ownedGames: ownedGames.filter((game) => game.playtime_forever > 0),
       };
     } catch (error) {
-      console.error('Failed to get user stats:', error);
+      console.error(API_ERRORS.STEAM_USER_STATS_FETCH_FAILED + ':', error);
       throw error;
     }
   }
