@@ -1,10 +1,12 @@
 import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { AchievementsGameCard } from '../AchievementsGameCard';
 import type { ParsedGame } from '@/lib/steam/parser';
+import type { Translations } from '@/i18n/types';
 
 interface AchievementsGameSwiperProps {
   games: ParsedGame[];
@@ -16,7 +18,7 @@ interface AchievementsGameSwiperProps {
   setHoveredAppId: (id: number | null) => void;
   setSelectedAppId: (id: number) => void;
   fetchAchievementOnClick: (appid: number) => void;
-  t: any;
+  t: Translations;
   formatPlaytime: (playtime: number) => string;
 }
 
@@ -33,7 +35,7 @@ export function AchievementsGameSwiper({
   t,
   formatPlaytime,
 }: AchievementsGameSwiperProps) {
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   // 分页
   const paginateGames = (games: ParsedGame[], page: number, pageSize: number) => {

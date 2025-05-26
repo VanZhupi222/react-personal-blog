@@ -1,11 +1,13 @@
 import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { AchievementsModalListSkeleton } from '@/components/skeleton/AchievementsModalListSkeleton';
 import { ErrorFunc } from '@/components/features/Error';
 import { useRef } from 'react';
+import type { Translations } from '@/i18n/types';
 
 interface Achievement {
   displayName?: string;
@@ -32,7 +34,7 @@ interface AchievementsModalProps {
   loading: boolean;
   error: string | null | undefined;
   onRetry: () => void;
-  t: any;
+  t: Translations;
   MODAL_PAGE_SIZE: number;
 }
 
@@ -50,7 +52,7 @@ export function AchievementsModal({
   t,
   MODAL_PAGE_SIZE,
 }: AchievementsModalProps) {
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   return (
     <Transition appear show={open} as="div">

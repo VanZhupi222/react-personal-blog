@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AchievementsStatsCard } from '../AchievementsStatsCard';
-import { AchievementsGameCard } from '../AchievementsGameCard';
 import { Trophy, Medal } from 'lucide-react';
-import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 import {
   MIN_PLAYTIME_HOURS,
   ITEMS_PER_PAGE,
