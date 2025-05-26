@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AchievementsStatsCard } from '../AchievementsStatsCard';
 import { AchievementsGameCard } from '../AchievementsGameCard';
 import { Trophy, Medal } from 'lucide-react';
 import { Dialog, DialogPanel, Transition } from '@headlessui/react';
-import { PaginationMobile } from '@/components/features/Pagination/PaginationMobile';
 import {
   MIN_PLAYTIME_HOURS,
   ITEMS_PER_PAGE,
@@ -16,8 +15,10 @@ import { useSteamStore } from '@/store/steam';
 import { useFetchOnClick } from '@/lib/hooks/useFetchOnClick';
 import { AchievementsPageSkeleton } from '@/components/skeleton/AchievementsPageSkeleton';
 import { ErrorFunc } from '@/components/features/Error';
-import { AchievementsModalListSkeleton } from '@/components/skeleton/AchievementsModalListSkeleton';
-import { AnimatePresence, motion } from 'framer-motion';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { AchievementsGameSwiper } from '../AchievementsGameSwiper';
+import { AchievementsModal } from '../AchievementsModal';
 
 export function AchievementsPageMobile() {
   const { t, locale } = useTranslations();
@@ -59,10 +60,6 @@ export function AchievementsPageMobile() {
     : [];
   const MODAL_PAGE_SIZE = 5;
   const modalTotalPages = Math.ceil(achievements.length / MODAL_PAGE_SIZE);
-  const modalCurrentItems = achievements.slice(
-    (modalPage - 1) * MODAL_PAGE_SIZE,
-    modalPage * MODAL_PAGE_SIZE
-  );
 
   if (ownedGamesLoading) {
     return <AchievementsPageSkeleton />;
@@ -100,163 +97,36 @@ export function AchievementsPageMobile() {
             <div className="mb-2 text-center text-sm text-gray-500">
               {t.achievements.clickToView}
             </div>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={currentPage}
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -40 }}
-                transition={{ duration: 0.35, ease: 'easeInOut' }}
-              >
-                {currentItems.map((item) => (
-                  <div key={item.appid} className="mb-4 w-full">
-                    <AchievementsGameCard
-                      item={item}
-                      isHovered={hoveredAppId === item.appid}
-                      isMobile={true}
-                      t={{ ...t, formatPlaytime }}
-                      onMouseEnter={() => setHoveredAppId(item.appid)}
-                      onMouseLeave={() => setHoveredAppId(null)}
-                      onClick={() => {
-                        setSelectedAppId(item.appid);
-                        setHoveredAppId(item.appid);
-                        fetchAchievementOnClick(item.appid);
-                      }}
-                    />
-                  </div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          <Transition appear show={!!selectedGame} as="div">
-            <Dialog as="div" className="relative z-50" onClose={() => setSelectedAppId(null)}>
-              <Transition
-                as="div"
-                show={!!selectedGame}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 translate-y-8"
-                enterTo="opacity-100 translate-y-0"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 translate-y-0"
-                leaveTo="opacity-0 translate-y-8"
-              >
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
-              </Transition>
-              <div className="fixed inset-0 overflow-y-auto">
-                <div className="flex min-h-full items-center justify-center p-4">
-                  <Transition
-                    as="div"
-                    show={!!selectedGame}
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 scale-95"
-                    enterTo="opacity-100 scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 scale-100"
-                    leaveTo="opacity-0 scale-95"
-                  >
-                    {!!selectedGame && (
-                      <DialogPanel className="bg-card flex max-h-[80vh] w-full max-w-lg transform flex-col overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all">
-                        {/* 顶部大图 */}
-                        <img
-                          src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedGame.appid}/library_hero.jpg`}
-                          alt={selectedGame.name}
-                          className="mb-4 h-32 w-full rounded-lg object-cover"
-                        />
-                        <div className="mb-2 text-lg font-bold">{selectedGame?.name}</div>
-                        <div className="hide-scrollbar flex-1 overflow-y-auto">
-                          {achievementDetailLoading ? (
-                            <AchievementsModalListSkeleton />
-                          ) : achievementDetailError ? (
-                            <ErrorFunc
-                              onRetry={() =>
-                                selectedGame && fetchAchievementOnClick(selectedGame.appid)
-                              }
-                            />
-                          ) : modalCurrentItems.length === 0 ? (
-                            <div className="text-muted-foreground py-8 text-center">
-                              {t.achievements.noAchievements}
-                            </div>
-                          ) : (
-                            <AnimatePresence mode="wait" initial={false}>
-                              <motion.div
-                                key={modalPage}
-                                initial={{ opacity: 0, x: 40 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -40 }}
-                                transition={{ duration: 0.35, ease: 'easeInOut' }}
-                              >
-                                {modalCurrentItems.map(
-                                  (
-                                    ach: {
-                                      apiname?: string;
-                                      displayName?: string;
-                                      name?: string;
-                                      description?: string;
-                                      icon?: string;
-                                    },
-                                    idx: number
-                                  ) => (
-                                    <div
-                                      key={ach?.apiname || idx}
-                                      className="bg-muted mb-4 flex items-center gap-3 rounded p-3"
-                                    >
-                                      {ach?.icon && (
-                                        <img
-                                          src={ach.icon}
-                                          alt={ach.displayName || ach.name}
-                                          className="h-10 w-10 rounded object-cover"
-                                        />
-                                      )}
-                                      <div className="flex-1">
-                                        <div className="font-medium">
-                                          {ach?.displayName || ach?.name}
-                                        </div>
-                                        <div className="text-muted-foreground text-xs">
-                                          {ach?.description}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )
-                                )}
-                              </motion.div>
-                            </AnimatePresence>
-                          )}
-                        </div>
-                        {modalTotalPages > 1 && (
-                          <div className="mt-2">
-                            <PaginationMobile
-                              currentPage={modalPage}
-                              total={achievements.length}
-                              pageSize={MODAL_PAGE_SIZE}
-                              onPageChange={setModalPage}
-                              labels={{ prev: '<', next: '>' }}
-                            />
-                          </div>
-                        )}
-                      </DialogPanel>
-                    )}
-                  </Transition>
-                </div>
-              </div>
-            </Dialog>
-          </Transition>
-        </div>
-        {/* 手机端分页：只保留左右箭头和输入框 */}
-        {totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center">
-            <PaginationMobile
-              currentPage={currentPage}
-              total={filteredGames.length}
+            <AchievementsGameSwiper
+              games={filteredGames}
               pageSize={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              totalPages={totalPages}
               onPageChange={setCurrentPage}
-              labels={{
-                prev: t.achievements.pagination.prev,
-                next: t.achievements.pagination.next,
-                goTo: t.achievements.pagination.goTo,
-              }}
+              hoveredAppId={hoveredAppId}
+              setHoveredAppId={setHoveredAppId}
+              setSelectedAppId={setSelectedAppId}
+              fetchAchievementOnClick={fetchAchievementOnClick}
+              t={t}
+              formatPlaytime={formatPlaytime}
             />
           </div>
-        )}
+          {/* 弹窗成就列表 */}
+          <AchievementsModal
+            open={!!selectedGame}
+            onClose={() => setSelectedAppId(null)}
+            selectedGame={selectedGame ?? undefined}
+            achievements={achievements}
+            modalPage={modalPage}
+            modalTotalPages={modalTotalPages}
+            setModalPage={setModalPage}
+            loading={achievementDetailLoading}
+            error={achievementDetailError}
+            onRetry={() => selectedGame && fetchAchievementOnClick(selectedGame.appid)}
+            t={t}
+            MODAL_PAGE_SIZE={MODAL_PAGE_SIZE}
+          />
+        </div>
       </div>
     </div>
   );
