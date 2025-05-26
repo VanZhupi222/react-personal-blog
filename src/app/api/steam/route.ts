@@ -6,8 +6,9 @@ import type {
   SteamAchievement,
   SteamAchievementSchema,
 } from '@/lib/steam/types';
+import { request } from '@/api/axios';
 
-class SteamAPI {
+export class SteamAPI {
   private readonly baseUrl = 'https://api.steampowered.com';
   private readonly apiKey: string;
   private readonly steamId: string;
@@ -29,40 +30,13 @@ class SteamAPI {
     this.steamId = steamId;
   }
 
-  private async fetchJson<T>(endpoint: string): Promise<T> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-
-    try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Steam API error: ${response.status} ${response.statusText}`);
-      }
-
-      return response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          throw new Error(`Request timeout after ${this.timeout}ms`);
-        }
-        throw new Error(`Steam API request failed: ${error.message}`);
-      }
-      throw error;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  }
-
   async getPlayerProfile(): Promise<SteamProfile> {
     const endpoint = `/ISteamUser/GetPlayerSummaries/v2/?key=${this.apiKey}&steamids=${this.steamId}`;
-    const data = await this.fetchJson<{
+    const data = await request.get<{
       response: {
         players: SteamProfile[];
       };
-    }>(endpoint);
+    }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
 
     const profile = data.response.players[0];
     if (!profile) {
@@ -74,39 +48,42 @@ class SteamAPI {
 
   async getRecentGames(): Promise<SteamGameStats[]> {
     const endpoint = `/IPlayerService/GetRecentlyPlayedGames/v1/?key=${this.apiKey}&steamid=${this.steamId}&count=5`;
-    const data = await this.fetchJson<{
+    const data = await request.get<{
       response: {
         total_count: number;
         games: SteamGameStats[];
       };
-    }>(endpoint);
+    }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
 
     return data.response.games || [];
   }
 
   async getOwnedGames(): Promise<SteamGameStats[]> {
     const endpoint = `/IPlayerService/GetOwnedGames/v1/?key=${this.apiKey}&steamid=${this.steamId}&include_appinfo=true&include_played_free_games=true`;
-    const data = await this.fetchJson<{
+    const data = await request.get<{
       response: {
         game_count: number;
         games: SteamGameStats[];
       };
-    }>(endpoint);
+    }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
 
     return data.response.games || [];
   }
 
-  async getPlayerAchievements(appid: number): Promise<SteamAchievement[]> {
-    const endpoint = `/ISteamUserStats/GetPlayerAchievements/v1/?key=${this.apiKey}&steamid=${this.steamId}&appid=${appid}&l=english`;
+  async getPlayerAchievements(
+    appid: number,
+    lang: string = 'english'
+  ): Promise<SteamAchievement[]> {
+    const endpoint = `/ISteamUserStats/GetPlayerAchievements/v1/?key=${this.apiKey}&steamid=${this.steamId}&appid=${appid}&l=${lang}`;
     try {
-      const data = await this.fetchJson<{
+      const data = await request.get<{
         playerstats: {
           steamID: string;
           gameName: string;
           achievements: SteamAchievement[];
           success: boolean;
         };
-      }>(endpoint);
+      }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
 
       const achievements = data.playerstats.achievements || [];
       return achievements.map((achievement) => ({
@@ -119,16 +96,16 @@ class SteamAPI {
     }
   }
 
-  async getGameSchema(appid: number): Promise<SteamAchievementSchema[]> {
-    const endpoint = `/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${appid}&l=english`;
+  async getGameSchema(appid: number, lang: string = 'english'): Promise<SteamAchievementSchema[]> {
+    const endpoint = `/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${appid}&l=${lang}`;
     try {
-      const data = await this.fetchJson<{
+      const data = await request.get<{
         game: {
           availableGameStats: {
             achievements: SteamAchievementSchema[];
           };
         };
-      }>(endpoint);
+      }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
       return data.game.availableGameStats.achievements || [];
     } catch (error) {
       console.warn(`Failed to fetch schema for app ${appid}:`, error);

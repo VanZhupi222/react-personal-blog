@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { steamAPI } from '@/api/steam';
+import { SteamAPI } from '../../route';
+
+const steamAPI = new SteamAPI();
 
 export async function GET(
   request: NextRequest,

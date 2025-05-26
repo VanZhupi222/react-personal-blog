@@ -43,10 +43,10 @@ export function AchievementsPagePC() {
   }, [ownedGames.length, ownedGamesLoading, fetchOwnedGames]);
 
   useEffect(() => {
-    if (selectedAppId) {
+    if (selectedAppId && !achievementDetailLoading) {
       fetchAchievementOnClick(selectedAppId);
     }
-  }, [locale, selectedAppId, fetchAchievementOnClick]);
+  }, [locale, selectedAppId, achievementDetailLoading, fetchAchievementOnClick]);
 
   if (ownedGamesLoading) {
     return <AchievementsPageSkeleton />;
