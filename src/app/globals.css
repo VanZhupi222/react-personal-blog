@@ -68,6 +68,9 @@
   --color-achievement-green: #22c55e;
   --color-achievement-gray: #9ca3af;
   --color-achievement-darkgreen: #15803d;
+  --color-achievement-rare-glow: var(--achievement-rare-glow);
+  --color-achievement-rare-glow-strong: var(--achievement-rare-glow-strong);
+  --color-achievement-rare-text-shadow: var(--achievement-rare-text-shadow);
 }
 
 @layer base {
@@ -121,6 +124,9 @@
     --achievement-green: #22c55e;
     --achievement-gray: #9ca3af;
     --achievement-darkgreen: #15803d;
+    --achievement-rare-glow: #ffe066;
+    --achievement-rare-glow-strong: #ffd700;
+    --achievement-rare-text-shadow: #fffbe6;
   }
 
   .dark {
@@ -185,6 +191,9 @@
     --achievement-green: #4ade80;
     --achievement-gray: #bdbdbd;
     --achievement-darkgreen: #166534;
+    --achievement-rare-glow: #bfa940;
+    --achievement-rare-glow-strong: #e6c200;
+    --achievement-rare-text-shadow: #5a4a1a;
   }
 }
 

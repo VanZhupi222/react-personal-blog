@@ -58,7 +58,7 @@ export function AchievementsPageMobile() {
   const achievements = selectedGame
     ? achievementDetail[`${selectedGame.appid}_${locale}`] || []
     : [];
-  const MODAL_PAGE_SIZE = 5;
+  const MODAL_PAGE_SIZE = 4;
   const modalTotalPages = Math.ceil(achievements.length / MODAL_PAGE_SIZE);
 
   if (ownedGamesLoading) {

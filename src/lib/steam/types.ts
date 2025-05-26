@@ -30,6 +30,7 @@ export interface SteamAchievementSchema {
 export interface AchievementDetail extends SteamAchievementSchema {
   achieved: number;
   unlocktime: number;
+  rarity?: number;
 }
 
 export interface SteamGameSchemaResponse {

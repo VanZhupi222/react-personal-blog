@@ -113,6 +113,25 @@ export class SteamAPI {
     }
   }
 
+  async getGlobalAchievementRarity(appid: number): Promise<Record<string, number>> {
+    const endpoint = `/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=${appid}`;
+    try {
+      const data = await request.get<{
+        achievementpercentages: {
+          achievements: { name: string; percent: number }[];
+        };
+      }>(`${this.baseUrl}${endpoint}`, { timeout: this.timeout });
+      const result: Record<string, number> = {};
+      data.achievementpercentages.achievements.forEach((a) => {
+        result[a.name] = a.percent;
+      });
+      return result;
+    } catch (error) {
+      console.warn(`Failed to fetch global achievement rarity for app ${appid}:`, error);
+      return {};
+    }
+  }
+
   async getUserStats(): Promise<SteamStats> {
     try {
       const [profile, recentGames, ownedGames] = await Promise.all([

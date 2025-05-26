@@ -17,18 +17,21 @@ export async function GET(
     const url = new URL(request.url);
     const lang = url.searchParams.get('language') || 'english';
 
-    const [playerAchievements, gameSchema] = await Promise.all([
+    const [playerAchievements, gameSchema, globalRarity] = await Promise.all([
       steamAPI.getPlayerAchievements(appidNum, lang),
       steamAPI.getGameSchema(appidNum, lang),
+      steamAPI.getGlobalAchievementRarity(appidNum),
     ]);
 
     const achievements = gameSchema.map((schema) => {
       const playerAchievement = playerAchievements.find((pa) => pa.apiname === schema.name);
-
+      const rarityRaw = globalRarity[schema.name];
+      const rarity = rarityRaw !== undefined ? Number(rarityRaw) : undefined;
       return {
         ...schema,
         achieved: playerAchievement?.achieved || 0,
         unlocktime: playerAchievement?.unlocktime || 0,
+        rarity,
       };
     });
 

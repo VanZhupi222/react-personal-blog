@@ -167,6 +167,7 @@ const en: Translations = {
     clickToView: 'Click on a game card to view achievements',
     achieved: 'Achieved',
     noAchievements: 'No achievements yet.',
+    ownedByPercent: 'Rarity: {percent}%',
   },
 };
 

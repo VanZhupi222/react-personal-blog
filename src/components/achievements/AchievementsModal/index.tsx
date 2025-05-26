@@ -12,6 +12,7 @@ interface Achievement {
   name?: string;
   description?: string;
   icon?: string;
+  rarity?: number;
 }
 
 interface Game {
@@ -78,7 +79,7 @@ export function AchievementsModal({
               leaveTo="opacity-0 scale-95"
             >
               {!!selectedGame && (
-                <DialogPanel className="bg-card mx-auto flex max-h-[80vh] w-[95vw] max-w-sm transform flex-col overflow-hidden rounded-2xl p-4 text-left align-middle shadow-xl transition-all sm:max-w-md sm:p-6 md:max-w-lg">
+                <DialogPanel className="bg-card relative mx-auto flex max-h-[80vh] w-[95vw] max-w-sm transform flex-col overflow-hidden rounded-2xl p-4 text-left align-middle shadow-xl transition-all sm:max-w-md sm:p-6 md:max-w-lg">
                   {/* 顶部大图 */}
                   <img
                     src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedGame.appid}/library_hero.jpg`}
@@ -127,7 +128,7 @@ export function AchievementsModal({
                                         <img
                                           src={ach.icon}
                                           alt={ach.displayName || ach.name}
-                                          className="h-10 w-10 rounded object-cover"
+                                          className={`h-10 w-10 rounded object-cover ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
                                         />
                                       )}
                                       <div className="flex-1">
@@ -137,6 +138,20 @@ export function AchievementsModal({
                                         <div className="text-muted-foreground text-xs">
                                           {ach?.description}
                                         </div>
+                                        {typeof ach.rarity === 'number' && (
+                                          <div
+                                            className={
+                                              ach.rarity < 10
+                                                ? 'text-achievement-rare-glow-strong mt-1 text-xs font-bold'
+                                                : 'text-achievement-gray mt-1 text-xs'
+                                            }
+                                          >
+                                            {t.achievements.ownedByPercent.replace(
+                                              '{percent}',
+                                              ach.rarity.toFixed(1)
+                                            )}
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   ))}
@@ -158,7 +173,10 @@ export function AchievementsModal({
                                 }
                               }}
                               className="accent-primary w-3/4"
-                              style={{ accentColor: '#2563eb' }}
+                              style={{
+                                accentColor: 'var(--primary-hover)',
+                                backgroundColor: 'var(--primary-muted)',
+                              }}
                             />
                             <span className="text-muted-foreground ml-2 text-sm">
                               {modalPage}/{modalTotalPages}
