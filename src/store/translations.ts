@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Translations, Locale } from '@/i18n/types';
-import { translationsAPI } from '@/api/translations';
+import { request } from '@/api/axios';
 import en from '@/i18n/locales/en';
 import zh from '@/i18n/locales/zh';
 
@@ -48,7 +48,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
       }
       set({ error: null, loading: true });
       try {
-        const translations = await translationsAPI.fetchTranslations(locale);
+        const translations = await request.get<Translations>(`/api/i18n?lang=${locale}`);
         set((state) => ({
           locale,
           translations,
@@ -70,7 +70,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
       if (initialized) return;
       set({ error: null, loading: true });
       try {
-        const translations = await translationsAPI.fetchTranslations(locale);
+        const translations = await request.get<Translations>(`/api/i18n?lang=${locale}`);
         set((state) => ({
           translations,
           locale,
