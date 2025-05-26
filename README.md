@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Blog
 
-## Getting Started
+A modern, feature-rich personal blog built with Next.js, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+## 🚀 Features
+
+- **Blog System**
+
+  - Markdown support with code highlighting
+  - Blog listing with tags and reading time
+  - Responsive design for all devices
+
+- **Project Showcase**
+
+  - Interactive project cards
+  - Tech stack visualization
+  - GitHub integration
+
+- **Steam Achievements**
+
+  - Real-time Steam game data
+  - Achievement tracking
+  - Interactive timeline view
+
+- **Internationalization**
+
+  - Multi-language support
+  - Dynamic content translation
+  - MongoDB-backed translations
+
+- **Contact System**
+  - Modern contact form
+  - Backend integration
+  - Form validation
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15.3.2
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4.1.6
+- **State Management**: Zustand 5.0.4
+- **UI Components**:
+  - @headlessui/react
+  - @radix-ui/\*
+- **Animation**:
+  - Framer Motion
+  - GSAP
+- **Data Fetching**: SWR
+- **Markdown**: react-markdown
+- **Database**: MongoDB with Mongoose
+
+## 📦 Installation
+
+1. Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [repository-url]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Create a `.env.local` file and add necessary environment variables:
 
-## Learn More
+```env
+MONGODB_URI=your_mongodb_uri
+STEAM_API_KEY=your_steam_api_key
+STEAM_ID=your_steam_id
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Start the development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ Project Structure
 
-## Deploy on Vercel
+```
+src/
+├── api/          # Web API utilities
+├── app/          # Next.js app router
+├── components/   # Reusable components
+├── config/       # Configuration files
+├── i18n/         # Internationalization
+├── lib/          # Utility functions
+├── models/       # MongoDB models
+└── store/        # Zustand stores
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Development
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Development**: `pnpm dev`
+- **Build**: `pnpm build`
+- **Start**: `pnpm start`
+- **Lint**: `pnpm lint`
+
+## 🌐 API Endpoints
+
+- `/api/blog` - Blog posts
+- `/api/projects` - Projects list
+- `/api/contact` - Contact form
+- `/api/steam` - Steam integration
+- `/api/about` - Personal profile
+- `/api/i18n` - Translations
+- `/api/version` - Version info
+
+## 🎨 Theme System
+
+The project uses a custom theme system with dark/light mode support:
+
+- Built with next-themes
+- Custom color variables
+- Responsive design
+- Tailwind CSS integration
+
+## 👥 Author
+
+Shijie Fan
+Zhupi222
