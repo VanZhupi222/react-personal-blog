@@ -30,7 +30,6 @@ export const useAboutStore = create<AboutStore>((set) => ({
       const rawData = await res.json();
       const parsedData = parseAboutData(rawData);
 
-      // 数据完整性校验
       if (
         !parsedData ||
         !parsedData.skills ||
