@@ -23,7 +23,7 @@ export const useBlogStore = create<BlogState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await request.get<Blog[]>('/api/blog');
-      const grouped = parseBlogs(res); // 按 language 分组
+      const grouped = parseBlogs(res); // Grouped by language
       set({ blogs: grouped, loading: false, initialized: true });
     } catch (err: unknown) {
       set({ error: err instanceof Error ? err.message : API_ERRORS.MONGODB_ERROR, loading: false });

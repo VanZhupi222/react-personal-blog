@@ -29,6 +29,19 @@ export const useAboutStore = create<AboutStore>((set) => ({
       if (!res.ok) throw new Error(API_ERRORS.MONGODB_ERROR);
       const rawData = await res.json();
       const parsedData = parseAboutData(rawData);
+
+      // 数据完整性校验
+      if (
+        !parsedData ||
+        !parsedData.skills ||
+        !parsedData.experiences ||
+        Object.values(parsedData.skills[useAboutStore.getState().language] ?? {}).flat().length ===
+          0 ||
+        (parsedData.experiences[useAboutStore.getState().language]?.length ?? 0) === 0
+      ) {
+        throw new Error('About data is incomplete');
+      }
+
       set({ data: parsedData, loading: false });
     } catch (error: unknown) {
       set({

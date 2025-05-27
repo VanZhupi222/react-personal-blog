@@ -9,17 +9,21 @@ import { LanguageSwitch } from '@/components/features/ControlPanel/LanguageSwitc
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import ThemeSwitch from '@/components/features/ControlPanel/ThemeSwitch';
 import { MobileMenu } from './MobileMenu';
+import { Translations } from '@/i18n/types';
 
-export function Navbar() {
+export function Navbar({ ssrTranslations }: { ssrTranslations: Translations }) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
-  const { t, locale, setLocale } = useTranslations();
+  const { t: storeTranslations, locale, setLocale } = useTranslations();
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Always use ssrTranslations as fallback
+  const t = mounted && storeTranslations ? storeTranslations : ssrTranslations;
 
   // Hide navbar on the entrance page
   if (pathname === '/') {
@@ -69,7 +73,7 @@ export function Navbar() {
         <div className="flex flex-1 items-center justify-end">
           {/* Desktop controls */}
           <nav className="hidden items-center space-x-2 md:flex">
-            <LanguageSwitch />
+            {mounted && <LanguageSwitch />}
             <ThemeSwitch />
           </nav>
           {/* Mobile menu button */}
