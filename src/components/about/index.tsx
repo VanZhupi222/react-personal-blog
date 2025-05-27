@@ -31,7 +31,6 @@ const itemVariants = {
 export function AboutContent() {
   const { t, locale } = useTranslations();
   const { data, loading, error, fetchAbout } = useAboutStore();
-  console.log(data);
 
   useEffect(() => {
     fetchAbout();
@@ -41,8 +40,9 @@ export function AboutContent() {
     <LazyMotion features={domAnimation}>
       <m.div className="flex min-h-[100dvh] items-center justify-center">
         <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <PageHeader heading={t.about.title} text={t.about.description} />
-
+          <m.div variants={itemVariants}>
+            <PageHeader heading={t.about.title} text={t.about.description} />
+          </m.div>
           {loading || !data ? (
             <SkeletonAbout />
           ) : error ? (
