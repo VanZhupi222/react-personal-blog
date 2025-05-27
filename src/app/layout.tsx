@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import { ThemeProvider } from 'next-themes';
 import { Navbar } from '@/components/layout/Navbar';
 import { ClientLayout } from '@/components/layout/ClientLayout';
 import { UpdateNotification } from '@/components/UpdateNotification';
@@ -21,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
+        {/* ThemeProvider Used to synchronise themes during server-side and client-side rendering
+        to prevent light/dark mode flicker (FOUC) issues during hydration. */}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ClientLayout>
             <div className="relative min-h-screen">
               <Navbar />

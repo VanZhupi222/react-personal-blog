@@ -1,55 +1,19 @@
-'use client';
-import { useEffect } from 'react';
-import { useBlogStore } from '@/store/blogStore';
-import { Calendar, Clock } from 'lucide-react';
-import { ErrorFunc } from '@/components/features/Error';
-import { useParams } from 'next/navigation';
-import 'highlight.js/styles/github-dark.css';
-import Markdown from '@/components/features/Markdown';
-import SkeletonBlogDetail from '@/components/skeleton/SkeletonBlogDetail';
-import { useTranslations } from '@/lib/hooks/useTranslations';
+import { notFound } from 'next/navigation';
+import { getBlogBySlug, getAllBlogSlugs } from '@/lib/blog/server';
+import { BlogDetailContent } from '@/components/blog/detailPage';
 
-export default function BlogDetailPage() {
-  const params = useParams();
-  const { blogs, loading, error, fetchBlogs } = useBlogStore();
-  const { locale } = useTranslations();
-  const blog = (blogs[locale] || []).find((b) => b.slug === params.slug);
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const slugs = await getAllBlogSlugs();
+  return slugs.map(({ slug }) => ({ slug }));
+}
 
-  useEffect(() => {
-    if (!blog && !loading && !error) fetchBlogs();
-  }, [blog, loading, error, fetchBlogs]);
+interface BlogDetailPageProps {
+  params: { slug: string };
+}
 
-  if (loading) return <SkeletonBlogDetail />;
-  if (error) return <ErrorFunc onRetry={fetchBlogs} />;
-  if (!blog) return null;
-
-  return (
-    <div className="bg-background flex min-h-[100dvh] justify-center px-2 py-8">
-      <div className="bg-card dark:bg-card w-full max-w-3xl rounded-2xl p-6 shadow-xl sm:p-10">
-        {/* 标题 */}
-        <h1 className="text-foreground mb-2 text-center text-3xl leading-tight font-extrabold tracking-tight">
-          {blog.title}
-        </h1>
-        {/* 元信息 */}
-        <div className="text-muted-foreground mb-6 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
-          <span className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            {blog.date}
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
-            {blog.readTime}
-          </span>
-        </div>
-        {/* 描述 */}
-        <div className="text-muted-foreground mb-8 text-center text-base">{blog.description}</div>
-        {/* 分割线 */}
-        <div className="border-border mb-8 border-b border-dashed" />
-        {/* 正文 */}
-        <article className="mx-auto max-w-none">
-          <Markdown>{blog.content}</Markdown>
-        </article>
-      </div>
-    </div>
-  );
+export default async function BlogDetailPage(props: BlogDetailPageProps) {
+  const { params } = await props;
+  const blog = await getBlogBySlug(params.slug);
+  if (!blog) return notFound();
+  return <BlogDetailContent blog={blog} />;
 }
