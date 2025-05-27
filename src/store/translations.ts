@@ -4,6 +4,7 @@ import { Translations, Locale } from '@/i18n/types';
 import { request } from '@/api/axios';
 import en from '@/i18n/locales/en';
 import zh from '@/i18n/locales/zh';
+import { API_ERRORS } from '@/lib/constants/errors';
 
 interface TranslationsStoreState {
   locale: Locale;
@@ -61,7 +62,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
           locale,
           translations: defaultTranslations[locale] || defaultTranslations.en,
           loading: false,
-          error: error instanceof Error ? error.message : 'Failed to fetch translations',
+          error: error instanceof Error ? error.message : API_ERRORS.MONGODB_ERROR,
         });
       }
     },
@@ -83,7 +84,7 @@ export const useTranslationsStore = create<TranslationsStoreState>()(
           translations: defaultTranslations[locale] || defaultTranslations.en,
           locale,
           loading: false,
-          error: error instanceof Error ? error.message : 'Failed to fetch translations',
+          error: error instanceof Error ? error.message : API_ERRORS.MONGODB_ERROR,
         });
       }
     },

@@ -1,38 +1,65 @@
-// API 基础配置
+// API Basic Config
 export const API_CONFIG = {
-  // 基础 URL
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || '',
-
   // LeetCode API
   LEETCODE: {
-    BASE: 'https://leetcode-stats-api.herokuapp.com',
+    BASE: 'https://leetcode.com/graphql',
     USER_STATS: (username: string) => `/users/${username}`,
   },
 
-  // Steam API（后续添加）
+  // Steam API
   STEAM: {
     BASE: 'https://api.steampowered.com',
-    // 待添加具体端点
+    ENDPOINTS: {
+      // User related
+      PLAYER_SUMMARIES: (apiKey: string, steamId: string) =>
+        `/ISteamUser/GetPlayerSummaries/v2/?key=${apiKey}&steamids=${steamId}`,
+
+      // Game related
+      RECENT_GAMES: (apiKey: string, steamId: string, count: number = 5) =>
+        `/IPlayerService/GetRecentlyPlayedGames/v1/?key=${apiKey}&steamid=${steamId}&count=${count}`,
+
+      OWNED_GAMES: (apiKey: string, steamId: string) =>
+        `/IPlayerService/GetOwnedGames/v1/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true`,
+
+      // Achievement related
+      PLAYER_ACHIEVEMENTS: (
+        apiKey: string,
+        steamId: string,
+        appId: number,
+        lang: string = 'english'
+      ) =>
+        `/ISteamUserStats/GetPlayerAchievements/v1/?key=${apiKey}&steamid=${steamId}&appid=${appId}&l=${lang}`,
+
+      GAME_SCHEMA: (apiKey: string, appId: number, lang: string = 'english') =>
+        `/ISteamUserStats/GetSchemaForGame/v2/?key=${apiKey}&appid=${appId}&l=${lang}`,
+
+      GLOBAL_ACHIEVEMENTS: (appId: number) =>
+        `/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=${appId}`,
+    },
   },
 } as const;
 
-// API 超时配置
+// API Timeout Config
 export const API_TIMEOUT = {
   DEFAULT: 10000,
   LONG: 30000,
 } as const;
 
-// API 错误消息
+// API Error Messages
 export const API_ERROR_MESSAGES = {
-  NETWORK_ERROR: '网络错误，请检查您的网络连接',
-  SERVER_ERROR: '服务器错误，请稍后重试',
-  TIMEOUT_ERROR: '请求超时，请稍后重试',
-  NOT_FOUND: '请求的资源不存在',
-  UNAUTHORIZED: '未授权，请先登录',
-  FORBIDDEN: '无权访问该资源',
+  NETWORK_ERROR: 'Network error, please check your connection',
+  SERVER_ERROR: 'Server error, please try again later',
+  TIMEOUT_ERROR: 'Request timeout, please try again later',
+  NOT_FOUND: 'Requested resource not found',
+  UNAUTHORIZED: 'Unauthorized, please login first',
+  FORBIDDEN: 'Access forbidden',
+  INVALID_PARAMS: 'Invalid parameters',
+  MISSING_PARAMS: 'Missing required parameters',
+  DATA_NOT_FOUND: 'No data found',
+  UNKNOWN_ERROR: 'Unknown error occurred',
 } as const;
 
-// HTTP 状态码
+// HTTP Status Codes
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,

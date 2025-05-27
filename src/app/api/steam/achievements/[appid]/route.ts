@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SteamAPI } from '@/api/steam';
 import type { SteamAchievementSchema, SteamAchievement } from '@/lib/steam/types';
+import { API_ERROR_MESSAGES, HTTP_STATUS } from '@/api/config';
 
 const steamAPI = new SteamAPI();
 
@@ -12,7 +13,10 @@ export async function GET(
     const { appid } = await params;
     const appidNum = parseInt(appid, 10);
     if (isNaN(appidNum)) {
-      return NextResponse.json({ error: 'Invalid appid' }, { status: 400 });
+      return NextResponse.json(
+        { error: API_ERROR_MESSAGES.INVALID_PARAMS },
+        { status: HTTP_STATUS.BAD_REQUEST }
+      );
     }
 
     const url = new URL(request.url);
@@ -41,6 +45,9 @@ export async function GET(
     return NextResponse.json(achievements);
   } catch (error) {
     console.error('Failed to fetch achievements:', error);
-    return NextResponse.json({ error: 'Failed to fetch achievements' }, { status: 500 });
+    return NextResponse.json(
+      { error: API_ERROR_MESSAGES.SERVER_ERROR },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
+    );
   }
 }

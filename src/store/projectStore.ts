@@ -3,6 +3,7 @@ import { request } from '@/api/axios';
 import { Project } from '@/lib/project/types';
 import { Locale } from '@/i18n/types';
 import { parseProjects } from '@/lib/project/parser';
+import { API_ERRORS } from '@/lib/constants/errors';
 
 interface ProjectState {
   projects: Record<Locale, Project[]>;
@@ -25,7 +26,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       const grouped = parseProjects(res);
       set({ projects: grouped, loading: false, initialized: true });
     } catch (err: unknown) {
-      set({ error: err instanceof Error ? err.message : 'Failed to fetch', loading: false });
+      set({ error: err instanceof Error ? err.message : API_ERRORS.MONGODB_ERROR, loading: false });
     }
   },
 }));

@@ -5,6 +5,7 @@ import { request } from '@/api/axios';
 import { parseGamesArray, sortGamesByPlaytime } from '@/lib/steam/parser';
 import { useTranslationsStore } from '@/store/translations';
 import { sortAchievementsByStatusAndRarity } from '@/lib/achievements/parser';
+import { API_ERRORS } from '@/lib/constants/errors';
 
 interface SteamState {
   profile: SteamStats['profile'] | null;
@@ -44,7 +45,7 @@ export const useSteamStore = create<SteamState>((set, get) => ({
     } catch (error: unknown) {
       set({
         ownedGamesLoading: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch Steam games',
+        error: error instanceof Error ? error.message : API_ERRORS.STEAM_API_ERROR,
       });
     }
   },
@@ -77,7 +78,7 @@ export const useSteamStore = create<SteamState>((set, get) => ({
       set({
         achievementDetailLoading: false,
         achievementDetailError:
-          error instanceof Error ? error.message : 'Error fetching achievements',
+          error instanceof Error ? error.message : API_ERRORS.STEAM_ACHIEVEMENTS_FETCH_FAILED,
       });
     }
   },

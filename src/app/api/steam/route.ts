@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SteamAPI } from '@/api/steam';
+import { API_ERROR_MESSAGES, HTTP_STATUS } from '@/api/config';
 
 export async function GET() {
   try {
@@ -10,10 +11,10 @@ export async function GET() {
     console.error('Steam API Error:', error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : API_ERROR_MESSAGES.UNKNOWN_ERROR,
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
     );
   }
 }

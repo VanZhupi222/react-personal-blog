@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { AboutData } from '@/lib/about/types';
 import { parseAboutData } from '@/lib/about/parser';
+import { API_ERRORS } from '@/lib/constants/errors';
 
 interface AboutStore {
   data: AboutData | null;
@@ -25,12 +26,15 @@ export const useAboutStore = create<AboutStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const res = await fetch('/api/about');
-      if (!res.ok) throw new Error('Failed to fetch about data');
+      if (!res.ok) throw new Error(API_ERRORS.MONGODB_ERROR);
       const rawData = await res.json();
       const parsedData = parseAboutData(rawData);
       set({ data: parsedData, loading: false });
     } catch (error: unknown) {
-      set({ error: error instanceof Error ? error.message : 'Unknown error', loading: false });
+      set({
+        error: error instanceof Error ? error.message : API_ERRORS.MONGODB_ERROR,
+        loading: false,
+      });
     }
   },
 }));

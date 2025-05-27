@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { ContactData } from '@/lib/contact/types';
+import { API_ERRORS } from '@/lib/constants/errors';
 
 interface ContactStoreState {
   contact: ContactData | null;
@@ -16,11 +17,11 @@ export const useContactStore = create<ContactStoreState>((set) => ({
     set({ loading: true, error: null });
     try {
       const res = await fetch('/api/contact');
-      if (!res.ok) throw new Error('Failed to fetch contact');
+      if (!res.ok) throw new Error(API_ERRORS.MONGODB_ERROR);
       const data = await res.json();
       set({ contact: data, loading: false });
     } catch (e: unknown) {
-      set({ error: e instanceof Error ? e.message : String(e), loading: false });
+      set({ error: e instanceof Error ? e.message : API_ERRORS.MONGODB_ERROR, loading: false });
     }
   },
 }));

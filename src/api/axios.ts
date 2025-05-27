@@ -5,21 +5,19 @@ import axios, {
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { API_CONFIG, API_TIMEOUT, API_ERROR_MESSAGES } from './config';
+import { API_TIMEOUT, API_ERROR_MESSAGES } from './config';
 
-// 创建 axios 实例
+// Create axios instance
 const instance: AxiosInstance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
   timeout: API_TIMEOUT.DEFAULT,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// 请求拦截器
+// Request interceptor
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 在这里可以添加认证信息等
     return config;
   },
   (error: AxiosError) => {
@@ -27,42 +25,42 @@ instance.interceptors.request.use(
   }
 );
 
-// 响应拦截器
+// Response interceptor
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response.data;
   },
   (error: AxiosError) => {
     if (error.response) {
-      // 服务器返回错误状态码
+      // Server returned error status code
       switch (error.response.status) {
         case 401:
-          console.error(API_ERROR_MESSAGES.UNAUTHORIZED);
+          error.message = API_ERROR_MESSAGES.UNAUTHORIZED;
           break;
         case 403:
-          console.error(API_ERROR_MESSAGES.FORBIDDEN);
+          error.message = API_ERROR_MESSAGES.FORBIDDEN;
           break;
         case 404:
-          console.error(API_ERROR_MESSAGES.NOT_FOUND);
+          error.message = API_ERROR_MESSAGES.NOT_FOUND;
           break;
         case 500:
-          console.error(API_ERROR_MESSAGES.SERVER_ERROR);
+          error.message = API_ERROR_MESSAGES.SERVER_ERROR;
           break;
         default:
-          console.error(API_ERROR_MESSAGES.NETWORK_ERROR);
+          error.message = API_ERROR_MESSAGES.NETWORK_ERROR;
       }
     } else if (error.request) {
-      // 请求发出但没有收到响应
-      console.error(API_ERROR_MESSAGES.NETWORK_ERROR);
+      // Request sent but no response received
+      error.message = API_ERROR_MESSAGES.NETWORK_ERROR;
     } else {
-      // 请求配置出错
-      console.error('Request config error:', error.message);
+      // Request config error
+      error.message = API_ERROR_MESSAGES.UNKNOWN_ERROR;
     }
     return Promise.reject(error);
   }
 );
 
-// 封装请求方法
+// Wrap request methods
 export const request = {
   get: <TResponse, TParams = Record<string, unknown>>(
     url: string,
@@ -99,8 +97,8 @@ export const request = {
   },
 };
 
-// 导出类型
+// Export types
 export type { AxiosError, AxiosResponse, AxiosRequestConfig };
 
-// 导出实例
+// Export instance
 export default instance;
