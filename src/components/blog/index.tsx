@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { ErrorFunc } from '@/components/features/Error';
+import Link from 'next/link';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -60,7 +61,7 @@ export function BlogListPage() {
                   <Card className="group hover:border-primary-hover transition-colors">
                     <CardHeader>
                       <CardTitle className="group-hover:text-primary-hover transition-colors hover:underline">
-                        <a href={`/blog/${blog.slug}`}>{blog.title || 'No Title'}</a>
+                        <Link href={`/blog/${blog.slug}`}>{blog.title || 'No Title'}</Link>
                       </CardTitle>
                     </CardHeader>
 
