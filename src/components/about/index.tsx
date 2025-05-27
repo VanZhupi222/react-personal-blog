@@ -33,14 +33,14 @@ export function AboutContent() {
   const { data, loading, error, fetchAbout } = useAboutStore();
 
   useEffect(() => {
-    fetchAbout();
-  }, [fetchAbout]);
+    if (!data && !loading) fetchAbout();
+  }, [fetchAbout, data, loading]);
 
   return (
     <LazyMotion features={domAnimation}>
       <m.div className="flex min-h-[100dvh] items-center justify-center">
         <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <m.div variants={itemVariants}>
+          <m.div initial="hidden" animate="visible" variants={itemVariants}>
             <PageHeader heading={t.about.title} text={t.about.description} />
           </m.div>
           {loading || !data ? (

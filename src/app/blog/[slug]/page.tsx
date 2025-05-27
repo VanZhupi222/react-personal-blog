@@ -12,7 +12,7 @@ interface BlogDetailPageProps {
 }
 
 export default async function BlogDetailPage(props: BlogDetailPageProps) {
-  const { params } = await props;
+  const params = await props.params;
   const blog = await getBlogBySlug(params.slug);
   if (!blog) return notFound();
   return <BlogDetailContent blog={blog} />;
