@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import type { ParsedGame } from '@/lib/steam/parser';
+import Image from 'next/image';
 
 export interface RecentGamesSectionProps {
   recentGames: ParsedGame[];
@@ -30,15 +31,21 @@ export function RecentGamesSection({
             className="hover:bg-muted/50 flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors"
             onClick={() => onGameClick(game.appid)}
           >
-            <img
-              src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`}
-              alt={game.name}
-              className="h-8 w-16 rounded object-cover object-center"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg`;
-              }}
-            />
+            <div className="relative h-8 w-16">
+              <Image
+                src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`}
+                alt={game.name}
+                fill
+                sizes="64px"
+                className="rounded object-cover object-center"
+                priority={false}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg`;
+                }}
+              />
+            </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1">
                 <p className="truncate font-medium">{game.name}</p>

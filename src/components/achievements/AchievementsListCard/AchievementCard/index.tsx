@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslations } from '@/lib/hooks/useTranslations';
+import Image from 'next/image';
 
 interface AchievementCardProps {
   achievement: {
@@ -39,12 +40,14 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
         onMouseLeave={onMouseLeave}
       >
         <div className="flex items-center gap-3">
-          <div className="relative">
-            <img
+          <div className="relative h-12 w-12">
+            <Image
               src={ach.achieved ? ach.icon : ach.icongray}
               alt={ach.displayName}
-              className={`h-12 w-12 bg-white object-cover object-center shadow ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
-              loading="lazy"
+              fill
+              sizes="48px"
+              className={`bg-white object-cover object-center shadow ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
+              priority={false}
             />
           </div>
           <div className="min-w-0 flex-1">
@@ -89,12 +92,14 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
       style={{ zIndex: 1 }}
     >
       <div className="flex items-center gap-3">
-        <div className="relative">
-          <img
+        <div className="relative h-10 w-10">
+          <Image
             src={ach.achieved ? ach.icon : ach.icongray}
             alt={ach.displayName}
-            className={`h-10 w-10 bg-white object-cover object-center shadow ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
-            loading="lazy"
+            fill
+            sizes="40px"
+            className={`bg-white object-cover object-center shadow ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
+            priority={false}
           />
         </div>
         <div className="min-w-0 flex-1">
