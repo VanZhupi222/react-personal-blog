@@ -10,5 +10,5 @@ export async function getBlogBySlug(slug: string): Promise<Blog | null> {
 export async function getAllBlogSlugs() {
   await dbConnect();
   const blogs = await BlogModel.find({}, { slug: 1, _id: 0 }).lean();
-  return blogs.map((b: any) => ({ slug: b.slug }));
+  return blogs.map((b) => ({ slug: b.slug as string }));
 }

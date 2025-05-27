@@ -1,5 +1,6 @@
 import { Clock } from 'lucide-react';
 import type { SteamStats } from '@/lib/steam/types';
+import Image from 'next/image';
 
 export interface ProfileSectionProps {
   profile: SteamStats['profile'];
@@ -15,7 +16,16 @@ export interface ProfileSectionProps {
 export function ProfileSection({ profile, totalPlaytime, formatPlaytime, t }: ProfileSectionProps) {
   return (
     <div className="flex items-center gap-4">
-      <img src={profile.avatar} alt={profile.personaname} className="h-12 w-12 rounded-full" />
+      <div className="relative h-12 w-12">
+        <Image
+          src={profile.avatar}
+          alt={profile.personaname}
+          fill
+          sizes="48px"
+          className="rounded-full"
+          priority={true}
+        />
+      </div>
       <div>
         <h3 className="text-primary-foreground font-semibold">{profile.personaname}</h3>
         <p

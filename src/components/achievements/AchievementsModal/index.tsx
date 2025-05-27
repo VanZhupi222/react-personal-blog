@@ -8,6 +8,7 @@ import { AchievementsModalListSkeleton } from '@/components/skeleton/Achievement
 import { ErrorFunc } from '@/components/features/Error';
 import { useRef } from 'react';
 import type { Translations } from '@/i18n/types';
+import Image from 'next/image';
 
 interface Achievement {
   displayName?: string;
@@ -84,11 +85,16 @@ export function AchievementsModal({
               {!!selectedGame && (
                 <DialogPanel className="bg-card relative mx-auto flex max-h-[80vh] w-[95vw] max-w-sm transform flex-col overflow-hidden rounded-2xl p-4 text-left align-middle shadow-xl transition-all sm:max-w-md sm:p-6 md:max-w-lg">
                   {/* 顶部大图 */}
-                  <img
-                    src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedGame.appid}/library_hero.jpg`}
-                    alt={selectedGame.name}
-                    className="mb-4 h-32 w-full rounded-lg object-cover"
-                  />
+                  <div className="relative mb-4 h-32 w-full">
+                    <Image
+                      src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${selectedGame.appid}/library_hero.jpg`}
+                      alt={selectedGame.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="rounded-lg object-cover"
+                      priority={true}
+                    />
+                  </div>
                   <div className="mb-2 text-lg font-bold">{selectedGame?.name}</div>
                   <div className="hide-scrollbar flex-1 overflow-y-auto">
                     {loading ? (
@@ -128,11 +134,16 @@ export function AchievementsModal({
                                       className={`bg-muted mb-4 flex items-center gap-3 rounded p-3 ${ach.achieved ? 'border-achievement-green border-2' : ''}`}
                                     >
                                       {ach?.icon && (
-                                        <img
-                                          src={ach.icon}
-                                          alt={ach.displayName || ach.name}
-                                          className={`h-10 w-10 rounded object-cover ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
-                                        />
+                                        <div className="relative h-10 w-10">
+                                          <Image
+                                            src={ach.icon}
+                                            alt={ach.displayName || ach.name || ''}
+                                            fill
+                                            sizes="40px"
+                                            className={`rounded object-cover ${typeof ach.rarity === 'number' && ach.rarity < 10 ? 'border-achievement-rare-glow border-3' : ''}`}
+                                            priority={false}
+                                          />
+                                        </div>
                                       )}
                                       <div className="flex-1">
                                         <div

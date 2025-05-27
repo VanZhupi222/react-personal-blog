@@ -7,6 +7,7 @@ import { AchievementCard } from './AchievementCard';
 import { useTranslations } from '@/lib/hooks/useTranslations';
 import { Pagination } from '@/components/features/Pagination';
 import type { ParsedGame } from '@/lib/steam/parser';
+import Image from 'next/image';
 
 interface Achievement {
   name: string;
@@ -29,15 +30,20 @@ interface AchievementsListCardProps {
 function CardImage({ hoveredGame }: { hoveredGame: ParsedGame | undefined }) {
   if (!hoveredGame) return null;
   return (
-    <img
-      src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${hoveredGame.appid}/library_hero.jpg`}
-      alt={hoveredGame.name}
-      className="max-h-[70vh] rounded-2xl border-4 border-white/10 object-cover object-center shadow-2xl"
-      style={{
-        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.35)',
-        background: 'rgba(0,0,0,0.1)',
-      }}
-    />
+    <div className="relative h-[20vh] w-full max-w-3xl">
+      <Image
+        src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${hoveredGame.appid}/library_hero.jpg`}
+        alt={hoveredGame.name}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="rounded-2xl border-4 border-white/10 object-cover object-center shadow-2xl"
+        style={{
+          boxShadow: '0 8px 32px 0 rgba(0,0,0,0.35)',
+          background: 'rgba(0,0,0,0.1)',
+        }}
+        priority={true}
+      />
+    </div>
   );
 }
 

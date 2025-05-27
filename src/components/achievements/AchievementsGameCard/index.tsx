@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/Card';
 import type { ParsedGame } from '@/lib/steam/parser';
+import Image from 'next/image';
 
 interface Translations {
   formatPlaytime: (playtime: number) => string;
@@ -33,11 +34,16 @@ export function AchievementsGameCard({
     >
       <CardContent className="pt-6">
         <div className="flex items-start gap-4">
-          <img
-            src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`}
-            alt={item.name}
-            className="h-16 w-32 rounded-md bg-gray-100 object-cover object-center"
-          />
+          <div className="relative h-16 w-32">
+            <Image
+              src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${item.appid}/header.jpg`}
+              alt={item.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="rounded-md object-cover object-center"
+              priority={false}
+            />
+          </div>
           <div className="min-w-0 flex-1">
             <div className="mb-3 flex items-center gap-2">
               <h2 className="truncate text-lg font-semibold">{item.name}</h2>
