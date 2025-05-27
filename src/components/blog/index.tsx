@@ -35,8 +35,8 @@ export function BlogListPage() {
   const { blogs, loading, error, fetchBlogs } = useBlogStore();
 
   useEffect(() => {
-    if ((blogs[locale]?.length ?? 0) === 0) fetchBlogs();
-  }, [fetchBlogs, blogs, locale]);
+    if ((blogs[locale]?.length ?? 0) === 0 && !loading && !error) fetchBlogs();
+  }, [fetchBlogs, blogs, locale, loading, error]);
 
   return (
     <LazyMotion features={domAnimation}>
@@ -47,11 +47,9 @@ export function BlogListPage() {
         variants={containerVariants}
       >
         <div className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          {/* 标题始终在最上方 */}
           <m.div variants={itemVariants}>
             <PageHeader heading={t.blog.title} text={t.blog.description} />
           </m.div>
-          {/* loading/error/blogs 渲染在下方 */}
           {loading && <SkeletonBlogList />}
           {error && <ErrorFunc onRetry={fetchBlogs} />}
           {!loading && !error && (

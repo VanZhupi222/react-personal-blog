@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Locale } from '@/i18n/types';
+import { useRouter } from 'next/navigation';
 
 const languages: { code: Locale; name: string }[] = [
   { code: 'en', name: 'English' },
@@ -18,6 +19,13 @@ const languages: { code: Locale; name: string }[] = [
 
 export function LanguageSwitch() {
   const { locale, setLocale } = useTranslations();
+  const router = useRouter();
+
+  const handleLanguageChange = async (newLocale: Locale) => {
+    await setLocale(newLocale);
+    // Use router.refresh() to refetch the data which use SSR to render
+    router.refresh();
+  };
 
   return (
     <DropdownMenu>
@@ -28,7 +36,7 @@ export function LanguageSwitch() {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => setLocale(lang.code)}
+            onClick={() => handleLanguageChange(lang.code)}
             className={locale === lang.code ? 'bg-accent dark:bg-accent/50' : ''}
           >
             {lang.name}
