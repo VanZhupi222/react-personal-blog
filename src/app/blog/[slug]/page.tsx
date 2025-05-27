@@ -7,13 +7,9 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return slugs.map(({ slug }) => ({ slug }));
 }
 
-interface BlogDetailPageProps {
-  params: { slug: string };
-}
-
-export default async function BlogDetailPage(props: BlogDetailPageProps) {
-  const params = await props.params;
-  const blog = await getBlogBySlug(params.slug);
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const blog = await getBlogBySlug(slug);
   if (!blog) return notFound();
   return <BlogDetailContent blog={blog} />;
 }
