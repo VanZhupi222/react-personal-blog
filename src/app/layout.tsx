@@ -8,6 +8,8 @@ import { UpdateNotification } from '@/components/UpdateNotification';
 import { Toaster } from 'sonner';
 import { APP_NAME, APP_DESCRIPTION } from '@/config/app';
 
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -24,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="relative min-h-screen">
               <Navbar />
               <main>{children}</main>
+              <SpeedInsights />
             </div>
             <UpdateNotification />
             <Toaster position="top-center" />
