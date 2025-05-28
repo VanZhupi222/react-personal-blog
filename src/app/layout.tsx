@@ -8,6 +8,7 @@ import { UpdateNotification } from '@/components/UpdateNotification';
 import { Toaster } from 'sonner';
 import { APP_NAME, APP_DESCRIPTION } from '@/config/app';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 import { getTranslations } from '@/lib/translations/server';
 import { getServerLocale } from '@/lib/utils/getServerLocale';
 
@@ -32,7 +33,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div className="relative min-h-screen">
               <Navbar ssrTranslations={translations} />
               <main>{children}</main>
+              {/* Vercel Speed Insights and Analytics */}
               <SpeedInsights />
+              <Analytics />
             </div>
             <UpdateNotification />
             <Toaster position="top-center" />
