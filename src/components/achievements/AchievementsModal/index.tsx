@@ -131,7 +131,7 @@ export function AchievementsModal({
                                   .map((ach, idx) => (
                                     <div
                                       key={idx}
-                                      className={`bg-muted mb-4 flex items-center gap-3 rounded p-3 ${ach.achieved ? 'border-achievement-green border-2' : ''}`}
+                                      className={`bg-muted mb-4 flex min-h-24 items-center gap-3 rounded p-3 ${ach.achieved ? 'border-achievement-green border-2' : ''}`}
                                     >
                                       {ach?.icon && (
                                         <div className="relative h-10 w-10">
