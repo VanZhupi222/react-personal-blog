@@ -71,6 +71,8 @@
   --color-achievement-rare-glow: var(--achievement-rare-glow);
   --color-achievement-rare-glow-strong: var(--achievement-rare-glow-strong);
   --color-achievement-rare-text-shadow: var(--achievement-rare-text-shadow);
+
+  --breakpoint-desktop: 72rem;
 }
 
 @layer base {
