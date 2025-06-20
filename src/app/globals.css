@@ -71,6 +71,14 @@
   --color-achievement-rare-glow: var(--achievement-rare-glow);
   --color-achievement-rare-glow-strong: var(--achievement-rare-glow-strong);
   --color-achievement-rare-text-shadow: var(--achievement-rare-text-shadow);
+  --color-code-block-bg: var(--code-block-bg);
+  --color-code-block-border: var(--code-block-border);
+  --color-code-inline-bg: var(--code-inline-bg);
+  --color-code-inline-border: var(--code-inline-border);
+  --color-table-bg: var(--table-bg);
+  --color-table-border: var(--table-border);
+  --color-table-header-bg: var(--table-header-bg);
+  --color-table-row-hover: var(--table-row-hover);
 
   --breakpoint-desktop: 72rem;
 }
@@ -129,6 +137,14 @@
     --achievement-rare-glow: #ffe066;
     --achievement-rare-glow-strong: #ffd700;
     --achievement-rare-text-shadow: #fffbe6;
+    --code-block-bg: transparent;
+    --code-block-border: #e2e8f0;
+    --code-inline-bg: #f1f5f9;
+    --code-inline-border: #cbd5e1;
+    --table-bg: #fff;
+    --table-border: #e5e7eb;
+    --table-header-bg: #f9fafb;
+    --table-row-hover: #f3f4f6;
   }
 
   .dark {
@@ -196,6 +212,14 @@
     --achievement-rare-glow: #bfa940;
     --achievement-rare-glow-strong: #e6c200;
     --achievement-rare-text-shadow: #5a4a1a;
+    --code-block-bg: var(--card);
+    --code-block-border: #2a2340;
+    --code-inline-bg: #2a2340;
+    --code-inline-border: #3d3558;
+    --table-bg: #241b3a;
+    --table-border: #32275a;
+    --table-header-bg: #2a2340;
+    --table-row-hover: #2f2447;
   }
 }
 
